@@ -1,4 +1,5 @@
 
+
 import Image from 'next/image';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
@@ -61,14 +62,14 @@ export default function Home() {
         <section id="home" className="relative pt-24 pb-16 sm:pt-32 sm:pb-24 overflow-hidden">
            <div className="absolute inset-0">
             <Image
-              src="https://images.unsplash.com/photo-1576091160550-2173dba9996a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxoZWFsdGhjYXJlJTIwdGVjaG5vbG9neXxlbnwwfHx8fDE3NTU1NjQzOTV8MA&ixlib=rb-4.1.0&q=80&w=1920"
+              src="/hero-background.png"
               alt="Healthcare Technology background"
               layout="fill"
               objectFit="cover"
-              className="opacity-10"
-              data-ai-hint="healthcare technology"
+              className="opacity-20 blur-sm"
+              data-ai-hint="healthcare technology abstract"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-white/50"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/50"></div>
           </div>
           <div className="container relative text-center">
             <Badge variant="outline" className="mb-4 border-primary/50 text-primary bg-white/50">Innovating for a Healthier Nigeria</Badge>
