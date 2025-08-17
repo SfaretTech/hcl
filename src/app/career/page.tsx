@@ -1,10 +1,13 @@
 
+'use client';
+
+import { useState } from 'react';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { AIAssistant } from '@/components/ai-assistant';
 import { Button } from '@/components/ui/button';
 import { Briefcase, Building, MapPin, Calendar, Award, TrendingUp, Users } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -114,6 +117,16 @@ const benefits = [
 ]
 
 export default function CareerPage() {
+  const [dialogOpen, setDialogOpen] = useState<Record<string, boolean>>({});
+
+  const handleDialogOpen = (title: string, state: boolean) => {
+    setDialogOpen(prev => ({ ...prev, [title]: state }));
+  };
+
+  const handleApplicationSuccess = (title: string) => {
+    handleDialogOpen(title, false);
+  };
+  
   return (
     <div className="flex flex-col min-h-dvh bg-background text-foreground">
       <Header />
@@ -164,7 +177,7 @@ export default function CareerPage() {
                   <CardContent className="flex-grow">
                     <p className="text-muted-foreground mb-6">{job.description}</p>
                      <div className="flex items-center gap-4">
-                        <Dialog>
+                        <Dialog open={dialogOpen[job.title]} onOpenChange={(state) => handleDialogOpen(job.title, state)}>
                           <DialogTrigger asChild>
                             <Button>Apply Now</Button>
                           </DialogTrigger>
@@ -175,7 +188,7 @@ export default function CareerPage() {
                                 Fill out the form below to submit your application. We look forward to hearing from you!
                               </DialogDescription>
                             </DialogHeader>
-                            <ApplicationForm />
+                            <ApplicationForm jobTitle={job.title} onSuccess={handleApplicationSuccess} />
                           </DialogContent>
                         </Dialog>
                         <Dialog>
@@ -212,7 +225,7 @@ export default function CareerPage() {
                                       </div>
                                   </div>
                                 </div>
-                                <Dialog>
+                                 <Dialog open={dialogOpen[`${job.title}-details`]} onOpenChange={(state) => handleDialogOpen(`${job.title}-details`, state)}>
                                   <DialogTrigger asChild>
                                       <Button className="mt-6 w-full">Apply Now</Button>
                                   </DialogTrigger>
@@ -223,7 +236,7 @@ export default function CareerPage() {
                                         Fill out the form below to submit your application. We look forward to hearing from you!
                                       </DialogDescription>
                                     </DialogHeader>
-                                    <ApplicationForm />
+                                     <ApplicationForm jobTitle={`${job.title}-details`} onSuccess={handleApplicationSuccess} />
                                   </DialogContent>
                                 </Dialog>
                             </DialogContent>

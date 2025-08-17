@@ -1,3 +1,4 @@
+
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -30,7 +31,7 @@ const formSchema = z.object({
   coverLetter: z.string().optional(),
 });
 
-export function ApplicationForm() {
+export function ApplicationForm({ jobTitle, onSuccess }: { jobTitle: string; onSuccess: (title: string) => void; }) {
   const { toast } = useToast();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -49,6 +50,7 @@ export function ApplicationForm() {
       description: "Thank you for applying. We'll be in touch if you're a good fit.",
     });
     form.reset();
+    onSuccess(jobTitle);
   }
 
   const fileRef = form.register("resume");
