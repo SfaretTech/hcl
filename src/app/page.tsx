@@ -170,7 +170,7 @@ export default function Home() {
            <div className="container">
             <div className="grid items-center gap-12 lg:grid-cols-2">
                <div className="flex justify-center lg:order-last">
-                 <Image src="https://placehold.co/500x500.png" width={500} height={500} alt="Community outreach event" data-ai-hint="community health fair" className="rounded-2xl shadow-2xl" />
+                 <Image src="/hcom-outreach-hub.png" width={500} height={500} alt="Community outreach event" data-ai-hint="community health fair" className="rounded-2xl shadow-2xl" />
               </div>
               <div>
                 <Badge variant="secondary" className="mb-4">Making a Difference</Badge>
