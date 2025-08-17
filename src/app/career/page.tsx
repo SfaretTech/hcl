@@ -1,8 +1,9 @@
+
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { AIAssistant } from '@/components/ai-assistant';
 import { Button } from '@/components/ui/button';
-import { Briefcase, Building, MapPin, Calendar } from 'lucide-react';
+import { Briefcase, Building, MapPin, Calendar, Award, TrendingUp, Users } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
@@ -92,6 +93,24 @@ const jobOpenings = [
       'Solid knowledge of website analytics tools (e.g., Google Analytics, NetInsight, WebTrends).',
     ]
   }
+];
+
+const benefits = [
+    {
+        icon: Award,
+        title: "Meaningful Work",
+        description: "Your work will directly contribute to improving healthcare access for millions of people in Nigeria."
+    },
+    {
+        icon: TrendingUp,
+        title: "Growth Opportunities",
+        description: "We are a fast-growing company with ample opportunities for professional development and career advancement."
+    },
+    {
+        icon: Users,
+        title: "Collaborative Culture",
+        description: "Join a team of passionate and talented individuals who are dedicated to working together to achieve our mission."
+    }
 ]
 
 export default function CareerPage() {
@@ -113,7 +132,7 @@ export default function CareerPage() {
           </div>
         </section>
 
-        <section id="open-positions" className="bg-background">
+        <section id="open-positions" className="bg-background py-16 sm:py-24">
           <div className="container">
             <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl text-center mb-12">
               Current Openings
@@ -222,25 +241,26 @@ export default function CareerPage() {
           </div>
         </section>
         
-        <section id="why-join" className="bg-white">
+        <section id="why-join" className="bg-white py-16 sm:py-24">
             <div className="container">
                 <div className="max-w-4xl mx-auto text-center mb-12">
                     <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">Why Join HCOM?</h2>
                     <p className="mt-4 text-lg text-muted-foreground">We offer a dynamic, inclusive, and innovative work environment where you can grow your career while making a difference.</p>
                 </div>
                 <div className="grid gap-8 md:grid-cols-3">
-                    <div className="text-center p-6">
-                        <h3 className="font-headline text-xl font-semibold mb-2">Meaningful Work</h3>
-                        <p className="text-muted-foreground">Your work will directly contribute to improving healthcare access for millions of people in Nigeria.</p>
-                    </div>
-                    <div className="text-center p-6">
-                        <h3 className="font-headline text-xl font-semibold mb-2">Growth Opportunities</h3>
-                        <p className="text-muted-foreground">We are a fast-growing company with ample opportunities for professional development and career advancement.</p>
-                    </div>
-                    <div className="text-center p-6">
-                        <h3 className="font-headline text-xl font-semibold mb-2">Collaborative Culture</h3>
-                        <p className="text-muted-foreground">Join a team of passionate and talented individuals who are dedicated to working together to achieve our mission.</p>
-                    </div>
+                   {benefits.map((benefit, index) => (
+                       <Card key={index} className="text-center transition-transform transform hover:-translate-y-2 hover:shadow-xl bg-background/50">
+                           <CardHeader>
+                               <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary mb-4">
+                                   <benefit.icon className="h-8 w-8" />
+                               </div>
+                               <CardTitle className="font-headline">{benefit.title}</CardTitle>
+                           </CardHeader>
+                           <CardContent>
+                               <p className="text-muted-foreground">{benefit.description}</p>
+                           </CardContent>
+                       </Card>
+                   ))}
                 </div>
             </div>
         </section>
