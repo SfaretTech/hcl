@@ -2,7 +2,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
+import { useForm, FormProvider } from 'react-hook-form';
 import { z } from 'zod';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -49,7 +49,7 @@ const investorSchema = z.object({
     fullName: z.string().min(2, { message: 'Full name must be at least 2 characters.' }),
     email: z.string().email({ message: 'Please enter a valid email address.' }),
     password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
-    idType: z.enum(['nin', 'bvn']),
+    idType: z.enum(['nin', 'bvn'], { required_error: 'Please select an ID type.'}),
     idNumber: z.string().min(10, { message: 'Please enter a valid identification number.' }),
     phoneNumber: z.string().min(10, { message: 'Please enter a valid phone number.' }),
 });
@@ -58,14 +58,13 @@ const formSchema = z.discriminatedUnion("accountType", [clientSchema, profession
 
 type FormSchema = z.infer<typeof formSchema>;
 
-
-const GenericForm = ({ schema, accountType, children, title, description }: { schema: z.ZodObject<any, any>, accountType: "client" | "professional" | "investor", children: React.ReactNode, title: string, description: string }) => {
+const GenericForm = ({ schema, accountType, children, title, description }: { schema: z.AnyZodObject, accountType: "client" | "professional" | "investor", children: React.ReactNode, title: string, description: string }) => {
     const { toast } = useToast();
-    const form = useForm<z.infer<typeof schema>>({
+    const form = useForm({
         resolver: zodResolver(schema),
         defaultValues: {
+            ...schema.shape,
             accountType,
-            ...Object.keys(schema.shape).reduce((acc, key) => ({ ...acc, [key]: '' }), {}),
         },
     });
 
@@ -73,7 +72,7 @@ const GenericForm = ({ schema, accountType, children, title, description }: { sc
         console.log(`${title} Account created:`, values);
         toast({
         title: "Account Created!",
-        description: `Your ${title.toLowerCase()} account has been successfully created.`,
+        description: `Your ${accountType} account has been successfully created.`,
         });
         form.reset();
     }
@@ -85,14 +84,16 @@ const GenericForm = ({ schema, accountType, children, title, description }: { sc
                 <CardDescription className="mt-2 text-muted-foreground">{description}</CardDescription>
             </CardHeader>
             <CardContent className="px-0">
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                        {children}
-                        <Button type="submit" size="lg" className="w-full font-bold">
-                            Create Account
-                        </Button>
-                    </form>
-                </Form>
+                <FormProvider {...form}>
+                    <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                            {children}
+                            <Button type="submit" size="lg" className="w-full font-bold">
+                                Create Account
+                            </Button>
+                        </form>
+                    </Form>
+                </FormProvider>
             </CardContent>
         </Card>
     );
