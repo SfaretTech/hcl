@@ -44,15 +44,6 @@ export function Header() {
               {link.label}
             </Link>
           ))}
-           <Link
-              href="/career"
-              className={cn(
-                "transition-colors hover:text-primary",
-                pathname === "/career" ? "text-primary font-semibold" : "text-muted-foreground"
-              )}
-            >
-              Career
-            </Link>
         </nav>
         
         <div className="hidden md:flex items-center ml-4">
@@ -98,17 +89,6 @@ export function Header() {
                       </Link>
                     </SheetClose>
                   ))}
-                   <SheetClose asChild>
-                      <Link
-                        href="/career"
-                        className={cn(
-                            "font-medium transition-colors hover:text-primary text-lg",
-                            pathname === "/career" ? "text-primary" : "text-foreground"
-                        )}
-                      >
-                        Career
-                      </Link>
-                    </SheetClose>
                 </nav>
                 <div className="p-4 mt-auto">
                     <SheetClose asChild>
