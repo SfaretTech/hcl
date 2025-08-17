@@ -23,7 +23,7 @@ const outreachHighlights = [
     description: 'Partnering with local centers to teach seniors how to use the HCOM app, connecting them with their health data like never before.',
   },
   {
-    image: 'https://placehold.co/600x400.png',
+    image: 'https://images.unsplash.com/photo-1708417134243-6d71770d82ef?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxSdXJhbCUyMEhlYWx0aCUyMEluaXRpYXRpdmV8ZW58MHx8fHwxNzU1NDcxNDE1fDA&ixlib=rb-4.1.0&q=80&w=1080',
     hint: 'medical professionals',
     title: 'Rural Health Initiative',
     description: 'Deploying mobile health clinics to remote areas, bringing essential services and our technology to those who need it most.',
