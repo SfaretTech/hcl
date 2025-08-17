@@ -180,12 +180,6 @@ export default function Home() {
             </Accordion>
           </div>
         </section>
-        
-        <section id="assistant" className="bg-white">
-          <div className="container">
-            <AIAssistant />
-          </div>
-        </section>
 
         <section id="outreach" className="bg-background">
           <div className="container">
@@ -261,6 +255,7 @@ export default function Home() {
         </section>
       </main>
       <Footer />
+      <AIAssistant />
     </div>
   );
 }

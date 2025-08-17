@@ -2,15 +2,16 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { handleQuestion } from '@/actions/ai-assistant-actions';
-import { Bot, Loader2, Send, User, Sparkles } from 'lucide-react';
+import { Bot, Loader2, Send, User, Sparkles, X, MessageSquare } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter, SheetClose } from '@/components/ui/sheet';
 
-export function AIAssistant() {
+function ChatContent() {
     const [question, setQuestion] = useState('');
     const [loading, setLoading] = useState(false);
     const [conversation, setConversation] = useState<{type: 'user' | 'bot', text: string}[]>([]);
@@ -41,78 +42,94 @@ export function AIAssistant() {
     };
 
     return (
-        <Card className="w-full max-w-4xl mx-auto shadow-2xl">
-            <CardHeader className="text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 mb-4">
-                  <Bot className="h-8 w-8 text-primary" />
-                </div>
-                <CardTitle className="font-headline text-3xl">Ask HCOM's AI Assistant</CardTitle>
-                <CardDescription>
-                    Have questions about our mission, services, or programs? Our virtual assistant is here to help.
-                </CardDescription>
-            </CardHeader>
-            <CardContent>
-                <div className="flex flex-col h-[450px]">
-                    <ScrollArea className="flex-1 p-4 border rounded-lg bg-background/50" ref={scrollAreaRef}>
-                        <div className="space-y-6">
-                            {conversation.length === 0 && (
-                              <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
-                                <Sparkles className="h-12 w-12 mb-4" />
-                                <p className="text-lg">Ask me anything!</p>
-                                <p className="text-sm">e.g., "What is the RAFFIM program?"</p>
-                              </div>
+        <div className="flex flex-col h-full">
+            <ScrollArea className="flex-1 p-4 border rounded-lg bg-background/50" ref={scrollAreaRef}>
+                <div className="space-y-6">
+                    {conversation.length === 0 && (
+                      <div className="flex flex-col items-center justify-center h-full text-center text-muted-foreground">
+                        <Sparkles className="h-12 w-12 mb-4" />
+                        <p className="text-lg">Ask me anything!</p>
+                        <p className="text-sm">e.g., "What is the RAFFIM program?"</p>
+                      </div>
+                    )}
+                    {conversation.map((entry, index) => (
+                        <div key={index} className={cn("flex items-start gap-3", entry.type === 'user' ? 'justify-end' : 'justify-start')}>
+                            {entry.type === 'bot' && (
+                                <Avatar className="w-8 h-8 border-2 border-primary">
+                                    <AvatarFallback className="bg-primary text-primary-foreground"><Bot className="w-5 h-5"/></AvatarFallback>
+                                </Avatar>
                             )}
-                            {conversation.map((entry, index) => (
-                                <div key={index} className={cn("flex items-start gap-3", entry.type === 'user' ? 'justify-end' : 'justify-start')}>
-                                    {entry.type === 'bot' && (
-                                        <Avatar className="w-8 h-8 border-2 border-primary">
-                                            <AvatarFallback className="bg-primary text-primary-foreground"><Bot className="w-5 h-5"/></AvatarFallback>
-                                        </Avatar>
-                                    )}
-                                    <div className={cn("max-w-[75%] rounded-2xl p-3 text-sm", entry.type === 'user' ? 'bg-primary text-primary-foreground rounded-br-none' : 'bg-white rounded-bl-none border')}>
-                                        <p>{entry.text}</p>
-                                    </div>
-                                     {entry.type === 'user' && (
-                                        <Avatar className="w-8 h-8">
-                                            <AvatarFallback><User className="w-5 h-5"/></AvatarFallback>
-                                        </Avatar>
-                                    )}
-                                </div>
-                            ))}
-                            {loading && (
-                                <div className="flex items-start gap-3 justify-start">
-                                    <Avatar className="w-8 h-8 border-2 border-primary">
-                                       <AvatarFallback className="bg-primary text-primary-foreground"><Bot className="w-5 h-5"/></AvatarFallback>
-                                    </Avatar>
-                                    <div className="max-w-[75%] rounded-2xl p-3 text-sm bg-white rounded-bl-none border flex items-center">
-                                       <Loader2 className="h-5 w-5 animate-spin text-primary" />
-                                    </div>
-                                </div>
+                            <div className={cn("max-w-[75%] rounded-2xl p-3 text-sm", entry.type === 'user' ? 'bg-primary text-primary-foreground rounded-br-none' : 'bg-white rounded-bl-none border')}>
+                                <p>{entry.text}</p>
+                            </div>
+                             {entry.type === 'user' && (
+                                <Avatar className="w-8 h-8">
+                                    <AvatarFallback><User className="w-5 h-5"/></AvatarFallback>
+                                </Avatar>
                             )}
                         </div>
-                    </ScrollArea>
-                    <form onSubmit={handleSubmit} className="mt-4 flex items-center gap-2">
-                        <Textarea
-                            value={question}
-                            onChange={(e) => setQuestion(e.target.value)}
-                            placeholder="Type your question here..."
-                            className="flex-1 resize-none"
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter' && !e.shiftKey) {
-                                e.preventDefault();
-                                handleSubmit(e);
-                              }
-                            }}
-                            rows={1}
-                            disabled={loading}
-                        />
-                        <Button type="submit" size="icon" disabled={loading || !question.trim()}>
-                            <Send className="h-5 w-5" />
-                            <span className="sr-only">Send</span>
-                        </Button>
-                    </form>
+                    ))}
+                    {loading && (
+                        <div className="flex items-start gap-3 justify-start">
+                            <Avatar className="w-8 h-8 border-2 border-primary">
+                               <AvatarFallback className="bg-primary text-primary-foreground"><Bot className="w-5 h-5"/></AvatarFallback>
+                            </Avatar>
+                            <div className="max-w-[75%] rounded-2xl p-3 text-sm bg-white rounded-bl-none border flex items-center">
+                               <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                            </div>
+                        </div>
+                    )}
                 </div>
-            </CardContent>
-        </Card>
+            </ScrollArea>
+            <form onSubmit={handleSubmit} className="mt-4 flex items-center gap-2">
+                <Textarea
+                    value={question}
+                    onChange={(e) => setQuestion(e.target.value)}
+                    placeholder="Type your question here..."
+                    className="flex-1 resize-none"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        handleSubmit(e);
+                      }
+                    }}
+                    rows={1}
+                    disabled={loading}
+                />
+                <Button type="submit" size="icon" disabled={loading || !question.trim()}>
+                    <Send className="h-5 w-5" />
+                    <span className="sr-only">Send</span>
+                </Button>
+            </form>
+        </div>
+    );
+}
+
+
+export function AIAssistant() {
+    const [open, setOpen] = useState(false);
+    return (
+        <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger asChild>
+                <Button size="icon" className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-2xl">
+                    <MessageSquare className="h-7 w-7" />
+                    <span className="sr-only">Open AI Assistant</span>
+                </Button>
+            </SheetTrigger>
+            <SheetContent className="w-full max-w-lg flex flex-col p-0">
+                <SheetHeader className="p-6 pb-4">
+                    <SheetTitle className="font-headline flex items-center gap-2 text-2xl">
+                        <Bot className="h-6 w-6 text-primary" />
+                        Ask HCOM's AI Assistant
+                    </SheetTitle>
+                    <CardDescription>
+                        Have questions about our mission, services, or programs? Our virtual assistant is here to help.
+                    </CardDescription>
+                </SheetHeader>
+                <div className="flex-1 p-6 pt-0 min-h-0">
+                    <ChatContent />
+                </div>
+            </SheetContent>
+        </Sheet>
     );
 }
