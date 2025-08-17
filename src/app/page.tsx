@@ -190,7 +190,7 @@ export default function Home() {
           <div className="container">
              <div className="grid items-center gap-12 lg:grid-cols-2">
                <div className="flex justify-center">
-                 <Image src="https://placehold.co/500x500.png" width={500} height={500} alt="RAFFIM program chart" data-ai-hint="investment chart" className="rounded-2xl shadow-2xl" />
+                 <Image src="https://images.unsplash.com/photo-1690787229559-5ca66ec89826?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxN3x8aGVhbHRoJTIwSW52ZXN0bWVudCUyMFByb2dyYW18ZW58MHx8fHwxNzU1NDY5NDY5fDA&ixlib=rb-4.1.0&q=80&w=1080" width={500} height={500} alt="RAFFIM program chart" data-ai-hint="investment chart" className="rounded-2xl shadow-2xl" />
               </div>
               <div>
                 <Badge variant="secondary" className="mb-4">Invest in Health</Badge>
