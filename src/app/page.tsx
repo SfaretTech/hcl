@@ -64,7 +64,7 @@ export default function Home() {
             <Image
               src="/hero-background.png"
               alt="Healthcare Technology background"
-              layout="fill"
+              fill
               objectFit="cover"
               className="opacity-20 blur-sm"
               data-ai-hint="healthcare technology abstract"
@@ -239,5 +239,7 @@ export default function Home() {
     </div>
   );
 }
+
+    
 
     
