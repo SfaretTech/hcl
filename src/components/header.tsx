@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { Button } from './ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from './ui/sheet';
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -17,6 +19,7 @@ const navLinks = [
 
 export function Header() {
   const [isSheetOpen, setSheetOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -31,7 +34,10 @@ export function Header() {
              <Link
               key={link.href}
               href={link.href}
-              className="text-muted-foreground transition-colors hover:text-primary"
+              className={cn(
+                "transition-colors hover:text-primary",
+                pathname === link.href ? "text-primary font-semibold" : "text-muted-foreground"
+              )}
             >
               {link.label}
             </Link>
@@ -65,7 +71,10 @@ export function Header() {
                     <SheetClose asChild key={link.href}>
                       <Link
                         href={link.href}
-                        className="text-lg font-medium text-foreground transition-colors hover:text-primary"
+                        className={cn(
+                            "font-medium transition-colors hover:text-primary text-lg",
+                            pathname === link.href ? "text-primary" : "text-foreground"
+                        )}
                       >
                         {link.label}
                       </Link>
