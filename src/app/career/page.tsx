@@ -125,6 +125,8 @@ export default function CareerPage() {
 
   const handleApplicationSuccess = (title: string) => {
     handleDialogOpen(title, false);
+    // Also close the details dialog if it's open
+    handleDialogOpen(`${title}-details`, false);
   };
   
   return (
@@ -236,7 +238,7 @@ export default function CareerPage() {
                                         Fill out the form below to submit your application. We look forward to hearing from you!
                                       </DialogDescription>
                                     </DialogHeader>
-                                     <ApplicationForm jobTitle={`${job.title}-details`} onSuccess={handleApplicationSuccess} />
+                                     <ApplicationForm jobTitle={job.title} onSuccess={handleApplicationSuccess} />
                                   </DialogContent>
                                 </Dialog>
                             </DialogContent>
