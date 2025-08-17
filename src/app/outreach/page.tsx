@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
+import { generateArticles } from '@/ai/flows/generate-articles';
 
 const outreachHighlights = [
   {
@@ -37,32 +38,9 @@ const outreachHighlights = [
   },
 ];
 
-const latestArticles = [
-    {
-        image: 'https://placehold.co/800x450.png',
-        hint: 'health worker community',
-        category: 'Community Health',
-        date: 'October 26, 2023',
-        title: 'Bridging the Gap: How HCOM is Bringing Healthcare to Rural Nigeria',
-        excerpt: 'Our recent initiative in the Niger Delta has already impacted over 5,000 lives, providing critical access to telemedicine and on-ground medical support. Read more about the challenges, successes, and stories from the field.',
-        likes: 125,
-        dislikes: 3,
-        comments: 18,
-    },
-    {
-        image: 'https://placehold.co/800x450.png',
-        hint: 'ai health technology',
-        category: 'Technology',
-        date: 'September 15, 2023',
-        title: 'The Role of AI in Personalized Health: A Look at the PAHC System',
-        excerpt: 'The Personalized AI-Driven Health Companion (PAHC) is more than just an app; it\'s a revolutionary step towards predictive and preventative healthcare. Discover how our technology is changing lives.',
-        likes: 240,
-        dislikes: 8,
-        comments: 42,
-    },
-];
+export default async function OutreachPage() {
+  const { articles: latestArticles } = await generateArticles();
 
-export default function OutreachPage() {
   return (
     <div className="flex flex-col min-h-dvh bg-background text-foreground">
       <Header />
