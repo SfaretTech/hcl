@@ -4,27 +4,27 @@ import Link from 'next/link';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
 import { Logo } from './logo';
+import { Separator } from './ui/separator';
 
 export function Footer() {
   const year = new Date().getFullYear();
   return (
     <footer className="bg-white border-t text-foreground">
-      <div className="container py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="container pt-16 pb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 mb-12">
           {/* About HCOM */}
-          <div className="space-y-4">
+          <div className="space-y-4 lg:col-span-2 md:col-span-3">
              <Link href="/" className="flex items-center gap-2">
               <Logo className="h-7 w-7 text-primary" />
               <span className="font-bold text-xl font-headline">HCOM</span>
             </Link>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground max-w-sm">
               Transforming access to quality healthcare in Nigeria through innovation, inclusivity, and digital connectivity.
             </p>
-            <div className="flex space-x-4">
-              <a href="#" className="text-muted-foreground hover:text-primary"><Facebook className="h-5 w-5" /></a>
-              <a href="#" className="text-muted-foreground hover:text-primary"><Twitter className="h-5 w-5" /></a>
-              <a href="#" className="text-muted-foreground hover:text-primary"><Linkedin className="h-5 w-5" /></a>
-            </div>
+             <form className="flex gap-2 max-w-sm">
+              <Input type="email" placeholder="Enter your email" className="flex-1" />
+              <Button type="submit">Subscribe</Button>
+            </form>
           </div>
 
           {/* Quick Links */}
@@ -33,22 +33,27 @@ export function Footer() {
             <ul className="space-y-2">
               <li><Link href="/about" className="text-sm text-muted-foreground hover:text-primary transition-colors">About</Link></li>
               <li><Link href="/services" className="text-sm text-muted-foreground hover:text-primary transition-colors">Services</Link></li>
-              <li><Link href="/product" className="text-sm text-muted-foreground hover:text-primary transition-colors">Product</Link></li>
-               <li><Link href="/outreach" className="text-sm text-muted-foreground hover:text-primary transition-colors">Outreach</Link></li>
+              <li><Link href="/outreach" className="text-sm text-muted-foreground hover:text-primary transition-colors">Outreach</Link></li>
                <li><Link href="/career" className="text-sm text-muted-foreground hover:text-primary transition-colors">Career</Link></li>
-              <li><Link href="/contact" className="text-sm text-muted-foreground hover:text-primary transition-colors">Contact</Link></li>
             </ul>
           </div>
+          
+           {/* Legal */}
+          <div className="space-y-4">
+            <h3 className="font-headline font-semibold text-lg">Legal</h3>
+            <ul className="space-y-2">
+              <li><Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Terms & Conditions</Link></li>
+              <li><Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">Privacy Policy</Link></li>
+              <li><Link href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors">FAQ</Link></li>
+            </ul>
+          </div>
+
 
           {/* Contact Info */}
           <div className="space-y-4">
             <h3 className="font-headline font-semibold text-lg">Contact Us</h3>
             <ul className="space-y-3 text-sm text-muted-foreground">
-              <li className="flex items-start gap-3">
-                <MapPin className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                <span>Our Office 23 Rumomoi, Port Harcourt, Nigeria</span>
-              </li>
-              <li className="flex items-start gap-3">
+               <li className="flex items-start gap-3">
                 <Phone className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                 <span>+234-9134311576</span>
               </li>
@@ -59,18 +64,15 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Newsletter */}
-          <div className="space-y-4">
-            <h3 className="font-headline font-semibold text-lg">Newsletter</h3>
-            <p className="text-sm text-muted-foreground">Be the First to get our update.</p>
-            <form className="flex gap-2">
-              <Input type="email" placeholder="Enter your email" className="flex-1" />
-              <Button type="submit">Subscribe</Button>
-            </form>
-          </div>
         </div>
-        <div className="mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
-          <p>&copy; {year} HCOM. All rights reserved.</p>
+        <Separator />
+        <div className="mt-8 flex flex-col sm:flex-row justify-between items-center text-sm text-muted-foreground">
+           <p>&copy; {year} HCOM. All rights reserved.</p>
+           <div className="flex space-x-4 mt-4 sm:mt-0">
+              <a href="#" className="text-muted-foreground hover:text-primary"><Facebook className="h-5 w-5" /></a>
+              <a href="#" className="text-muted-foreground hover:text-primary"><Twitter className="h-5 w-5" /></a>
+              <a href="#" className="text-muted-foreground hover:text-primary"><Linkedin className="h-5 w-5" /></a>
+            </div>
         </div>
       </div>
     </footer>
