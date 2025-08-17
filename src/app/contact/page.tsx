@@ -1,11 +1,9 @@
-
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { AIAssistant } from '@/components/ai-assistant';
 import { ContactForm } from '@/components/contact-form';
 import { Badge } from '@/components/ui/badge';
 import { Mail, MapPin, Phone } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const contactDetails = [
     {
@@ -49,17 +47,17 @@ export default function ContactPage() {
 
         <section id="contact-form-section" className="pb-16 sm:pb-24">
             <div className="container">
-                <div className="grid lg:grid-cols-2 gap-16 items-start">
-                    <div>
+                <div className="grid lg:grid-cols-5 gap-16 items-start">
+                    <div className="lg:col-span-3">
                          <h2 className="font-headline text-3xl font-bold mb-6">Send us a Message</h2>
                         <ContactForm />
                     </div>
-                     <div>
+                     <div className="lg:col-span-2">
                         <h2 className="font-headline text-3xl font-bold mb-6">Contact Information</h2>
                         <div className="space-y-6">
                             {contactDetails.map(detail => (
                                  <a key={detail.title} href={detail.href} className="flex items-start gap-4 group">
-                                     <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                                     <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white transition-colors">
                                         <detail.icon className="h-6 w-6" />
                                      </div>
                                      <div>
