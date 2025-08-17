@@ -7,8 +7,8 @@ import { Sheet, SheetContent, SheetTrigger, SheetClose } from './ui/sheet';
 import { useState } from 'react';
 
 const navLinks = [
-  { href: '#home', label: 'Home' },
-  { href: '#mission', label: 'About' },
+  { href: '/', label: 'Home' },
+  { href: '/about', label: 'About' },
   { href: '#platform', label: 'Platform' },
   { href: '#departments', label: 'Services' },
   { href: '#outreach', label: 'Outreach' },

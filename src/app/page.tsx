@@ -7,26 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import { Rocket, Eye, Gem, HeartHandshake, Microscope, Target, TrendingUp, Download, Bot, DollarSign } from 'lucide-react';
+import { HeartHandshake, Microscope, Target, TrendingUp, Download, Bot, DollarSign } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-
-const missionData = {
-  mission: {
-    icon: Rocket,
-    title: 'Our Mission',
-    description: 'To ensure that everyone has access to the care they need, regardless of geographical barriers through Tele Medical and Holistic Delivery.',
-  },
-  vision: {
-    icon: Eye,
-    title: 'Our Vision',
-    description: 'To create a future where healthcare is truly accessible to all individuals, irrespective of their location or socio-economic status through Holistic care and Technology.',
-  },
-  values: {
-    icon: Gem,
-    title: 'Core Values',
-    description: 'Accessibility, Innovation, Compassion, and Integrity. These values guide every decision we make and every interaction we have.',
-  },
-};
 
 const departments = [
   {
@@ -97,26 +79,6 @@ export default function Home() {
               <Button size="lg" variant="ghost" asChild className="font-bold group">
                 <a href="#contact">Get In Touch <span className="ml-2 transition-transform group-hover:translate-x-1" aria-hidden="true">&rarr;</span></a>
               </Button>
-            </div>
-          </div>
-        </section>
-
-        <section id="mission" className="bg-background">
-          <div className="container">
-            <div className="grid gap-8 md:grid-cols-3">
-              {Object.values(missionData).map((item) => (
-                <Card key={item.title} className="text-center transition-transform transform hover:-translate-y-2 hover:shadow-xl">
-                  <CardHeader>
-                    <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
-                      <item.icon className="h-8 w-8" />
-                    </div>
-                    <CardTitle className="font-headline mt-4">{item.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground">{item.description}</p>
-                  </CardContent>
-                </Card>
-              ))}
             </div>
           </div>
         </section>
