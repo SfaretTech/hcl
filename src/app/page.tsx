@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
@@ -60,12 +61,12 @@ export default function Home() {
         <section id="home" className="relative pt-24 pb-16 sm:pt-32 sm:pb-24 overflow-hidden">
            <div className="absolute inset-0">
             <Image
-              src="https://images.unsplash.com/photo-1579684385127-6abfec45c28b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxtZWRpY2FsJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NTU1NjQzOTV8MA&ixlib=rb-4.1.0&q=80&w=1920"
-              alt="Medical background"
+              src="https://images.unsplash.com/photo-1576091160550-2173dba9996a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxoZWFsdGhjYXJlJTIwdGVjaG5vbG9neXxlbnwwfHx8fDE3NTU1NjQzOTV8MA&ixlib=rb-4.1.0&q=80&w=1920"
+              alt="Healthcare Technology background"
               layout="fill"
               objectFit="cover"
               className="opacity-10"
-              data-ai-hint="medical background"
+              data-ai-hint="healthcare technology"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-white/50"></div>
           </div>
@@ -237,3 +238,5 @@ export default function Home() {
     </div>
   );
 }
+
+    
