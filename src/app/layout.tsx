@@ -3,7 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'HCOM Connect',
+  title: 'HCOM',
   description: 'Transforming access to quality healthcare in Nigeria through innovation, inclusivity, and digital connectivity.',
 };
 
