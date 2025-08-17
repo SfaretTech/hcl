@@ -185,12 +185,12 @@ export default function CareerPage() {
                             <DialogContent className="sm:max-w-2xl max-h-[90vh] flex flex-col">
                                 <DialogHeader>
                                     <DialogTitle className="font-headline text-2xl">{job.title}</DialogTitle>
-                                    <DialogDescription className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm pt-2">
+                                    <div className="text-sm text-muted-foreground flex flex-wrap items-center gap-x-4 gap-y-2 pt-2">
                                         <div className="flex items-center gap-1.5"><Building className="h-4 w-4" /><span>{job.department}</span></div>
                                         <div className="flex items-center gap-1.5"><MapPin className="h-4 w-4" /><span>{job.location}</span></div>
                                         <div className="flex items-center gap-1.5"><Briefcase className="h-4 w-4" /><span>{job.type}</span></div>
                                         <div className="flex items-center gap-1.5"><Calendar className="h-4 w-4" /><span>Apply by {job.deadline}</span></div>
-                                    </DialogDescription>
+                                    </div>
                                 </DialogHeader>
                                 <div className="flex-grow overflow-y-auto pr-4 -mr-4">
                                   <div className="space-y-6 mt-4">
