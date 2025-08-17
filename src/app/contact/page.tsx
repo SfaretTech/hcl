@@ -47,27 +47,9 @@ export default function ContactPage() {
 
         <section id="contact-form-section" className="pb-16 sm:pb-24">
             <div className="container">
-                <div className="grid lg:grid-cols-5 gap-16 items-start">
-                    <div className="lg:col-span-3">
-                         <h2 className="font-headline text-3xl font-bold mb-6">Send us a Message</h2>
-                        <ContactForm />
-                    </div>
-                     <div className="lg:col-span-2">
-                        <h2 className="font-headline text-3xl font-bold mb-6">Contact Information</h2>
-                        <div className="space-y-6">
-                            {contactDetails.map(detail => (
-                                 <a key={detail.title} href={detail.href} className="flex items-start gap-4 group">
-                                     <div className="flex-shrink-0 w-12 h-12 flex items-center justify-center rounded-lg bg-primary/10 text-primary group-hover:bg-primary group-hover:text-white transition-colors">
-                                        <detail.icon className="h-6 w-6" />
-                                     </div>
-                                     <div>
-                                        <h3 className="font-headline text-lg font-semibold">{detail.title}</h3>
-                                        <p className="text-muted-foreground group-hover:text-primary transition-colors">{detail.value}</p>
-                                     </div>
-                                 </a>
-                            ))}
-                        </div>
-                    </div>
+                <div className="max-w-3xl mx-auto">
+                     <h2 className="font-headline text-3xl font-bold mb-6 text-center">Send us a Message</h2>
+                    <ContactForm />
                 </div>
             </div>
         </section>
