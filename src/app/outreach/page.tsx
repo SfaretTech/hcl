@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
 
 const outreachHighlights = [
   {
@@ -106,7 +107,7 @@ export default function OutreachPage() {
             <div className="space-y-16">
                 {latestArticles.map((article, index) => (
                     <Card key={index} className="overflow-hidden shadow-lg border-none grid grid-cols-1 md:grid-cols-2 gap-0 items-center">
-                         <div className={cn(index % 2 === 1 ? "md:order-first" : "md:order-last")}>
+                         <div className={cn(index % 2 === 1 ? "md:order-last" : "md:order-first")}>
                            <Image src={article.image} width={800} height={450} alt={article.title} data-ai-hint={article.hint} className="w-full h-full object-cover"/>
                         </div>
                         <div className="p-8">
