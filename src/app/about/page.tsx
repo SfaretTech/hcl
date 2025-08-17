@@ -6,6 +6,7 @@ import { AIAssistant } from '@/components/ai-assistant';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 
 const missionData = {
   mission: {
@@ -76,6 +77,16 @@ const teamMembers = [
       twitter: '#',
     },
   },
+    {
+    name: 'John Doe',
+    role: 'Project Manager',
+    image: 'https://placehold.co/200x200.png',
+    hint: 'professional smiling',
+    socials: {
+      linkedin: '#',
+      twitter: '#',
+    },
+  },
 ];
 
 
@@ -123,28 +134,38 @@ export default function AboutPage() {
               <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">Meet Our Team</h2>
               <p className="mt-4 text-lg text-muted-foreground">The passionate minds driving the HCOM mission forward.</p>
             </div>
-            <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 justify-center">
-              {teamMembers.map((member) => (
-                <div key={member.name} className="text-center">
-                  <Image src={member.image} data-ai-hint={member.hint} alt={`Photo of ${member.name}`} width={200} height={200} className="rounded-full mx-auto w-40 h-40 object-cover shadow-lg border-4 border-white" />
-                  <h3 className="font-headline mt-4 text-xl font-semibold">{member.name}</h3>
-                  <p className="text-primary">{member.role}</p>
-                  <div className="mt-2 flex justify-center gap-4">
-                    <Link href={member.socials.linkedin}>
-                      <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-primary">
-                        <Linkedin className="h-5 w-5" />
-                        <span className="sr-only">LinkedIn</span>
-                      </Button>
-                    </Link>
-                    <Link href={member.socials.twitter}>
-                       <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-primary">
-                        <Twitter className="h-5 w-5" />
-                        <span className="sr-only">Twitter</span>
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              ))}
+            <div className="mt-12">
+               <Carousel className="w-full" opts={{ loop: true, align: 'start' }}>
+                <CarouselContent>
+                  {teamMembers.map((member, index) => (
+                    <CarouselItem key={index} className="sm:basis-1/2 md:basis-1/3 lg:basis-1/5">
+                      <div className="p-4">
+                        <div className="text-center">
+                          <Image src={member.image} data-ai-hint={member.hint} alt={`Photo of ${member.name}`} width={200} height={200} className="rounded-full mx-auto w-40 h-40 object-cover shadow-lg border-4 border-white" />
+                          <h3 className="font-headline mt-4 text-xl font-semibold">{member.name}</h3>
+                          <p className="text-primary">{member.role}</p>
+                          <div className="mt-2 flex justify-center gap-4">
+                            <Link href={member.socials.linkedin}>
+                              <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-primary">
+                                <Linkedin className="h-5 w-5" />
+                                <span className="sr-only">LinkedIn</span>
+                              </Button>
+                            </Link>
+                            <Link href={member.socials.twitter}>
+                               <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-primary">
+                                <Twitter className="h-5 w-5" />
+                                <span className="sr-only">Twitter</span>
+                              </Button>
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="-left-4 sm:-left-6 md:-left-8"/>
+                <CarouselNext className="-right-4 sm:-right-6 md:-right-8"/>
+              </Carousel>
             </div>
           </div>
         </section>
