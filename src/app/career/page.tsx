@@ -2,7 +2,7 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { AIAssistant } from '@/components/ai-assistant';
 import { Button } from '@/components/ui/button';
-import { Briefcase, Building, MapPin } from 'lucide-react';
+import { Briefcase, Building, MapPin, Calendar } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
@@ -15,28 +15,82 @@ const jobOpenings = [
     location: 'Port Harcourt, Nigeria',
     type: 'Full-time',
     department: 'Technology',
-    description: 'We are looking for an experienced Frontend Developer to build and maintain our cutting-edge HealthTech applications. You will work with React, Next.js, and TypeScript to create beautiful and performant user interfaces.'
+    deadline: 'August 31, 2024',
+    description: 'We are looking for an experienced Frontend Developer to build and maintain our cutting-edge HealthTech applications. You will work with React, Next.js, and TypeScript to create beautiful and performant user interfaces.',
+    responsibilities: [
+      'Develop and maintain user-facing features using React.js and Next.js.',
+      'Build reusable components and front-end libraries for future use.',
+      'Translate designs and wireframes into high-quality code.',
+      'Optimize components for maximum performance across a vast array of web-capable devices and browsers.',
+    ],
+    qualifications: [
+      'Strong proficiency in JavaScript, including DOM manipulation and the JavaScript object model.',
+      'Thorough understanding of React.js and its core principles.',
+      'Experience with popular React.js workflows (such as Flux or Redux).',
+      'Familiarity with newer specifications of EcmaScript.',
+      'Experience with data structure libraries (e.g., Immutable.js).',
+      'Knowledge of modern authorization mechanisms, such as JSON Web Token.',
+    ]
   },
   {
     title: 'Community Health Officer',
     location: 'Remote, Nigeria',
     type: 'Contract',
     department: 'Outreach',
-    description: 'Join our outreach team to lead health seminars, conduct diagnostic screenings, and bring vital health services to underserved communities across Nigeria.'
+    deadline: 'September 15, 2024',
+    description: 'Join our outreach team to lead health seminars, conduct diagnostic screenings, and bring vital health services to underserved communities across Nigeria.',
+    responsibilities: [
+        'Organize and conduct health education and awareness campaigns in designated communities.',
+        'Perform basic health screenings and refer cases to appropriate healthcare facilities.',
+        'Collect and manage data on community health needs and services provided.',
+        'Liaise with community leaders and stakeholders to promote HCOM\'s initiatives.',
+    ],
+    qualifications: [
+        'Certificate or Diploma in Community Health or a related field.',
+        'Proven experience in community mobilization and health education.',
+        'Excellent communication and interpersonal skills.',
+        'Ability to work independently and travel to remote areas.',
+    ]
   },
   {
     title: 'AI/ML Engineer',
     location: 'Port Harcourt, Nigeria',
     type: 'Full-time',
     department: 'Technology',
-    description: 'Develop and deploy machine learning models for our Personalized AI-Driven Health Companion (PAHC). Experience with NLP and predictive modeling is a plus.'
+    deadline: 'September 5, 2024',
+    description: 'Develop and deploy machine learning models for our Personalized AI-Driven Health Companion (PAHC). Experience with NLP and predictive modeling is a plus.',
+     responsibilities: [
+      'Design, build, and maintain scalable machine learning systems.',
+      'Research and implement appropriate ML algorithms and tools.',
+      'Develop machine learning applications according to requirements.',
+      'Perform statistical analysis and fine-tuning using test results.',
+    ],
+    qualifications: [
+      'Proven experience as an AI/ML Engineer or similar role.',
+      'Deep knowledge of math, probability, statistics, and algorithms.',
+      'Expertise in Python, Java, and R.',
+      'Familiarity with machine learning frameworks (like Keras or PyTorch) and libraries (like scikit-learn).',
+    ]
   },
   {
     title: 'Digital Marketing Specialist',
     location: 'Port Harcourt, Nigeria',
     type: 'Full-time',
     department: 'Marketing',
-    description: 'Drive the growth of HCOM by developing and executing digital marketing campaigns across various channels. You will be responsible for SEO, SEM, and social media marketing.'
+    deadline: 'August 25, 2024',
+    description: 'Drive the growth of HCOM by developing and executing digital marketing campaigns across various channels. You will be responsible for SEO, SEM, and social media marketing.',
+     responsibilities: [
+      'Plan and execute all digital marketing, including SEO/SEM, marketing database, email, social media, and display advertising campaigns.',
+      'Design, build, and maintain our social media presence.',
+      'Measure and report performance of all digital marketing campaigns and assess against goals (ROI and KPIs).',
+      'Identify trends and insights, and optimize spend and performance based on the insights.',
+    ],
+    qualifications: [
+      'Proven working experience in digital marketing.',
+      'Demonstrable experience leading and managing SEO/SEM, marketing database, email, social media and/or display advertising campaigns.',
+      'Highly creative with experience in identifying target audiences and devising digital campaigns that engage, inform, and motivate.',
+      'Solid knowledge of website analytics tools (e.g., Google Analytics, NetInsight, WebTrends).',
+    ]
   }
 ]
 
@@ -66,7 +120,7 @@ export default function CareerPage() {
             </h2>
             <div className="grid gap-8 lg:grid-cols-2">
               {jobOpenings.map((job, index) => (
-                <Card key={index} className="transition-shadow hover:shadow-xl bg-white">
+                <Card key={index} className="transition-shadow hover:shadow-xl bg-white flex flex-col">
                   <CardHeader>
                     <CardTitle className="font-headline text-2xl">{job.title}</CardTitle>
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground pt-2">
@@ -82,24 +136,80 @@ export default function CareerPage() {
                         <Briefcase className="h-4 w-4" />
                         <span>{job.type}</span>
                       </div>
+                       <div className="flex items-center gap-1.5">
+                        <Calendar className="h-4 w-4" />
+                        <span>Apply by {job.deadline}</span>
+                      </div>
                     </div>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="flex-grow">
                     <p className="text-muted-foreground mb-6">{job.description}</p>
-                     <Dialog>
-                      <DialogTrigger asChild>
-                        <Button>Apply Now</Button>
-                      </DialogTrigger>
-                      <DialogContent className="sm:max-w-[425px]">
-                        <DialogHeader>
-                          <DialogTitle>Apply for {job.title}</DialogTitle>
-                          <DialogDescription>
-                            Fill out the form below to submit your application. We look forward to hearing from you!
-                          </DialogDescription>
-                        </DialogHeader>
-                        <ApplicationForm />
-                      </DialogContent>
-                    </Dialog>
+                     <div className="flex items-center gap-4">
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button>Apply Now</Button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-[425px]">
+                            <DialogHeader>
+                              <DialogTitle>Apply for {job.title}</DialogTitle>
+                              <DialogDescription>
+                                Fill out the form below to submit your application. We look forward to hearing from you!
+                              </DialogDescription>
+                            </DialogHeader>
+                            <ApplicationForm />
+                          </DialogContent>
+                        </Dialog>
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Button variant="outline">Read More</Button>
+                            </DialogTrigger>
+                            <DialogContent className="sm:max-w-2xl max-h-[90vh] flex flex-col">
+                                <DialogHeader>
+                                    <DialogTitle className="font-headline text-2xl">{job.title}</DialogTitle>
+                                    <DialogDescription className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm pt-2">
+                                        <div className="flex items-center gap-1.5"><Building className="h-4 w-4" /><span>{job.department}</span></div>
+                                        <div className="flex items-center gap-1.5"><MapPin className="h-4 w-4" /><span>{job.location}</span></div>
+                                        <div className="flex items-center gap-1.5"><Briefcase className="h-4 w-4" /><span>{job.type}</span></div>
+                                        <div className="flex items-center gap-1.5"><Calendar className="h-4 w-4" /><span>Apply by {job.deadline}</span></div>
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <div className="flex-grow overflow-y-auto pr-4 -mr-4">
+                                  <div className="space-y-6 mt-4">
+                                      <div>
+                                          <h3 className="font-headline text-lg font-semibold mb-2">Job Description</h3>
+                                          <p className="text-muted-foreground">{job.description}</p>
+                                      </div>
+                                      <div>
+                                          <h3 className="font-headline text-lg font-semibold mb-2">Responsibilities</h3>
+                                          <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                                              {job.responsibilities.map((resp, i) => <li key={i}>{resp}</li>)}
+                                          </ul>
+                                      </div>
+                                      <div>
+                                          <h3 className="font-headline text-lg font-semibold mb-2">Qualifications</h3>
+                                          <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                                              {job.qualifications.map((qual, i) => <li key={i}>{qual}</li>)}
+                                          </ul>
+                                      </div>
+                                  </div>
+                                </div>
+                                <Dialog>
+                                  <DialogTrigger asChild>
+                                      <Button className="mt-6 w-full">Apply Now</Button>
+                                  </DialogTrigger>
+                                  <DialogContent className="sm:max-w-[425px]">
+                                    <DialogHeader>
+                                      <DialogTitle>Apply for {job.title}</DialogTitle>
+                                      <DialogDescription>
+                                        Fill out the form below to submit your application. We look forward to hearing from you!
+                                      </DialogDescription>
+                                    </DialogHeader>
+                                    <ApplicationForm />
+                                  </DialogContent>
+                                </Dialog>
+                            </DialogContent>
+                        </Dialog>
+                     </div>
                   </CardContent>
                 </Card>
               ))}
