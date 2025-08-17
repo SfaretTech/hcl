@@ -137,13 +137,13 @@ export default function Home() {
                   Our ecosystem is built on two core platforms designed to work together, providing a comprehensive and personalized health journey.
                 </p>
                 <div className="mt-8 space-y-6">
-                  <Card className="bg-background/50">
+                  <Card className="bg-background/50 transition-transform transform hover:-translate-y-2 hover:shadow-xl">
                     <CardHeader>
                       <CardTitle className="flex items-center gap-3 font-headline"><Download className="h-6 w-6 text-primary"/> HCOM HealthTech App</CardTitle>
                       <CardDescription>Your central hub for virtual consultations, remote diagnostics, e-prescriptions, and health records. Secure, user-friendly, and powerful.</CardDescription>
                     </CardHeader>
                   </Card>
-                   <Card className="bg-background/50">
+                   <Card className="bg-background/50 transition-transform transform hover:-translate-y-2 hover:shadow-xl">
                     <CardHeader>
                       <CardTitle className="flex items-center gap-3 font-headline"><Bot className="h-6 w-6 text-primary"/> PAHC Health Companion</CardTitle>
                       <CardDescription>Your Personalized AI-Driven Health Companion offers real-time advice, health monitoring, and support based on your unique health profile.</CardDescription>
