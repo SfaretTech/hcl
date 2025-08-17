@@ -72,7 +72,7 @@ export default function Home() {
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Button size="lg" asChild className="font-bold">
-                <a href="#platform">Our Services</a>
+                <Link href="/services">Our Services</Link>
               </Button>
               <Button size="lg" variant="ghost" asChild className="font-bold group">
                 <a href="#contact">Get In Touch <span className="ml-2 transition-transform group-hover:translate-x-1" aria-hidden="true">&rarr;</span></a>
@@ -129,8 +129,8 @@ export default function Home() {
                     </CardHeader>
                   </Card>
                 </div>
-                 <Button size="lg" className="mt-8 font-bold">
-                    Learn More about our App
+                 <Button size="lg" className="mt-8 font-bold" asChild>
+                    <Link href="/product">Learn More about our App</Link>
                   </Button>
               </div>
               <div className="flex justify-center">
