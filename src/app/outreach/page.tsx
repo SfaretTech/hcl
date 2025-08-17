@@ -1,0 +1,151 @@
+import { Header } from '@/components/header';
+import { Footer } from '@/components/footer';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { ThumbsUp, ThumbsDown, MessageSquare } from 'lucide-react';
+import { AIAssistant } from '@/components/ai-assistant';
+import Image from 'next/image';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+
+const outreachHighlights = [
+  {
+    image: 'https://placehold.co/600x400.png',
+    hint: 'community event',
+    title: 'Annual Health Fair 2023',
+    description: 'Our biggest event yet, providing free health screenings and wellness education to over 1,000 community members.',
+  },
+  {
+    image: 'https://placehold.co/600x400.png',
+    hint: 'volunteers smiling',
+    title: 'Digital Literacy for Seniors',
+    description: 'Partnering with local centers to teach seniors how to use the HCOM app, connecting them with their health data like never before.',
+  },
+  {
+    image: 'https://placehold.co/600x400.png',
+    hint: 'medical professionals',
+    title: 'Rural Health Initiative',
+    description: 'Deploying mobile health clinics to remote areas, bringing essential services and our technology to those who need it most.',
+  },
+   {
+    image: 'https://placehold.co/600x400.png',
+    hint: 'children health checkup',
+    title: 'School Health Program',
+    description: 'Conducting health checkups and awareness sessions in local schools to promote early wellness habits.',
+  },
+];
+
+const latestArticles = [
+    {
+        image: 'https://placehold.co/800x450.png',
+        hint: 'health worker community',
+        category: 'Community Health',
+        date: 'October 26, 2023',
+        title: 'Bridging the Gap: How HCOM is Bringing Healthcare to Rural Nigeria',
+        excerpt: 'Our recent initiative in the Niger Delta has already impacted over 5,000 lives, providing critical access to telemedicine and on-ground medical support. Read more about the challenges, successes, and stories from the field.',
+        likes: 125,
+        dislikes: 3,
+        comments: 18,
+    },
+    {
+        image: 'https://placehold.co/800x450.png',
+        hint: 'ai health technology',
+        category: 'Technology',
+        date: 'September 15, 2023',
+        title: 'The Role of AI in Personalized Health: A Look at the PAHC System',
+        excerpt: 'The Personalized AI-Driven Health Companion (PAHC) is more than just an app; it\'s a revolutionary step towards predictive and preventative healthcare. Discover how our technology is changing lives.',
+        likes: 240,
+        dislikes: 8,
+        comments: 42,
+    },
+];
+
+export default function OutreachPage() {
+  return (
+    <div className="flex flex-col min-h-dvh bg-background text-foreground">
+      <Header />
+      <main className="flex-1">
+        <section id="outreach-hero" className="bg-white pt-24 pb-16 sm:pt-32 sm:pb-24">
+          <div className="container">
+            <div className="max-w-4xl mx-auto text-center">
+               <Badge variant="secondary" className="mb-4">Our Mission in Action</Badge>
+              <h1 className="font-headline text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl">
+                Health Community Outreach Movement
+              </h1>
+              <p className="mt-6 text-lg tracking-wide text-muted-foreground">
+                We believe in the power of community. Our outreach programs are designed to educate, empower, and provide access to vital health resources to both rural and urban regions.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section id="outreach-gallery" className="bg-background">
+          <div className="container">
+             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {outreachHighlights.map((highlight, index) => (
+                <Card key={index} className="overflow-hidden h-full flex flex-col transition-transform transform hover:-translate-y-2 hover:shadow-xl bg-white">
+                  <Image src={highlight.image} width={600} height={400} alt={highlight.title} data-ai-hint={highlight.hint} className="w-full h-48 object-cover" />
+                  <CardHeader>
+                    <CardTitle className="font-headline">{highlight.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex-grow">
+                    <p className="text-muted-foreground">{highlight.description}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="latest-news" className="bg-white">
+          <div className="container">
+            <div className="max-w-4xl mx-auto text-center mb-12">
+              <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">Latest News & Articles</h2>
+              <p className="mt-4 text-lg text-muted-foreground">Stay updated on our latest initiatives, stories, and impact.</p>
+            </div>
+            <div className="space-y-16">
+                {latestArticles.map((article, index) => (
+                    <Card key={index} className="overflow-hidden shadow-lg border-none grid grid-cols-1 md:grid-cols-2 gap-0 items-center">
+                         <div className="md:order-last">
+                           <Image src={article.image} width={800} height={450} alt={article.title} data-ai-hint={article.hint} className="w-full h-full object-cover"/>
+                        </div>
+                        <div className="p-8">
+                            <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
+                                <Badge variant="outline">{article.category}</Badge>
+                                <span>{article.date}</span>
+                            </div>
+                            <h3 className="font-headline text-2xl font-bold mb-4 text-foreground">{article.title}</h3>
+                            <p className="text-muted-foreground mb-6">{article.excerpt}</p>
+                            <div className="flex items-center justify-between">
+                                <Button>Read More</Button>
+                                <div className="flex items-center gap-4 text-muted-foreground">
+                                    <div className="flex items-center gap-1.5">
+                                        <Button variant="ghost" size="icon" className="h-8 w-8"><ThumbsUp className="h-4 w-4" /></Button>
+                                        <span className="text-sm font-medium">{article.likes}</span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5">
+                                       <Button variant="ghost" size="icon" className="h-8 w-8"><ThumbsDown className="h-4 w-4" /></Button>
+                                        <span className="text-sm font-medium">{article.dislikes}</span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5">
+                                        <Button variant="ghost" size="icon" className="h-8 w-8"><MessageSquare className="h-4 w-4" /></Button>
+                                        <span className="text-sm font-medium">{article.comments}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </Card>
+                ))}
+            </div>
+             <div className="text-center mt-16">
+                <Button size="lg" variant="outline">Load More Articles</Button>
+            </div>
+          </div>
+        </section>
+
+      </main>
+      <Footer />
+      <AIAssistant />
+    </div>
+  );
+}

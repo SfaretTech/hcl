@@ -6,7 +6,6 @@ import { AIAssistant } from '@/components/ai-assistant';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { HeartHandshake, Microscope, Target, TrendingUp, Download, Bot, DollarSign, Rocket, Eye, Gem } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
@@ -50,27 +49,6 @@ const departments = [
     icon: TrendingUp,
     description: "The RAFFIM department manages our innovative health investment and referral system, enabling individuals to invest in high-demand health products and earn returns, combining social entrepreneurship with health impact."
   }
-];
-
-const outreachHighlights = [
-  {
-    image: 'https://placehold.co/600x400.png',
-    hint: 'community event',
-    title: 'Annual Health Fair 2023',
-    description: 'Our biggest event yet, providing free health screenings and wellness education to over 1,000 community members.',
-  },
-  {
-    image: 'https://placehold.co/600x400.png',
-    hint: 'volunteers smiling',
-    title: 'Digital Literacy for Seniors',
-    description: 'Partnering with local centers to teach seniors how to use the HCOM app, connecting them with their health data like never before.',
-  },
-  {
-    image: 'https://placehold.co/600x400.png',
-    hint: 'medical professionals',
-    title: 'Rural Health Initiative',
-    description: 'Deploying mobile health clinics to remote areas, bringing essential services and our technology to those who need it most.',
-  },
 ];
 
 export default function Home() {
@@ -188,35 +166,21 @@ export default function Home() {
         </section>
 
         <section id="outreach" className="bg-background">
-          <div className="container">
-            <div className="text-center">
-              <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">Health Community Outreach Movement</h2>
-              <p className="mt-4 max-w-3xl mx-auto text-lg text-muted-foreground">
-                We believe in the power of community. Our outreach programs are designed to educate, empower, and provide access to vital health resources to both rural and urban regions.
-              </p>
-            </div>
-            <div className="mt-12">
-              <Carousel className="w-full" opts={{ loop: true }}>
-                <CarouselContent>
-                  {outreachHighlights.map((highlight, index) => (
-                    <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                      <div className="p-1">
-                        <Card className="overflow-hidden h-full flex flex-col">
-                          <Image src={highlight.image} width={600} height={400} alt={highlight.title} data-ai-hint={highlight.hint} className="w-full h-48 object-cover" />
-                          <CardHeader>
-                            <CardTitle className="font-headline">{highlight.title}</CardTitle>
-                          </CardHeader>
-                          <CardContent className="flex-grow">
-                            <p className="text-muted-foreground">{highlight.description}</p>
-                          </CardContent>
-                        </Card>
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious className="ml-14"/>
-                <CarouselNext className="mr-14"/>
-              </Carousel>
+           <div className="container">
+            <div className="grid items-center gap-12 lg:grid-cols-2">
+               <div className="flex justify-center">
+                 <Image src="https://placehold.co/500x500.png" width={500} height={500} alt="Community outreach event" data-ai-hint="community health fair" className="rounded-2xl shadow-2xl" />
+              </div>
+              <div>
+                <Badge variant="secondary" className="mb-4">Making a Difference</Badge>
+                <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">Health Community Outreach</h2>
+                <p className="mt-4 text-lg text-muted-foreground">
+                  Our commitment extends beyond digital platforms. We actively engage with communities to provide on-the-ground support, education, and free health services to those in need.
+                </p>
+                 <Button size="lg" variant="outline" className="mt-8 font-bold" asChild>
+                    <Link href="/outreach">Explore Our Initiatives</Link>
+                  </Button>
+              </div>
             </div>
           </div>
         </section>

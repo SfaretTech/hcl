@@ -11,7 +11,7 @@ const navLinks = [
   { href: '/about', label: 'About' },
   { href: '#platform', label: 'Platform' },
   { href: '/services', label: 'Services' },
-  { href: '#outreach', label: 'Outreach' },
+  { href: '/outreach', label: 'Outreach' },
   { href: '#contact', label: 'Contact' },
 ];
 
