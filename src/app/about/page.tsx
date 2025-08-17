@@ -36,18 +36,15 @@ export default function AboutPage() {
               <p className="mt-8 text-lg text-muted-foreground">
                 HCOM International Limited is a Nigeria-based, technology-driven telemedical and healthcare consultancy Health Startups company dedicated to transforming access to quality healthcare through innovation, inclusivity, and digital connectivity. Positioned at the intersection of healthcare delivery and technological advancement, HCOM offers a comprehensive ecosystem of services designed to meet the evolving needs of individuals, professionals, and healthcare institutions across both rural and urban regions.
               </p>
-              <p className="mt-4 text-lg text-muted-foreground">
-                more coming...
-              </p>
             </div>
           </div>
         </section>
         
-        <section id="mission" className="bg-background">
+        <section id="mission" className="bg-background py-16 sm:py-24">
           <div className="container">
             <div className="grid gap-8 md:grid-cols-3">
               {Object.values(missionData).map((item) => (
-                <Card key={item.title} className="text-center transition-transform transform hover:-translate-y-2 hover:shadow-xl">
+                <Card key={item.title} className="text-center transition-transform transform hover:-translate-y-2 hover:shadow-xl bg-white">
                   <CardHeader>
                     <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary">
                       <item.icon className="h-8 w-8" />
