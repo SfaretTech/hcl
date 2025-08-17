@@ -15,7 +15,7 @@ const navLinks = [
   { href: '/services', label: 'Services' },
   { href: '/product', label: 'Product' },
   { href: '/outreach', label: 'Outreach' },
-  { href: '#contact', label: 'Contact' },
+  { href: '/contact', label: 'Contact' },
 ];
 
 export function Header() {
@@ -88,6 +88,17 @@ export function Header() {
                       </Link>
                     </SheetClose>
                   ))}
+                   <SheetClose asChild>
+                      <Link
+                        href="/career"
+                        className={cn(
+                            "font-medium transition-colors hover:text-primary text-lg",
+                            pathname === "/career" ? "text-primary" : "text-foreground"
+                        )}
+                      >
+                        Career
+                      </Link>
+                    </SheetClose>
                 </nav>
                 <div className="p-4 mt-auto">
                     <SheetClose asChild>

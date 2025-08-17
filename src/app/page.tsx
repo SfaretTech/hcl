@@ -62,7 +62,7 @@ export default function Home() {
         <section id="home" className="relative pt-24 pb-16 sm:pt-32 sm:pb-24 overflow-hidden">
            <div className="absolute inset-0">
             <Image
-              src="/hero-background.png"
+              src="https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxoZWFsdGhjYXJlJTIwdGVjaG5vbG9neSUyMGFic3RyYWN0fGVufDB8fHx8MTc1NTQ3MDI3N3ww&ixlib=rb-4.1.0&q=80&w=1080"
               alt="Healthcare Technology background"
               fill
               objectFit="cover"
@@ -84,7 +84,7 @@ export default function Home() {
                 <Link href="/services">Our Services</Link>
               </Button>
               <Button size="lg" variant="ghost" asChild className="font-bold group">
-                <a href="#contact">Get In Touch <span className="ml-2 transition-transform group-hover:translate-x-1" aria-hidden="true">&rarr;</span></a>
+                <Link href="/contact">Get In Touch <span className="ml-2 transition-transform group-hover:translate-x-1" aria-hidden="true">&rarr;</span></Link>
               </Button>
             </div>
           </div>
@@ -175,7 +175,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="outreach" className="bg-background">
+        <section id="outreach" className="bg-white">
            <div className="container">
             <div className="grid items-center gap-12 lg:grid-cols-2">
                <div className="flex justify-center lg:order-last">
@@ -195,7 +195,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="raffim" className="bg-white">
+        <section id="raffim" className="bg-background">
           <div className="container">
              <div className="grid items-center gap-12 lg:grid-cols-2">
                <div className="flex justify-center">
@@ -220,19 +220,6 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="contact" className="bg-background">
-          <div className="container max-w-4xl mx-auto">
-             <div className="text-center">
-              <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">Connect With Us</h2>
-              <p className="mt-4 text-lg text-muted-foreground">
-                We're always looking for partners, investors, and healthcare professionals to join our mission. Let's build the future of healthcare together.
-              </p>
-            </div>
-            <div className="mt-12">
-              <ContactForm />
-            </div>
-          </div>
-        </section>
       </main>
       <Footer />
       <AIAssistant />
