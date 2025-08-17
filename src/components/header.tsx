@@ -43,6 +43,13 @@ export function Header() {
             </Link>
           ))}
         </nav>
+        
+        <div className="hidden md:flex items-center ml-4">
+            <Button asChild>
+                <Link href="/signup">Register/Signup</Link>
+            </Button>
+        </div>
+
 
         <div className="md:hidden ml-4">
           <Sheet open={isSheetOpen} onOpenChange={setSheetOpen}>
@@ -81,6 +88,13 @@ export function Header() {
                     </SheetClose>
                   ))}
                 </nav>
+                <div className="p-4 mt-auto">
+                    <SheetClose asChild>
+                        <Button asChild className="w-full">
+                            <Link href="/signup">Register/Signup</Link>
+                        </Button>
+                    </SheetClose>
+                </div>
               </div>
             </SheetContent>
           </Sheet>
