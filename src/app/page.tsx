@@ -134,7 +134,7 @@ export default function Home() {
                 <Badge variant="secondary" className="mb-4">Our Technology</Badge>
                 <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">Our Digital Health Ecosystem</h2>
                 <p className="mt-4 text-lg text-muted-foreground">
-                  Our ecosystem is built on two core platforms designed to work together, providing a comprehensive and personalized health journey.
+                  HCOM technology infrastructure is built on a secure, scalable, and cloud-based architecture that integrates AI-powered diagnostics, real-time consultation modules, encrypted communication channels, and automated backend workflows
                 </p>
                 <div className="mt-8 space-y-6">
                   <Card className="bg-background/50 transition-transform transform hover:-translate-y-2 hover:shadow-xl">
