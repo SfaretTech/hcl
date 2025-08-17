@@ -17,7 +17,7 @@ const outreachHighlights = [
     description: 'Our biggest event yet, providing free health screenings and wellness education to over 1,000 community members.',
   },
   {
-    image: 'https://placehold.co/600x400.png',
+    image: 'https://images.unsplash.com/photo-1628673178332-d268f98ef08a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxM3x8RGlnaXRhbCUyMExpdGVyYWN5JTIwZm9yJTIwU2VuaW9yc3xlbnwwfHx8fDE3NTU0NzEzNTZ8MA&ixlib=rb-4.1.0&q=80&w=1080',
     hint: 'volunteers smiling',
     title: 'Digital Literacy for Seniors',
     description: 'Partnering with local centers to teach seniors how to use the HCOM app, connecting them with their health data like never before.',
