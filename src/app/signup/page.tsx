@@ -21,33 +21,84 @@ import { useToast } from '@/hooks/use-toast';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { AIAssistant } from '@/components/ai-assistant';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
-const formSchema = z.object({
+const clientSchema = z.object({
+  accountType: z.literal('client'),
   fullName: z.string().min(2, { message: 'Full name must be at least 2 characters.' }),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
+  dateOfBirth: z.string().min(1, { message: 'Date of birth is required.' }),
+  phoneNumber: z.string().min(10, { message: 'Please enter a valid phone number.' }),
 });
 
-export default function SignupPage() {
-  const { toast } = useToast();
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      fullName: '',
-      email: '',
-      password: '',
-    },
-  });
+const professionalSchema = z.object({
+  accountType: z.literal('professional'),
+  fullName: z.string().min(2, { message: 'Full name must be at least 2 characters.' }),
+  email: z.string().email({ message: 'Please enter a valid email address.' }),
+  password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
+  professionalTitle: z.string().min(2, { message: 'Professional title is required.' }),
+  licenseNumber: z.string().min(1, { message: 'License number is required.' }),
+  specialization: z.string().min(2, { message: 'Specialization is required.' }),
+});
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log('Form submitted:', values);
-    toast({
-      title: "Account Created!",
-      description: "Welcome to HCOM. You have successfully signed up.",
+const investorSchema = z.object({
+    accountType: z.literal('investor'),
+    fullName: z.string().min(2, { message: 'Full name must be at least 2 characters.' }),
+    email: z.string().email({ message: 'Please enter a valid email address.' }),
+    password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
+    idType: z.enum(['nin', 'bvn']),
+    idNumber: z.string().min(10, { message: 'Please enter a valid identification number.' }),
+    phoneNumber: z.string().min(10, { message: 'Please enter a valid phone number.' }),
+});
+
+const formSchema = z.discriminatedUnion("accountType", [clientSchema, professionalSchema, investorSchema]);
+
+type FormSchema = z.infer<typeof formSchema>;
+
+
+const GenericForm = ({ schema, accountType, children, title, description }: { schema: z.ZodObject<any, any>, accountType: "client" | "professional" | "investor", children: React.ReactNode, title: string, description: string }) => {
+    const { toast } = useToast();
+    const form = useForm<z.infer<typeof schema>>({
+        resolver: zodResolver(schema),
+        defaultValues: {
+            accountType,
+            ...Object.keys(schema.shape).reduce((acc, key) => ({ ...acc, [key]: '' }), {}),
+        },
     });
-    form.reset();
-  }
 
+    function onSubmit(values: z.infer<typeof schema>) {
+        console.log(`${title} Account created:`, values);
+        toast({
+        title: "Account Created!",
+        description: `Your ${title.toLowerCase()} account has been successfully created.`,
+        });
+        form.reset();
+    }
+    
+    return (
+        <Card className="border-0 shadow-none">
+            <CardHeader className="text-center px-0">
+                <CardTitle className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">{title}</CardTitle>
+                <CardDescription className="mt-2 text-muted-foreground">{description}</CardDescription>
+            </CardHeader>
+            <CardContent className="px-0">
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                        {children}
+                        <Button type="submit" size="lg" className="w-full font-bold">
+                            Create Account
+                        </Button>
+                    </form>
+                </Form>
+            </CardContent>
+        </Card>
+    );
+};
+
+export default function SignupPage() {
   return (
     <div className="flex flex-col min-h-dvh bg-background text-foreground">
       <Header />
@@ -64,65 +115,167 @@ export default function SignupPage() {
                         className="rounded-2xl shadow-2xl object-cover"
                     />
                 </div>
-                 <div>
-                    <div className="max-w-md mx-auto">
-                        <div className="text-center mb-8">
-                            <h1 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">Create Your Account</h1>
-                            <p className="mt-2 text-muted-foreground">Join HCOM to manage your health journey.</p>
-                        </div>
-                        <Form {...form}>
-                          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                            <FormField
-                              control={form.control}
-                              name="fullName"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Full Name</FormLabel>
-                                  <FormControl>
-                                    <Input placeholder="John Doe" {...field} />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                             <FormField
-                              control={form.control}
-                              name="email"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Email Address</FormLabel>
-                                  <FormControl>
-                                    <Input type="email" placeholder="john.doe@example.com" {...field} />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                             <FormField
-                              control={form.control}
-                              name="password"
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Password</FormLabel>
-                                  <FormControl>
-                                    <Input type="password" placeholder="********" {...field} />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-                            <Button type="submit" size="lg" className="w-full font-bold">
-                              Sign Up
-                            </Button>
-                          </form>
-                        </Form>
-                         <p className="mt-8 text-center text-sm text-muted-foreground">
-                            Already have an account?{' '}
-                            <Link href="/login" className="font-semibold text-primary hover:underline">
-                                Log in
-                            </Link>
-                        </p>
-                    </div>
+                 <div className="max-w-md mx-auto w-full">
+                    <Tabs defaultValue="client" className="w-full">
+                        <TabsList className="grid w-full grid-cols-3">
+                            <TabsTrigger value="client">Client</TabsTrigger>
+                            <TabsTrigger value="professional">Professional</TabsTrigger>
+                            <TabsTrigger value="investor">Investor</TabsTrigger>
+                        </TabsList>
+                        
+                        <TabsContent value="client">
+                            <GenericForm schema={clientSchema} accountType="client" title="Create Client Account" description="Join HCOM to manage your health journey.">
+                                <FormField name="fullName" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Full Name</FormLabel>
+                                        <FormControl><Input placeholder="John Doe" {...field} /></FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                                <FormField name="email" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Email Address</FormLabel>
+                                        <FormControl><Input type="email" placeholder="john.doe@example.com" {...field} /></FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                                <FormField name="password" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Password</FormLabel>
+                                        <FormControl><Input type="password" placeholder="********" {...field} /></FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                                <FormField name="dateOfBirth" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Date of Birth</FormLabel>
+                                        <FormControl><Input type="date" {...field} /></FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                                <FormField name="phoneNumber" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Phone Number</FormLabel>
+                                        <FormControl><Input type="tel" placeholder="+234..." {...field} /></FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                            </GenericForm>
+                        </TabsContent>
+                        
+                        <TabsContent value="professional">
+                            <GenericForm schema={professionalSchema} accountType="professional" title="Professional Registration" description="Join our network of licensed healthcare providers.">
+                                <FormField name="fullName" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Full Name</FormLabel>
+                                        <FormControl><Input placeholder="Dr. Jane Smith" {...field} /></FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                                <FormField name="email" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Email Address</FormLabel>
+                                        <FormControl><Input type="email" placeholder="jane.smith@example.com" {...field} /></FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                                 <FormField name="password" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Password</FormLabel>
+                                        <FormControl><Input type="password" placeholder="********" {...field} /></FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                                 <FormField name="professionalTitle" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Professional Title</FormLabel>
+                                        <FormControl><Input placeholder="e.g., Medical Doctor, Pharmacist" {...field} /></FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                                <FormField name="licenseNumber" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Medical License Number</FormLabel>
+                                        <FormControl><Input placeholder="MDCN/12345" {...field} /></FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                                <FormField name="specialization" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Specialization</FormLabel>
+                                        <FormControl><Input placeholder="e.g., General Practice, Radiology" {...field} /></FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                            </GenericForm>
+                        </TabsContent>
+
+                        <TabsContent value="investor">
+                             <GenericForm schema={investorSchema} accountType="investor" title="Investor Registration" description="Join our RAFFIM program and invest in health.">
+                                <FormField name="fullName" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Full Name</FormLabel>
+                                        <FormControl><Input placeholder="Adaeze Okoro" {...field} /></FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                                <FormField name="email" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Email Address</FormLabel>
+                                        <FormControl><Input type="email" placeholder="ada.okoro@example.com" {...field} /></FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                                 <FormField name="password" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Password</FormLabel>
+                                        <FormControl><Input type="password" placeholder="********" {...field} /></FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                                <FormField
+                                    name="idType"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Identification Type</FormLabel>
+                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                <FormControl>
+                                                    <SelectTrigger>
+                                                        <SelectValue placeholder="Select ID type" />
+                                                    </SelectTrigger>
+                                                </FormControl>
+                                                <SelectContent>
+                                                    <SelectItem value="nin">NIN (National Identification Number)</SelectItem>
+                                                    <SelectItem value="bvn">BVN (Bank Verification Number)</SelectItem>
+                                                </SelectContent>
+                                            </Select>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                 <FormField name="idNumber" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Identification Number</FormLabel>
+                                        <FormControl><Input placeholder="Enter your ID number" {...field} /></FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                                <FormField name="phoneNumber" render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Phone Number</FormLabel>
+                                        <FormControl><Input type="tel" placeholder="+234..." {...field} /></FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )} />
+                            </GenericForm>
+                        </TabsContent>
+                    </Tabs>
+                    <p className="mt-8 text-center text-sm text-muted-foreground">
+                        Already have an account?{' '}
+                        <Link href="/login" className="font-semibold text-primary hover:underline">
+                            Log in
+                        </Link>
+                    </p>
                  </div>
             </div>
         </div>
@@ -132,3 +285,5 @@ export default function SignupPage() {
     </div>
   );
 }
+
+    
