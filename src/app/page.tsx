@@ -57,13 +57,20 @@ export default function Home() {
     <div className="flex flex-col min-h-dvh bg-background text-foreground">
       <Header />
       <main className="flex-1">
-        <section id="home" className="relative bg-white pt-24 pb-16 sm:pt-32 sm:pb-24">
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute -top-48 left-0 h-[40rem] w-[40rem] rounded-full bg-primary/5 blur-[100px]"></div>
-            <div className="absolute -bottom-48 right-0 h-[40rem] w-[40rem] rounded-full bg-accent/10 blur-[100px]"></div>
+        <section id="home" className="relative pt-24 pb-16 sm:pt-32 sm:pb-24 overflow-hidden">
+           <div className="absolute inset-0">
+            <Image
+              src="https://images.unsplash.com/photo-1579684385127-6abfec45c28b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxtZWRpY2FsJTIwYmFja2dyb3VuZHxlbnwwfHx8fDE3NTU1NjQzOTV8MA&ixlib=rb-4.1.0&q=80&w=1920"
+              alt="Medical background"
+              layout="fill"
+              objectFit="cover"
+              className="opacity-10"
+              data-ai-hint="medical background"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-white via-white/80 to-white/50"></div>
           </div>
           <div className="container relative text-center">
-            <Badge variant="outline" className="mb-4 border-primary/50 text-primary">Innovating for a Healthier Nigeria</Badge>
+            <Badge variant="outline" className="mb-4 border-primary/50 text-primary bg-white/50">Innovating for a Healthier Nigeria</Badge>
             <h1 className="font-headline text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl">
               Transforming Healthcare Access Across Nigeria
             </h1>
