@@ -134,7 +134,7 @@ export default function Home() {
                   </Button>
               </div>
               <div className="flex justify-center">
-                 <Image src="https://placehold.co/500x500.png" width={500} height={500} alt="HCOM App interface" data-ai-hint="app interface" className="rounded-2xl shadow-2xl" />
+                 <Image src="https://images.unsplash.com/photo-1674049406107-f5c1e8258d4a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxIZWFsdGglMjB0ZWNofGVufDB8fHx8MTc1NTQ2OTIwMXww&ixlib=rb-4.1.0&q=80&w=1080" width={500} height={500} alt="HCOM App interface" data-ai-hint="app interface" className="rounded-2xl shadow-2xl" />
               </div>
             </div>
           </div>
