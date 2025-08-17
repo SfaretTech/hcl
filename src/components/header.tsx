@@ -1,13 +1,14 @@
 
 'use client';
 
-import { HeartPulse, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from './ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from './ui/sheet';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { Logo } from './logo';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -26,7 +27,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
         <Link href="/" className="flex items-center gap-2 mr-auto">
-          <HeartPulse className="h-7 w-7 text-primary" />
+          <Logo className="h-7 w-7 text-primary" />
           <span className="font-bold text-xl font-headline">HCOM</span>
         </Link>
 
@@ -43,6 +44,15 @@ export function Header() {
               {link.label}
             </Link>
           ))}
+           <Link
+              href="/career"
+              className={cn(
+                "transition-colors hover:text-primary",
+                pathname === "/career" ? "text-primary font-semibold" : "text-muted-foreground"
+              )}
+            >
+              Career
+            </Link>
         </nav>
         
         <div className="hidden md:flex items-center ml-4">
@@ -64,7 +74,7 @@ export function Header() {
               <div className="flex flex-col h-full">
                  <div className="flex items-center justify-between p-4 border-b">
                    <Link href="/" className="flex items-center gap-2">
-                    <HeartPulse className="h-6 w-6 text-primary" />
+                    <Logo className="h-6 w-6 text-primary" />
                     <span className="font-bold text-lg font-headline">HCOM</span>
                   </Link>
                    <SheetClose asChild>

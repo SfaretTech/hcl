@@ -1,8 +1,9 @@
 
-import { HeartPulse, Mail, MapPin, Phone, Facebook, Twitter, Linkedin } from 'lucide-react';
+import { Mail, MapPin, Phone, Facebook, Twitter, Linkedin } from 'lucide-react';
 import Link from 'next/link';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
+import { Logo } from './logo';
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -13,7 +14,7 @@ export function Footer() {
           {/* About HCOM */}
           <div className="space-y-4">
              <Link href="/" className="flex items-center gap-2">
-              <HeartPulse className="h-7 w-7 text-primary" />
+              <Logo className="h-7 w-7 text-primary" />
               <span className="font-bold text-xl font-headline">HCOM</span>
             </Link>
             <p className="text-sm text-muted-foreground">
