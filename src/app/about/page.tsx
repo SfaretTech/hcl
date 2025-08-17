@@ -1,8 +1,11 @@
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Rocket, Eye, Gem } from 'lucide-react';
+import { Rocket, Eye, Gem, Linkedin, Twitter } from 'lucide-react';
 import { AIAssistant } from '@/components/ai-assistant';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 const missionData = {
   mission: {
@@ -21,6 +24,60 @@ const missionData = {
     description: 'Accessibility, Innovation, Compassion, and Integrity. These values guide every decision we make and every interaction we have.',
   },
 };
+
+const teamMembers = [
+  {
+    name: 'Dr. Evelyn Reed',
+    role: 'CEO & Founder',
+    image: 'https://placehold.co/200x200.png',
+    hint: 'professional headshot',
+    socials: {
+      linkedin: '#',
+      twitter: '#',
+    },
+  },
+  {
+    name: 'Samuel Chen',
+    role: 'Chief Technology Officer',
+    image: 'https://placehold.co/200x200.png',
+    hint: 'developer portrait',
+    socials: {
+      linkedin: '#',
+      twitter: '#',
+    },
+  },
+  {
+    name: 'Amina Khan',
+    role: 'Head of Community Outreach',
+    image: 'https://placehold.co/200x200.png',
+    hint: 'community leader',
+    socials: {
+      linkedin: '#',
+      twitter: '#',
+    },
+  },
+  {
+    name: 'Ben Carter',
+    role: 'Lead UX Designer',
+    image: 'https://placehold.co/200x200.png',
+    hint: 'designer smiling',
+    socials: {
+      linkedin: '#',
+      twitter: '#',
+    },
+  },
+  {
+    name: 'Maria Garcia',
+    role: 'Director of RAFFIM Program',
+    image: 'https://placehold.co/200x200.png',
+    hint: 'finance professional',
+    socials: {
+      linkedin: '#',
+      twitter: '#',
+    },
+  },
+];
+
 
 export default function AboutPage() {
   return (
@@ -55,6 +112,38 @@ export default function AboutPage() {
                     <p className="text-muted-foreground">{item.description}</p>
                   </CardContent>
                 </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section id="team" className="bg-white py-16 sm:py-24">
+          <div className="container">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">Meet Our Team</h2>
+              <p className="mt-4 text-lg text-muted-foreground">The passionate minds driving the HCOM mission forward.</p>
+            </div>
+            <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 justify-center">
+              {teamMembers.map((member) => (
+                <div key={member.name} className="text-center">
+                  <Image src={member.image} data-ai-hint={member.hint} alt={`Photo of ${member.name}`} width={200} height={200} className="rounded-full mx-auto w-40 h-40 object-cover shadow-lg border-4 border-white" />
+                  <h3 className="font-headline mt-4 text-xl font-semibold">{member.name}</h3>
+                  <p className="text-primary">{member.role}</p>
+                  <div className="mt-2 flex justify-center gap-4">
+                    <Link href={member.socials.linkedin}>
+                      <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-primary">
+                        <Linkedin className="h-5 w-5" />
+                        <span className="sr-only">LinkedIn</span>
+                      </Button>
+                    </Link>
+                    <Link href={member.socials.twitter}>
+                       <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-primary">
+                        <Twitter className="h-5 w-5" />
+                        <span className="sr-only">Twitter</span>
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
