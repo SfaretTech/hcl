@@ -1,3 +1,4 @@
+
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -29,7 +30,7 @@ const outreachHighlights = [
     description: 'Deploying mobile health clinics to remote areas, bringing essential services and our technology to those who need it most.',
   },
    {
-    image: 'https://placehold.co/600x400.png',
+    image: 'https://images.unsplash.com/photo-1646579217809-7dbcd8120402?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxM3x8U2Nob29sJTIwSGVhbHRoJTIwUHJvZ3JhbXxlbnwwfHx8fDE3NTU0NzE0ODB8MA&ixlib=rb-4.1.0&q=80&w=1080',
     hint: 'children health checkup',
     title: 'School Health Program',
     description: 'Conducting health checkups and awareness sessions in local schools to promote early wellness habits.',
