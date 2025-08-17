@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 
 const outreachHighlights = [
   {
-    image: 'https://placehold.co/600x400.png',
+    image: 'https://images.unsplash.com/photo-1734139890055-d3353670b744?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxOXx8QW5udWFsJTIwSGVhbHRoJTIwfGVufDB8fHx8MTc1NTQ3MTI5NXww&ixlib=rb-4.1.0&q=80&w=1080',
     hint: 'community event',
     title: 'Annual Health Fair 2023',
     description: 'Our biggest event yet, providing free health screenings and wellness education to over 1,000 community members.',
