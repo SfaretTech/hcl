@@ -179,7 +179,7 @@ export default function Home() {
            <div className="container">
             <div className="grid items-center gap-12 lg:grid-cols-2">
                <div className="flex justify-center lg:order-last">
-                 <Image src="/hcom-outreach-hub.png" width={500} height={500} alt="Community outreach event" data-ai-hint="community health fair" className="rounded-2xl shadow-2xl" />
+                 <Image src="https://images.unsplash.com/photo-1695462131544-7f3928ee9159?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyMHx8eW91JTIwYW5kJTIweW91ciUyMGhlYWx0aHxlbnwwfHx8fDE3NTU0NzEwNjd8MA&ixlib=rb-4.1.0&q=80&w=1080" width={500} height={500} alt="Community outreach event" data-ai-hint="community health fair" className="rounded-2xl shadow-2xl" />
               </div>
               <div>
                 <Badge variant="secondary" className="mb-4">Making a Difference</Badge>
@@ -239,7 +239,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
-
-    
