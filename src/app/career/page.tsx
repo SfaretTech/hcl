@@ -6,6 +6,8 @@ import { Briefcase, Building, MapPin } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { ApplicationForm } from '@/components/application-form';
 
 const jobOpenings = [
   {
@@ -84,7 +86,20 @@ export default function CareerPage() {
                   </CardHeader>
                   <CardContent>
                     <p className="text-muted-foreground mb-6">{job.description}</p>
-                    <Button>Apply Now</Button>
+                     <Dialog>
+                      <DialogTrigger asChild>
+                        <Button>Apply Now</Button>
+                      </DialogTrigger>
+                      <DialogContent className="sm:max-w-[425px]">
+                        <DialogHeader>
+                          <DialogTitle>Apply for {job.title}</DialogTitle>
+                          <DialogDescription>
+                            Fill out the form below to submit your application. We look forward to hearing from you!
+                          </DialogDescription>
+                        </DialogHeader>
+                        <ApplicationForm />
+                      </DialogContent>
+                    </Dialog>
                   </CardContent>
                 </Card>
               ))}
