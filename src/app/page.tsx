@@ -158,7 +158,7 @@ export default function Home() {
         <section id="departments" className="bg-background">
           <div className="container max-w-4xl mx-auto">
             <div className="text-center">
-              <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">Our Core Departments</h2>
+              <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">Our Core Services</h2>
               <p className="mt-4 text-lg text-muted-foreground">
                 The pillars of our organization, working in synergy to deliver comprehensive healthcare solutions.
               </p>
