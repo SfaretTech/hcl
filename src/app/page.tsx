@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
-import { ContactForm } from '@/components/contact-form';
 import { AIAssistant } from '@/components/ai-assistant';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -53,6 +52,24 @@ const departments = [
     description: "The RAFFIM department manages our innovative health investment and referral system, enabling individuals to invest in high-demand health products and earn returns, combining social entrepreneurship with health impact."
   }
 ];
+
+const raffimBenefits = [
+    {
+        icon: DollarSign,
+        title: "Invest & Earn",
+        description: "Invest in high-demand health products and earn returns through our stakeholding programs.",
+    },
+    {
+        icon: TrendingUp,
+        title: "Drive Social Impact",
+        description: "Your investment combines social entrepreneurship with health impact, funding vital services.",
+    },
+    {
+        icon: HeartHandshake,
+        title: "Join a Community",
+        description: "Be part of a movement that's improving health outcomes and creating economic opportunity.",
+    }
+]
 
 export default function Home() {
   return (
@@ -197,25 +214,37 @@ export default function Home() {
 
         <section id="raffim" className="bg-background">
           <div className="container">
-             <div className="grid items-center gap-12 lg:grid-cols-2">
-               <div className="flex justify-center">
-                 <Image src="https://images.unsplash.com/photo-1690787229559-5ca66ec89826?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxN3x8aGVhbHRoJTIwSW52ZXN0bWVudCUyMFByb2dyYW18ZW58MHx8fHwxNzU1NDY5NDY5fDA&ixlib=rb-4.1.0&q=80&w=1080" width={500} height={500} alt="RAFFIM program chart" data-ai-hint="investment chart" className="rounded-2xl shadow-2xl" />
-              </div>
-              <div>
-                <Badge variant="secondary" className="mb-4">Invest in Health</Badge>
-                <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">The RAFFIM Investment Program</h2>
-                <p className="mt-4 text-lg text-muted-foreground">
-                  RAFFIM (Revolutionary AI-For-Financial-&-Investment-in-Medicine) is our groundbreaking initiative that allows you to invest in the future of healthcare while earning returns.
-                </p>
-                <ul className="mt-8 space-y-4 text-muted-foreground">
-                  <li className="flex items-start gap-3"><DollarSign className="h-6 w-5 text-primary flex-shrink-0 mt-1" /><span><strong>Invest &amp; Earn:</strong> Invest in high-demand health products and earn returns through our stakeholding programs.</span></li>
-                  <li className="flex items-start gap-3"><TrendingUp className="h-6 w-5 text-primary flex-shrink-0 mt-1" /><span><strong>Drive Social Impact:</strong> Your investment combines social entrepreneurship with health impact, funding vital services.</span></li>
-                  <li className="flex items-start gap-3"><HeartHandshake className="h-6 w-5 text-primary flex-shrink-0 mt-1" /><span><strong>Join a Community:</strong> Be part of a movement that's improving health outcomes and creating economic opportunity.</span></li>
-                </ul>
-                 <Button size="lg" variant="outline" className="mt-8 font-bold">
-                    Become a Partner
-                  </Button>
-              </div>
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 items-center">
+                <div className="lg:col-span-2 flex justify-center">
+                    <Image src="https://images.unsplash.com/photo-1690787229559-5ca66ec89826?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxN3x8aGVhbHRoJTIwSW52ZXN0bWVudCUyMFByb2dyYW18ZW58MHx8fHwxNzU1NDY5NDY5fDA&ixlib=rb-4.1.0&q=80&w=1080" width={500} height={500} alt="RAFFIM program chart" data-ai-hint="investment chart" className="rounded-2xl shadow-2xl object-cover w-full h-full max-h-[500px]" />
+                </div>
+                <div className="lg:col-span-3">
+                    <Badge variant="secondary" className="mb-4">Invest in Health</Badge>
+                    <h2 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">The RAFFIM Investment Program</h2>
+                    <p className="mt-4 text-lg text-muted-foreground">
+                    RAFFIM (Revolutionary AI-For-Financial-&amp;-Investment-in-Medicine) is our groundbreaking initiative that allows you to invest in the future of healthcare while earning returns.
+                    </p>
+                    <div className="mt-8 grid sm:grid-cols-1 gap-6">
+                        {raffimBenefits.map((benefit) => (
+                           <Card key={benefit.title} className="bg-white/50 transition-transform transform hover:-translate-y-2 hover:shadow-xl border-l-4 border-primary">
+                               <CardHeader className="flex flex-row items-center gap-4">
+                                   <div className="flex-shrink-0 bg-primary/10 text-primary p-3 rounded-full">
+                                       <benefit.icon className="h-6 w-6" />
+                                   </div>
+                                   <div>
+                                     <CardTitle className="font-headline text-xl">{benefit.title}</CardTitle>
+                                   </div>
+                               </CardHeader>
+                               <CardContent>
+                                   <p className="text-muted-foreground ml-16 -mt-4">{benefit.description}</p>
+                               </CardContent>
+                           </Card>
+                        ))}
+                    </div>
+                     <Button size="lg" variant="outline" className="mt-8 font-bold">
+                        Become a Partner
+                      </Button>
+                </div>
             </div>
           </div>
         </section>
