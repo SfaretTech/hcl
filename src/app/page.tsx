@@ -9,6 +9,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { HeartHandshake, Microscope, Target, TrendingUp, Download, Bot, DollarSign, Rocket, Eye, Gem } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 const missionData = {
   mission: {
@@ -168,7 +169,7 @@ export default function Home() {
         <section id="outreach" className="bg-background">
            <div className="container">
             <div className="grid items-center gap-12 lg:grid-cols-2">
-               <div className="flex justify-center">
+               <div className="flex justify-center lg:order-last">
                  <Image src="https://placehold.co/500x500.png" width={500} height={500} alt="Community outreach event" data-ai-hint="community health fair" className="rounded-2xl shadow-2xl" />
               </div>
               <div>
