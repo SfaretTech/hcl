@@ -9,7 +9,7 @@ import { useState } from 'react';
 const navLinks = [
   { href: '#mission', label: 'Mission' },
   { href: '#platform', label: 'Platform' },
-  { href: '#departments', label: 'Departments' },
+  { href: '#departments', label: 'Services' },
   { href: '#outreach', label: 'Outreach' },
   { href: '#contact', label: 'Contact' },
 ];
