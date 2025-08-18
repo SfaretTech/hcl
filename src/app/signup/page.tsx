@@ -83,7 +83,7 @@ function ClientForm() {
     }
     
     return (
-        <Card className="shadow-lg">
+        <Card className="shadow-lg border">
             <CardHeader className="text-center">
                 <CardTitle className="font-headline text-2xl font-bold">Create Client Account</CardTitle>
                 <CardDescription>Join HCOM to manage your health journey.</CardDescription>
@@ -169,7 +169,7 @@ function ProfessionalForm() {
     }
     
     return (
-        <Card className="shadow-lg">
+        <Card className="shadow-lg border">
             <CardHeader className="text-center">
                 <CardTitle className="font-headline text-2xl font-bold">Professional Registration</CardTitle>
                 <CardDescription>Join our network of licensed healthcare providers.</CardDescription>
@@ -263,7 +263,7 @@ function InvestorForm() {
     }
     
     return (
-        <Card className="shadow-lg">
+        <Card className="shadow-lg border">
             <CardHeader className="text-center">
                 <CardTitle className="font-headline text-2xl font-bold">Investor Registration</CardTitle>
                 <CardDescription>Join our RAFFIM program and invest in health.</CardDescription>
@@ -357,7 +357,24 @@ function InvestorForm() {
 };
 
 
+const accountImages: Record<string, {src: string, hint: string}> = {
+  client: {
+    src: "https://images.unsplash.com/photo-1521790797524-b2497295b8a0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxDbGllbnR8ZW58MHx8fHwxNzU1NDc1NjA2fDA&ixlib=rb-4.1.0&q=80&w=1080",
+    hint: "happy clients"
+  },
+  professional: {
+    src: "https://images.unsplash.com/photo-1576091160550-2173dba999ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxkb2N0b3J8ZW58MHx8fHwxNzU1NDc0MDA4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+    hint: "healthcare professional"
+  },
+  investor: {
+    src: "https://images.unsplash.com/photo-1563986768609-322da13575f3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxmaW5hbmNlJTIwaW52ZXN0bWVudHxlbnwwfHx8fDE3NTU3ODk3NTN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+    hint: "financial investment"
+  }
+}
+
 export default function SignupPage() {
+  const [activeTab, setActiveTab] = useState('client');
+  
   return (
     <div className="flex flex-col min-h-dvh bg-background text-foreground">
       <Header />
@@ -366,16 +383,16 @@ export default function SignupPage() {
             <div className="grid lg:grid-cols-2 gap-16 items-center">
                 <div className="hidden lg:flex justify-center">
                     <Image 
-                        src="https://images.unsplash.com/photo-1521790797524-b2497295b8a0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxDbGllbnR8ZW58MHx8fHwxNzU1NDc1NjA2fDA&ixlib=rb-4.1.0&q=80&w=1080"
+                        src={accountImages[activeTab].src}
                         width={500}
                         height={600}
                         alt="A diverse group of people smiling"
-                        data-ai-hint="happy clients"
+                        data-ai-hint={accountImages[activeTab].hint}
                         className="rounded-2xl shadow-2xl object-cover h-full"
                     />
                 </div>
                  <div className="w-full">
-                    <Tabs defaultValue="client" className="w-full">
+                    <Tabs defaultValue="client" className="w-full" onValueChange={setActiveTab}>
                         <TabsList className="grid w-full grid-cols-3 mb-6">
                             <TabsTrigger value="client">Client</TabsTrigger>
                             <TabsTrigger value="professional">Professional</TabsTrigger>
