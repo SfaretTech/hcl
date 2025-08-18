@@ -3,7 +3,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CalendarDays, Video, MessageSquare, FileText, User, Bell, ChevronRight, CheckCircle2, ArrowRight } from 'lucide-react';
+import { CalendarDays, Video, MessageSquare, FileText, User, Bell, ChevronRight, CheckCircle2, ArrowRight, ShoppingCart } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
@@ -134,6 +134,20 @@ const ClientDashboard = () => (
                                      <div>
                                         <p className="font-semibold">Health Records</p>
                                         <p className="text-sm text-muted-foreground">12 files</p>
+                                     </div>
+                                </div>
+                                <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                            </div>
+                        </Link>
+                        <Link href="/dashboard/shop" className="block p-4 rounded-lg bg-background hover:bg-secondary/50 transition-colors">
+                            <div className="flex justify-between items-center">
+                                <div className="flex items-center gap-4">
+                                    <div className="p-3 rounded-full bg-primary/10 text-primary">
+                                        <ShoppingCart className="h-5 w-5" />
+                                     </div>
+                                     <div>
+                                        <p className="font-semibold">Shop</p>
+                                        <p className="text-sm text-muted-foreground">Medications & Equipment</p>
                                      </div>
                                 </div>
                                 <ChevronRight className="h-5 w-5 text-muted-foreground" />

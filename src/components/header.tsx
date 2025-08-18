@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Menu, X, LayoutGrid, CalendarDays, MessageSquare, FileText, User, UserSearch, UserPlus, Settings, Bell, CheckCircle2, LogOut } from 'lucide-react';
+import { Menu, X, LayoutGrid, CalendarDays, MessageSquare, FileText, User, UserSearch, UserPlus, Settings, Bell, CheckCircle2, LogOut, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { Button, buttonVariants } from './ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle } from './ui/sheet';
@@ -56,6 +56,11 @@ const dashboardNavItems = [
         title: 'Health Records',
         href: '/dashboard/records',
         icon: FileText
+    },
+    {
+        title: 'Shop',
+        href: '/dashboard/shop',
+        icon: ShoppingCart
     },
     {
         title: 'Profile',
