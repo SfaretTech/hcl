@@ -88,7 +88,9 @@ function ClientForm() {
 
     function onSubmit(values: z.infer<typeof clientSchema>) {
         console.log('Client Account created:', values);
-        toast({ title: "Account Created!", description: `Your client account has been successfully created.` });
+        toast({ title: "Account Created!", description: "Please check your email to verify your account." });
+        // In a real app, you would redirect here:
+        // window.location.href = '/verify-account';
         form.reset();
     }
     
@@ -194,7 +196,9 @@ function ProfessionalForm() {
 
     function onSubmit(values: z.infer<typeof professionalSchema>) {
         console.log('Professional Account created:', values);
-        toast({ title: "Account Created!", description: `Your professional account has been successfully created.` });
+        toast({ title: "Account Created!", description: "Please check your email to verify your account." });
+        // In a real app, you would redirect here:
+        // window.location.href = '/verify-account';
         form.reset();
     }
     
@@ -308,7 +312,9 @@ function InvestorForm() {
 
     function onSubmit(values: z.infer<typeof investorSchema>) {
         console.log('Investor Account created:', values);
-        toast({ title: "Account Created!", description: `Your investor account has been successfully created.` });
+        toast({ title: "Account Created!", description: "Please check your email to verify your account." });
+        // In a real app, you would redirect here:
+        // window.location.href = '/verify-account';
         form.reset();
     }
     
