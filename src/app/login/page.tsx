@@ -6,6 +6,8 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+
 
 import { Button } from '@/components/ui/button';
 import {
@@ -31,6 +33,7 @@ const formSchema = z.object({
 
 export default function LoginPage() {
   const { toast } = useToast();
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -46,9 +49,7 @@ export default function LoginPage() {
       title: "Logged In Successfully!",
       description: "Redirecting to your dashboard...",
     });
-    // In a real app, you'd redirect here.
-    // window.location.href = '/dashboard';
-    form.reset();
+    router.push('/dashboard');
   }
 
   return (
@@ -95,11 +96,13 @@ export default function LoginPage() {
                                 <FormItem>
                                   <div className="flex justify-between items-baseline">
                                       <FormLabel>Password</FormLabel>
-                                      <Link href="#" className="text-sm font-medium text-primary hover:underline">Forgot password?</Link>
                                   </div>
                                   <FormControl>
                                     <Input type="password" placeholder="********" {...field} />
                                   </FormControl>
+                                   <div className="flex justify-end">
+                                      <Link href="#" className="text-sm font-medium text-primary hover:underline -mt-1">Forgot password?</Link>
+                                  </div>
                                   <FormMessage />
                                 </FormItem>
                               )}
