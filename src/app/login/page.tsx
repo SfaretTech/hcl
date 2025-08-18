@@ -44,8 +44,10 @@ export default function LoginPage() {
     console.log('Login submitted:', values);
     toast({
       title: "Logged In Successfully!",
-      description: "Welcome back to HCOM.",
+      description: "Redirecting to your dashboard...",
     });
+    // In a real app, you'd redirect here.
+    // window.location.href = '/dashboard';
     form.reset();
   }
 
@@ -91,13 +93,13 @@ export default function LoginPage() {
                               name="password"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>Password</FormLabel>
+                                  <div className="flex justify-between items-baseline">
+                                      <FormLabel>Password</FormLabel>
+                                      <Link href="#" className="text-sm font-medium text-primary hover:underline">Forgot password?</Link>
+                                  </div>
                                   <FormControl>
                                     <Input type="password" placeholder="********" {...field} />
                                   </FormControl>
-                                  <div className="text-right">
-                                    <Link href="#" className="text-sm font-semibold text-primary hover:underline">Forgot password?</Link>
-                                  </div>
                                   <FormMessage />
                                 </FormItem>
                               )}

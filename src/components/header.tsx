@@ -23,6 +23,85 @@ export function Header() {
   const [isSheetOpen, setSheetOpen] = useState(false);
   const pathname = usePathname();
 
+  const isDashboard = pathname.startsWith('/dashboard');
+
+  if (isDashboard) {
+    return (
+       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 lg:hidden">
+            <div className="container flex h-16 items-center">
+                 <Sheet open={isSheetOpen} onOpenChange={setSheetOpen}>
+                    <SheetTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                        <Menu className="h-6 w-6" />
+                        <span className="sr-only">Open menu</span>
+                    </Button>
+                    </SheetTrigger>
+                    <SheetContent side="left" className="w-[280px] p-0">
+                         <div className="flex flex-col h-full">
+                            <div className="h-16 flex items-center px-6 border-b">
+                                <Link href="/" className="flex items-center gap-2">
+                                <Logo className="h-7 w-7 text-primary" />
+                                <span className="font-bold text-xl font-headline">HCOM</span>
+                            </Link>
+                            </div>
+                           <nav className="flex-1 px-4 py-4 space-y-2">
+                                {[{
+                                    title: 'Dashboard',
+                                    href: '/dashboard',
+                                    icon: 'LayoutGrid'
+                                },
+                                {
+                                    title: 'Appointments',
+                                    href: '/dashboard/appointments',
+                                    icon: 'CalendarDays'
+                                },
+                                {
+                                    title: 'Messages',
+                                    href: '/dashboard/messages',
+                                    icon: 'MessageSquare'
+                                },
+                                {
+                                    title: 'Health Records',
+                                    href: '/dashboard/records',
+                                    icon: 'FileText'
+                                },
+                                {
+                                    title: 'Profile',
+                                    href: '/dashboard/profile',
+                                    icon: 'User'
+                                }].map((item) => (
+                                    <SheetClose asChild key={item.href}>
+                                        <Link
+                                            href={item.href}
+                                             className={cn(
+                                                buttonVariants({ variant: 'ghost' }),
+                                                'w-full justify-start text-base',
+                                                pathname === item.href && 'bg-primary/10 text-primary hover:bg-primary/20'
+                                            )}
+                                        >
+                                           {item.title}
+                                        </Link>
+                                    </SheetClose>
+                                ))}
+                            </nav>
+                             <div className="p-4 mt-auto border-t">
+                                <SheetClose asChild>
+                                    <Button asChild className="w-full justify-start text-base mb-2">
+                                        <Link href="/dashboard/settings">Settings</Link>
+                                    </Button>
+                                </SheetClose>
+                                <SheetClose asChild>
+                                    <Button variant="outline" className="w-full justify-start text-base">Logout</Button>
+                                </SheetClose>
+                             </div>
+                         </div>
+                    </SheetContent>
+                </Sheet>
+            </div>
+       </header>
+    )
+  }
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
@@ -46,9 +125,12 @@ export function Header() {
           ))}
         </nav>
         
-        <div className="hidden md:flex items-center ml-4">
+        <div className="hidden md:flex items-center ml-4 gap-2">
+            <Button variant="ghost" asChild>
+                <Link href="/login">Log In</Link>
+            </Button>
             <Button asChild>
-                <Link href="/signup">Register/Signup</Link>
+                <Link href="/signup">Register</Link>
             </Button>
         </div>
 
@@ -90,10 +172,15 @@ export function Header() {
                     </SheetClose>
                   ))}
                 </nav>
-                <div className="p-4 mt-auto">
+                <div className="p-4 mt-auto border-t">
                     <SheetClose asChild>
-                        <Button asChild className="w-full">
-                            <Link href="/signup">Register/Signup</Link>
+                         <Button asChild className="w-full mb-2">
+                            <Link href="/signup">Register</Link>
+                        </Button>
+                    </SheetClose>
+                    <SheetClose asChild>
+                        <Button asChild variant="outline" className="w-full">
+                           <Link href="/login">Log In</Link>
                         </Button>
                     </SheetClose>
                 </div>

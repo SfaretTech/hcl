@@ -1,0 +1,89 @@
+
+'use client';
+
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { LayoutGrid, CalendarDays, MessageSquare, FileText, User, Settings, LifeBuoy, LogOut } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Logo } from './logo';
+
+
+const sidebarNavItems = [
+    {
+        title: 'Dashboard',
+        href: '/dashboard',
+        icon: LayoutGrid
+    },
+    {
+        title: 'Appointments',
+        href: '/dashboard/appointments',
+        icon: CalendarDays
+    },
+    {
+        title: 'Messages',
+        href: '/dashboard/messages',
+        icon: MessageSquare
+    },
+    {
+        title: 'Health Records',
+        href: '/dashboard/records',
+        icon: FileText
+    },
+    {
+        title: 'Profile',
+        href: '/dashboard/profile',
+        icon: User
+    },
+];
+
+export function Sidebar() {
+    const pathname = usePathname();
+
+    return (
+        <aside className="hidden lg:flex flex-col w-64 border-r bg-white">
+            <div className="flex-1 flex flex-col gap-y-7">
+                <div className="h-16 flex items-center px-6 border-b">
+                     <Link href="/" className="flex items-center gap-2">
+                        <Logo className="h-7 w-7 text-primary" />
+                        <span className="font-bold text-xl font-headline">HCOM</span>
+                    </Link>
+                </div>
+                <nav className="flex-1 px-4 space-y-2">
+                   {sidebarNavItems.map((item) => (
+                       <Link
+                           key={item.title}
+                           href={item.href}
+                           className={cn(
+                               buttonVariants({ variant: 'ghost' }),
+                               'w-full justify-start',
+                               pathname === item.href && 'bg-primary/10 text-primary hover:bg-primary/20'
+                           )}
+                       >
+                           <item.icon className="mr-3 h-5 w-5" />
+                           {item.title}
+                       </Link>
+                   ))}
+                </nav>
+            </div>
+             <div className="p-4 border-t">
+                <Link
+                    href="/dashboard/settings"
+                    className={cn(
+                        buttonVariants({ variant: 'ghost' }),
+                        'w-full justify-start mb-2',
+                        pathname === '/dashboard/settings' && 'bg-primary/10 text-primary hover:bg-primary/20'
+                    )}
+                    >
+                    <Settings className="mr-3 h-5 w-5" />
+                    Settings
+                </Link>
+                <Button variant="outline" className="w-full justify-start">
+                     <LogOut className="mr-3 h-5 w-5" />
+                     Logout
+                </Button>
+            </div>
+        </aside>
+    )
+}

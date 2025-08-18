@@ -458,7 +458,7 @@ export default function SignupPage() {
                         height={600}
                         alt="A diverse group of people smiling"
                         data-ai-hint={accountImages[activeTab].hint}
-                        className="rounded-2xl shadow-2xl object-cover h-full"
+                        className="rounded-2xl shadow-2xl object-cover h-full max-h-[700px]"
                     />
                 </div>
                  <div className="w-full">
@@ -496,5 +496,3 @@ export default function SignupPage() {
     </div>
   );
 }
-
-    
