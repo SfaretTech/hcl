@@ -1,11 +1,10 @@
 
-
 'use client';
 
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Calendar as CalendarIcon, Clock, Video, MoreVertical, CheckCircle, XCircle, Info, AlertTriangle, UserPlus } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, Video, MoreVertical, CheckCircle, XCircle, Info, AlertTriangle, UserPlus, Hourglass } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -65,7 +64,15 @@ const initialAppointments = [
     }
 ];
 
-export type Appointment = typeof initialAppointments[0];
+export type AppointmentStatus = 'Pending' | 'Confirmed' | 'Completed' | 'Canceled';
+export type Appointment = {
+    id: string;
+    doctor: Doctor;
+    date: string;
+    status: AppointmentStatus;
+    notes: string;
+    joinLink: string;
+};
 
 
 const RescheduleDialog = ({ appointment, onReschedule, children }: { appointment: Appointment, onReschedule: (id: string, newDate: Date) => void, children: React.ReactNode }) => {
@@ -162,10 +169,11 @@ const ViewDetailsDialog = ({ appointment, children }: { appointment: Appointment
 
 
 const AppointmentCard = ({ appointment, onCancel, onReschedule }: { appointment: Appointment, onCancel: (id: string) => void; onReschedule: (id: string, newDate: Date) => void; }) => {
-    const isPast = new Date(appointment.date) < new Date() && appointment.status !== 'Confirmed';
+    const isPast = new Date(appointment.date) < new Date() && !['Confirmed', 'Pending'].includes(appointment.status);
 
-    const getStatusBadge = (status: 'Confirmed' | 'Completed' | 'Canceled') => {
+    const getStatusBadge = (status: AppointmentStatus) => {
         switch(status) {
+            case 'Pending': return <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-200"><Hourglass className="h-4 w-4 mr-1.5" />Pending</Badge>;
             case 'Confirmed': return <Badge variant="default" className="bg-blue-500 hover:bg-blue-600"><CheckCircle className="h-4 w-4 mr-1.5" />Confirmed</Badge>;
             case 'Completed': return <Badge variant="secondary"><CheckCircle className="h-4 w-4 mr-1.5" />Completed</Badge>;
             case 'Canceled': return <Badge variant="destructive"><XCircle className="h-4 w-4 mr-1.5" />Canceled</Badge>;
@@ -198,14 +206,16 @@ const AppointmentCard = ({ appointment, onCancel, onReschedule }: { appointment:
                                     <Info className="mr-2 h-4 w-4"/> View Details
                                 </DropdownMenuItem>
                             </ViewDetailsDialog>
-                            <RescheduleDialog appointment={appointment} onReschedule={onReschedule}>
-                                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                                    <CalendarIcon className="mr-2 h-4 w-4"/> Reschedule
-                                </DropdownMenuItem>
-                            </RescheduleDialog>
+                            {appointment.status === 'Confirmed' && (
+                                <RescheduleDialog appointment={appointment} onReschedule={onReschedule}>
+                                     <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                        <CalendarIcon className="mr-2 h-4 w-4"/> Reschedule
+                                    </DropdownMenuItem>
+                                </RescheduleDialog>
+                            )}
                             <AlertDialog>
                                 <AlertDialogTrigger asChild>
-                                     <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-red-600 focus:text-red-600 focus:bg-red-50">
+                                     <DropdownMenuItem disabled={appointment.status === 'Completed'} onSelect={(e) => e.preventDefault()} className="text-red-600 focus:text-red-600 focus:bg-red-50">
                                         <XCircle className="mr-2 h-4 w-4"/> Cancel
                                     </DropdownMenuItem>
                                 </AlertDialogTrigger>
@@ -257,10 +267,10 @@ export default function AppointmentsPage() {
     }
 
     const handleRescheduleAppointment = (id: string, newDate: Date) => {
-        setAllAppointments(prev => prev.map(appt => appt.id === id ? { ...appt, date: newDate.toISOString() } : appt));
+        setAllAppointments(prev => prev.map(appt => appt.id === id ? { ...appt, date: newDate.toISOString(), status: 'Pending' } : appt));
          toast({
             title: "Appointment Rescheduled",
-            description: `Your appointment has been moved to ${format(newDate, "PPP 'at' p")}.`,
+            description: `Your appointment has been moved to ${format(newDate, "PPP 'at' p")} and is awaiting confirmation.`,
         });
     }
 
@@ -269,20 +279,25 @@ export default function AppointmentsPage() {
             id: `appt-${Date.now()}`,
             doctor: doctor,
             date: date.toISOString(),
-            status: 'Confirmed',
+            status: 'Pending',
             notes: notes,
             joinLink: '#'
         };
         setAllAppointments(prev => [newAppointment, ...prev]);
         setIsScheduling(false);
         toast({
-            title: "Appointment Scheduled!",
-            description: `Your appointment with ${doctor.name} has been confirmed for ${format(date, "PPP 'at' p")}.`,
+            title: "Appointment Request Sent!",
+            description: `Your appointment request with ${doctor.name} for ${format(date, "PPP 'at' p")} is pending confirmation.`,
         });
     }
     
-    const currentUpcoming = allAppointments.filter(a => a.status === 'Confirmed' && new Date(a.date) >= new Date()).sort((a,b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-    const currentPast = allAppointments.filter(a => a.status !== 'Confirmed' || new Date(a.date) < new Date()).sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    const currentUpcoming = allAppointments
+        .filter(a => ['Confirmed', 'Pending'].includes(a.status) && new Date(a.date) >= new Date())
+        .sort((a,b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+        
+    const currentPast = allAppointments
+        .filter(a => !['Confirmed', 'Pending'].includes(a.status) || new Date(a.date) < new Date())
+        .sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     return (
         <div className="space-y-8">
