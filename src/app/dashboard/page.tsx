@@ -1,14 +1,11 @@
 
 'use client';
 
-import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CalendarDays, Video, MessageSquare, FileText, User, Settings, Bell, LayoutGrid } from 'lucide-react';
+import { CalendarDays, Video, MessageSquare, FileText } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import Link from 'next/link';
 
 const ClientDashboard = () => (
     <div className="space-y-8">
@@ -98,68 +95,8 @@ const ClientDashboard = () => (
     </div>
 );
 
-
-const ProfessionalDashboard = () => (
-     <div className="space-y-8">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div>
-                <h1 className="text-3xl font-bold tracking-tight font-headline">Welcome back, Dr. Chen!</h1>
-                <p className="text-muted-foreground">Here's a summary of your schedule and patients.</p>
-            </div>
-             <Link href="/dashboard/schedule">
-                <Button>
-                    <CalendarDays className="mr-2 h-4 w-4" />
-                    View Full Schedule
-                </Button>
-            </Link>
-        </div>
-         <div className="text-center p-16 border-2 border-dashed rounded-lg">
-            <h2 className="text-2xl font-bold font-headline mb-2">Professional Dashboard</h2>
-            <p className="text-muted-foreground">Coming soon! This is where you'll manage your appointments, patients, and more.</p>
-        </div>
-    </div>
-)
-
-const InvestorDashboard = () => (
-     <div className="space-y-8">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <div>
-                <h1 className="text-3xl font-bold tracking-tight font-headline">Welcome back, Adaeze!</h1>
-                <p className="text-muted-foreground">Here's your RAFFIM investment overview.</p>
-            </div>
-             <Link href="/dashboard/investments">
-                <Button>
-                    Manage Investments
-                </Button>
-            </Link>
-        </div>
-        <div className="text-center p-16 border-2 border-dashed rounded-lg">
-            <h2 className="text-2xl font-bold font-headline mb-2">Investor Dashboard</h2>
-            <p className="text-muted-foreground">Coming soon! Track your portfolio, earnings, and impact.</p>
-        </div>
-    </div>
-)
-
 export default function DashboardPage() {
     return (
-        <Tabs defaultValue="client" className="w-full">
-            <div className="flex justify-between items-center mb-6">
-                 <TabsList>
-                    <TabsTrigger value="client">Client View</TabsTrigger>
-                    <TabsTrigger value="professional">Professional View</TabsTrigger>
-                    <TabsTrigger value="investor">Investor View</TabsTrigger>
-                </TabsList>
-            </div>
-            
-            <TabsContent value="client">
-                <ClientDashboard />
-            </TabsContent>
-            <TabsContent value="professional">
-                <ProfessionalDashboard />
-            </TabsContent>
-            <TabsContent value="investor">
-                <InvestorDashboard />
-            </TabsContent>
-        </Tabs>
+        <ClientDashboard />
     );
 }
