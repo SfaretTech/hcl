@@ -59,42 +59,38 @@ const ClientDashboard = () => (
                     <CardContent>
                         <ul className="space-y-6">
                             <li className="flex items-start gap-4">
-                                <Avatar className="mt-1">
-                                    <AvatarImage src="https://placehold.co/40x40.png" alt="Dr. Samuel Chen" />
-                                    <AvatarFallback>SC</AvatarFallback>
-                                </Avatar>
+                                 <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-1">
+                                    <MessageSquare className="h-5 w-5 text-primary" />
+                                </div>
                                 <div className="flex-1">
                                     <p className="font-medium">New message from <span className="text-primary">Dr. Samuel Chen</span></p>
                                     <p className="text-sm text-muted-foreground line-clamp-2">"Hi Jessica, please find your latest test results attached. Let's discuss them during our next appointment..."</p>
                                 </div>
                                 <div className="text-right">
-                                    <Badge variant="secondary">Message</Badge>
                                     <p className="text-xs text-muted-foreground mt-1">2 hours ago</p>
                                 </div>
                             </li>
                              <li className="flex items-start gap-4">
-                                <Avatar  className="mt-1">
-                                    <AvatarFallback className="bg-accent/50 text-accent-foreground"><CheckCircle2 /></AvatarFallback>
-                                </Avatar>
+                                <div className="w-8 h-8 rounded-full bg-green-500/10 flex items-center justify-center flex-shrink-0 mt-1">
+                                    <CheckCircle2 className="h-5 w-5 text-green-600" />
+                                </div>
                                 <div className="flex-1">
                                     <p className="font-medium">Prescription Refilled</p>
                                     <p className="text-sm text-muted-foreground">Your prescription for Vitamin D has been refilled and is ready for pickup.</p>
                                 </div>
                                  <div className="text-right">
-                                    <Badge variant="outline">Pharmacy</Badge>
                                     <p className="text-xs text-muted-foreground mt-1">1 day ago</p>
                                 </div>
                             </li>
                              <li className="flex items-start gap-4">
-                                <Avatar className="mt-1">
-                                    <AvatarFallback className="bg-primary/20 text-primary"><CalendarDays/></AvatarFallback>
-                                </Avatar>
+                                 <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center flex-shrink-0 mt-1">
+                                    <CalendarDays className="h-5 w-5 text-blue-600"/>
+                                 </div>
                                 <div className="flex-1">
                                     <p className="font-medium">Appointment Confirmed</p>
                                     <p className="text-sm text-muted-foreground">Follow-up with Dr. Amina Khan on Oct 28, 2024</p>
                                 </div>
                                  <div className="text-right">
-                                    <Badge variant="outline">Appointment</Badge>
                                     <p className="text-xs text-muted-foreground mt-1">3 days ago</p>
                                 </div>
                             </li>
