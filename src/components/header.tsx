@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Menu, X, LayoutGrid, CalendarDays, MessageSquare, FileText, User, UserSearch, UserPlus, Settings, Bell, CheckCircle2 } from 'lucide-react';
+import { Menu, X, LayoutGrid, CalendarDays, MessageSquare, FileText, User, UserSearch, UserPlus, Settings, Bell, CheckCircle2, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { Button, buttonVariants } from './ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle } from './ui/sheet';
@@ -13,6 +13,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Avatar, AvatarFallback } from './ui/avatar';
 import { Separator } from './ui/separator';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from './ui/dropdown-menu';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -234,11 +235,37 @@ export function Header() {
                         </SheetContent>
                     </Sheet>
                  </div>
-                 <div className="flex items-center gap-4 ml-auto">
+                 <div className="flex items-center gap-2 ml-auto">
                     <Notifications />
-                    <Avatar>
-                        <AvatarFallback>JP</AvatarFallback>
-                    </Avatar>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                             <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                                <Avatar className="h-10 w-10">
+                                    <AvatarFallback>JP</AvatarFallback>
+                                </Avatar>
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent className="w-56" align="end" forceMount>
+                            <DropdownMenuLabel className="font-normal">
+                                <div className="flex flex-col space-y-1">
+                                    <p className="text-sm font-medium leading-none">Jessica Peterson</p>
+                                    <p className="text-xs leading-none text-muted-foreground">jessica.peterson@example.com</p>
+                                </div>
+                            </DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                             <DropdownMenuItem asChild>
+                                <Link href="/dashboard/profile"><User className="mr-2 h-4 w-4" />Profile</Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                                 <Link href="/dashboard/settings"><Settings className="mr-2 h-4 w-4" />Settings</Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem>
+                               <LogOut className="mr-2 h-4 w-4" />
+                               Logout
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                  </div>
             </div>
        </header>
