@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -13,13 +14,45 @@ import { useToast } from '@/hooks/use-toast';
 
 export default function SettingsPage() {
     const { toast } = useToast();
+    const [notificationSettings, setNotificationSettings] = useState({
+        email: true,
+        sms: true,
+        push: false,
+    });
+    const [activeTheme, setActiveTheme] = useState('light');
+
+    useEffect(() => {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        setActiveTheme(savedTheme);
+        document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+    }, []);
+
 
     const handleThemeChange = (theme: 'light' | 'dark' | 'system') => {
-        // In a real app, you'd save this to user preferences and update the app's theme.
+        let newTheme = theme;
+        if (theme === 'system') {
+            newTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        
+        setActiveTheme(newTheme);
+        localStorage.setItem('theme', newTheme);
+        document.documentElement.classList.toggle('dark', newTheme === 'dark');
+
         toast({
             title: "Theme Changed",
-            description: `Switched to ${theme} theme.`,
-        })
+            description: `Switched to ${newTheme} theme.`,
+        });
+    };
+
+    const handleNotificationChange = (id: keyof typeof notificationSettings) => {
+        setNotificationSettings(prev => {
+            const newSettings = { ...prev, [id]: !prev[id] };
+            toast({
+                title: 'Notification Settings Updated',
+                description: `${id.charAt(0).toUpperCase() + id.slice(1)} notifications ${newSettings[id] ? 'enabled' : 'disabled'}.`
+            });
+            return newSettings;
+        });
     }
 
     return (
@@ -43,21 +76,33 @@ export default function SettingsPage() {
                             <Label htmlFor="email-notifications" className="font-semibold">Email Notifications</Label>
                             <p className="text-sm text-muted-foreground">Receive updates and reminders via email.</p>
                         </div>
-                        <Switch id="email-notifications" defaultChecked />
+                        <Switch 
+                            id="email-notifications" 
+                            checked={notificationSettings.email}
+                            onCheckedChange={() => handleNotificationChange('email')}
+                        />
                     </div>
                     <div className="flex items-center justify-between p-4 rounded-lg bg-background">
                         <div>
                             <Label htmlFor="sms-notifications" className="font-semibold">SMS Reminders</Label>
                             <p className="text-sm text-muted-foreground">Get appointment reminders via text message.</p>
                         </div>
-                        <Switch id="sms-notifications" defaultChecked />
+                        <Switch 
+                            id="sms-notifications"
+                            checked={notificationSettings.sms}
+                            onCheckedChange={() => handleNotificationChange('sms')}
+                        />
                     </div>
                      <div className="flex items-center justify-between p-4 rounded-lg bg-background">
                         <div>
                             <Label htmlFor="push-notifications" className="font-semibold">Push Notifications</Label>
                             <p className="text-sm text-muted-foreground">Get real-time alerts on your device.</p>
                         </div>
-                        <Switch id="push-notifications" />
+                         <Switch 
+                            id="push-notifications"
+                            checked={notificationSettings.push}
+                            onCheckedChange={() => handleNotificationChange('push')}
+                        />
                     </div>
                 </CardContent>
             </Card>
@@ -72,11 +117,10 @@ export default function SettingsPage() {
                 </CardHeader>
                 <CardContent>
                     <div className="grid sm:grid-cols-3 gap-4">
-                        <Button variant="outline" onClick={() => handleThemeChange('light')}>Light Mode</Button>
-                        <Button variant="secondary" onClick={() => handleThemeChange('dark')}>Dark Mode</Button>
+                        <Button variant={activeTheme === 'light' ? 'secondary' : 'outline'} onClick={() => handleThemeChange('light')}>Light Mode</Button>
+                        <Button variant={activeTheme === 'dark' ? 'secondary' : 'outline'} onClick={() => handleThemeChange('dark')}>Dark Mode</Button>
                         <Button variant="outline" onClick={() => handleThemeChange('system')}>System Default</Button>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-4 text-center">Note: Dark mode is a visual demonstration. Full implementation requires theme switching logic.</p>
                 </CardContent>
             </Card>
             
