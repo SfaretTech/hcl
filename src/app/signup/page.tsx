@@ -67,12 +67,12 @@ function ClientForm() {
     }
     
     return (
-        <Card className="border-0 shadow-none">
-            <CardHeader className="text-center px-0">
+        <Card>
+            <CardHeader className="text-center">
                 <CardTitle className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">Create Client Account</CardTitle>
                 <CardDescription className="mt-2 text-muted-foreground">Join HCOM to manage your health journey.</CardDescription>
             </CardHeader>
-            <CardContent className="px-0">
+            <CardContent>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                         <FormField control={form.control} name="fullName" render={({ field }) => (
@@ -134,12 +134,12 @@ function ProfessionalForm() {
     }
     
     return (
-        <Card className="border-0 shadow-none">
-            <CardHeader className="text-center px-0">
+        <Card>
+            <CardHeader className="text-center">
                 <CardTitle className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">Professional Registration</CardTitle>
                 <CardDescription className="mt-2 text-muted-foreground">Join our network of licensed healthcare providers.</CardDescription>
             </CardHeader>
-            <CardContent className="px-0">
+            <CardContent>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                         <FormField control={form.control} name="fullName" render={({ field }) => (
@@ -209,12 +209,12 @@ function InvestorForm() {
     }
     
     return (
-        <Card className="border-0 shadow-none">
-            <CardHeader className="text-center px-0">
+        <Card>
+            <CardHeader className="text-center">
                 <CardTitle className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">Investor Registration</CardTitle>
                 <CardDescription className="mt-2 text-muted-foreground">Join our RAFFIM program and invest in health.</CardDescription>
             </CardHeader>
-            <CardContent className="px-0">
+            <CardContent>
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                         <FormField control={form.control} name="fullName" render={({ field }) => (
