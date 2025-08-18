@@ -18,6 +18,7 @@ import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { ScheduleAppointmentForm, type Doctor } from '@/components/schedule-appointment-form';
 
 
 const upcomingAppointments = [
@@ -86,20 +87,22 @@ const pastAppointments = [
     }
 ]
 
-type Appointment = typeof upcomingAppointments[0] | typeof pastAppointments[0];
+export type Appointment = typeof upcomingAppointments[0] | typeof pastAppointments[0];
 
 
 const RescheduleDialog = ({ appointment, onReschedule, children }: { appointment: Appointment, onReschedule: (id: string, newDate: Date) => void, children: React.ReactNode }) => {
     const [date, setDate] = useState<Date | undefined>(new Date(appointment.date));
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const handleReschedule = () => {
         if (date) {
             onReschedule(appointment.id, date);
+            setIsDialogOpen(false);
         }
     }
 
     return (
-        <Dialog>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>{children}</DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
@@ -138,12 +141,8 @@ const RescheduleDialog = ({ appointment, onReschedule, children }: { appointment
                     </div>
                 </div>
                 <DialogFooter>
-                    <DialogClose asChild>
-                        <Button type="button" variant="outline">Cancel</Button>
-                    </DialogClose>
-                     <DialogClose asChild>
-                        <Button type="submit" onClick={handleReschedule}>Save changes</Button>
-                    </DialogClose>
+                    <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
+                    <Button type="submit" onClick={handleReschedule}>Save changes</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
@@ -265,6 +264,7 @@ const AppointmentCard = ({ appointment, onCancel, onReschedule }: { appointment:
 export default function AppointmentsPage() {
     const { toast } = useToast();
     const [allAppointments, setAllAppointments] = useState<Appointment[]>([...upcomingAppointments, ...pastAppointments]);
+    const [isScheduling, setIsScheduling] = useState(false);
 
     const handleCancelAppointment = (id: string) => {
         setAllAppointments(prev => prev.map(appt => appt.id === id ? { ...appt, status: 'Canceled' } : appt));
@@ -282,6 +282,23 @@ export default function AppointmentsPage() {
             description: `Your appointment has been moved to ${format(newDate, "PPP 'at' p")}.`,
         });
     }
+
+    const handleScheduleAppointment = (doctor: Doctor, date: Date, notes: string) => {
+        const newAppointment: Appointment = {
+            id: `appt-${Date.now()}`,
+            doctor: doctor,
+            date: date.toISOString(),
+            status: 'Confirmed',
+            notes: notes,
+            joinLink: '#'
+        };
+        setAllAppointments(prev => [newAppointment, ...prev]);
+        setIsScheduling(false);
+        toast({
+            title: "Appointment Scheduled!",
+            description: `Your appointment with ${doctor.name} has been confirmed for ${format(date, "PPP 'at' p")}.`,
+        });
+    }
     
     const currentUpcoming = allAppointments.filter(a => a.status === 'Confirmed' && new Date(a.date) >= new Date()).sort((a,b) => new Date(a.date).getTime() - new Date(b.date).getTime());
     const currentPast = allAppointments.filter(a => a.status !== 'Confirmed' || new Date(a.date) < new Date()).sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -293,10 +310,23 @@ export default function AppointmentsPage() {
                     <h1 className="text-3xl font-bold tracking-tight font-headline">Manage Appointments</h1>
                     <p className="text-muted-foreground">View, schedule, and manage all your appointments in one place.</p>
                 </div>
-                <Button size="lg">
-                    <CalendarIcon className="mr-2 h-5 w-5" />
-                    Schedule New Appointment
-                </Button>
+                 <Dialog open={isScheduling} onOpenChange={setIsScheduling}>
+                    <DialogTrigger asChild>
+                        <Button size="lg">
+                            <CalendarIcon className="mr-2 h-5 w-5" />
+                            Schedule New Appointment
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-lg">
+                        <DialogHeader>
+                            <DialogTitle>Schedule a New Appointment</DialogTitle>
+                            <DialogDescription>
+                                Choose a doctor and find a time that works for you.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <ScheduleAppointmentForm onSchedule={handleScheduleAppointment} />
+                    </DialogContent>
+                </Dialog>
             </div>
 
             <Tabs defaultValue="upcoming">
@@ -333,5 +363,3 @@ export default function AppointmentsPage() {
         </div>
     )
 }
-
-    
