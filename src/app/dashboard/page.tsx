@@ -106,29 +106,6 @@ const ClientDashboard = () => (
            
            {/* Side column */}
            <div className="lg:col-span-1 space-y-8">
-                <Card className="bg-white text-center">
-                    <CardHeader>
-                        <Avatar className="w-24 h-24 mx-auto mb-4 border-4 border-primary/20">
-                            <AvatarImage src="https://placehold.co/100x100.png" alt="Jessica's avatar" data-ai-hint="woman smiling"/>
-                            <AvatarFallback>JP</AvatarFallback>
-                        </Avatar>
-                        <CardTitle className="font-headline">Jessica Peterson</CardTitle>
-                        <CardDescription>Client ID: HCOM-12345</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-left space-y-2">
-                          <p className="text-sm font-medium">Profile Completion</p>
-                          <Progress value={75} className="h-2"/>
-                          <p className="text-xs text-muted-foreground">Complete your profile to get better recommendations.</p>
-                        </div>
-                    </CardContent>
-                    <CardFooter>
-                        <Button variant="secondary" className="w-full">
-                            <User className="mr-2 h-4 w-4" /> Edit Profile
-                        </Button>
-                    </CardFooter>
-                </Card>
-
                  <Card className="bg-white">
                     <CardHeader>
                         <CardTitle>Quick Access</CardTitle>
