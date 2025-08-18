@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutGrid, CalendarDays, MessageSquare, FileText, User, Settings, LifeBuoy, LogOut, UserSearch, UserPlus, ShoppingCart } from 'lucide-react';
+import { LayoutGrid, CalendarDays, MessageSquare, FileText, User, Settings, LifeBuoy, LogOut, UserSearch, UserPlus, ShoppingCart, CreditCard } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -53,6 +53,11 @@ const sidebarNavItems = [
                 title: 'Cart',
                 href: '/dashboard/shop/cart',
                 icon: ShoppingCart,
+            },
+            {
+                title: 'Checkout',
+                href: '/dashboard/shop/checkout',
+                icon: CreditCard,
             }
         ]
     },

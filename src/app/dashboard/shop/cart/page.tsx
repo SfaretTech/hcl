@@ -122,8 +122,8 @@ export default function CartPage() {
                             </div>
                         </CardContent>
                         <CardFooter className="flex-col gap-2">
-                            <Button size="lg" className="w-full" disabled={cartItems.length === 0}>
-                                Proceed to Checkout
+                            <Button size="lg" className="w-full" disabled={cartItems.length === 0} asChild>
+                                <Link href="/dashboard/shop/checkout">Proceed to Checkout</Link>
                             </Button>
                              <Button asChild variant="outline" className="w-full">
                                 <Link href="/dashboard/shop">

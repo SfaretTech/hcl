@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Menu, X, LayoutGrid, CalendarDays, MessageSquare, FileText, User, UserSearch, UserPlus, Settings, Bell, CheckCircle2, LogOut, ShoppingCart } from 'lucide-react';
+import { Menu, X, LayoutGrid, CalendarDays, MessageSquare, FileText, User, UserSearch, UserPlus, Settings, Bell, CheckCircle2, LogOut, ShoppingCart, CreditCard } from 'lucide-react';
 import Link from 'next/link';
 import { Button, buttonVariants } from './ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle } from './ui/sheet';
@@ -66,6 +66,11 @@ const dashboardNavItems = [
                 title: 'Cart',
                 href: '/dashboard/shop/cart',
                 icon: ShoppingCart,
+            },
+            {
+                title: 'Checkout',
+                href: '/dashboard/shop/checkout',
+                icon: CreditCard,
             }
         ]
     },
