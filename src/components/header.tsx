@@ -60,7 +60,14 @@ const dashboardNavItems = [
     {
         title: 'Shop',
         href: '/dashboard/shop',
-        icon: ShoppingCart
+        icon: ShoppingCart,
+        subItems: [
+            {
+                title: 'Cart',
+                href: '/dashboard/shop/cart',
+                icon: ShoppingCart,
+            }
+        ]
     },
     {
         title: 'Profile',
@@ -206,7 +213,7 @@ export function Header() {
                                                 className={cn(
                                                     buttonVariants({ variant: 'ghost' }),
                                                     'w-full justify-start text-base',
-                                                    pathname.startsWith(item.href) && !item.href.endsWith('professionals') && 'bg-primary/10 text-primary hover:bg-primary/20'
+                                                    pathname.startsWith(item.href) && !item.href.endsWith('professionals') && !item.href.endsWith('shop') && 'bg-primary/10 text-primary hover:bg-primary/20'
                                                 )}
                                             >
                                             <item.icon className="mr-3 h-5 w-5" />
@@ -241,6 +248,12 @@ export function Header() {
                     </Sheet>
                  </div>
                  <div className="flex items-center gap-2 ml-auto">
+                    <Button asChild variant="ghost" size="icon">
+                        <Link href="/dashboard/shop/cart">
+                            <ShoppingCart className="h-5 w-5" />
+                            <span className="sr-only">Cart</span>
+                        </Link>
+                    </Button>
                     <Notifications />
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>

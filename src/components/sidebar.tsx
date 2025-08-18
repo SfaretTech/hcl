@@ -47,7 +47,14 @@ const sidebarNavItems = [
      {
         title: 'Shop',
         href: '/dashboard/shop',
-        icon: ShoppingCart
+        icon: ShoppingCart,
+        subItems: [
+            {
+                title: 'Cart',
+                href: '/dashboard/shop/cart',
+                icon: ShoppingCart,
+            }
+        ]
     },
     {
         title: 'Profile',
@@ -60,6 +67,7 @@ export function Sidebar() {
     const pathname = usePathname();
 
     const isProfessionalsActive = pathname.startsWith('/dashboard/professionals');
+    const isShopActive = pathname.startsWith('/dashboard/shop');
 
     return (
         <aside className="hidden lg:flex flex-col w-64 border-r bg-white">
@@ -73,7 +81,7 @@ export function Sidebar() {
                 <nav className="flex-1 px-4 space-y-1">
                    {sidebarNavItems.map((item) => (
                     item.subItems ? (
-                        <Accordion key={item.title} type="single" collapsible defaultValue={isProfessionalsActive ? 'item-1' : ''}>
+                        <Accordion key={item.title} type="single" collapsible defaultValue={isProfessionalsActive || isShopActive ? 'item-1' : ''}>
                             <AccordionItem value="item-1" className="border-b-0">
                                 <Link
                                     href={item.href}
@@ -115,7 +123,7 @@ export function Sidebar() {
                            className={cn(
                                buttonVariants({ variant: 'ghost' }),
                                'w-full justify-start',
-                               pathname.startsWith(item.href) && !item.href.endsWith('professionals') && pathname !== '/dashboard/professionals/find' && 'bg-primary/10 text-primary hover:bg-primary/20'
+                               pathname.startsWith(item.href) && !item.href.endsWith('professionals') && !item.href.endsWith('shop') && pathname !== '/dashboard/professionals/find' && 'bg-primary/10 text-primary hover:bg-primary/20'
                            )}
                        >
                            <item.icon className="mr-3 h-5 w-5" />
