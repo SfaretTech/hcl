@@ -47,8 +47,8 @@ const investorSchema = z.object({
     fullName: z.string().min(2, { message: 'Full name must be at least 2 characters.' }),
     email: z.string().email({ message: 'Please enter a valid email address.' }),
     password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
-    idType: z.enum(['nin', 'bvn'], { required_error: 'Please select an ID type.'}),
-    idNumber: z.string().min(10, { message: 'Please enter a valid identification number.' }),
+    idType: z.enum(['nin', 'bvn']).optional(),
+    idNumber: z.string().min(10, { message: 'Please enter a valid identification number.' }).optional().or(z.literal('')),
     phoneNumber: z.string().min(10, { message: 'Please enter a valid phone number.' }),
 });
 
@@ -67,14 +67,14 @@ function ClientForm() {
     }
     
     return (
-        <Card>
+        <Card className="shadow-lg">
             <CardHeader className="text-center">
-                <CardTitle className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">Create Client Account</CardTitle>
-                <CardDescription className="mt-2 text-muted-foreground">Join HCOM to manage your health journey.</CardDescription>
+                <CardTitle className="font-headline text-2xl font-bold">Create Client Account</CardTitle>
+                <CardDescription>Join HCOM to manage your health journey.</CardDescription>
             </CardHeader>
             <CardContent>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         <FormField control={form.control} name="fullName" render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Full Name</FormLabel>
@@ -110,7 +110,7 @@ function ClientForm() {
                                 <FormMessage />
                             </FormItem>
                         )} />
-                        <Button type="submit" size="lg" className="w-full font-bold">
+                        <Button type="submit" size="lg" className="w-full font-bold mt-6">
                             Create Account
                         </Button>
                     </form>
@@ -134,14 +134,14 @@ function ProfessionalForm() {
     }
     
     return (
-        <Card>
+        <Card className="shadow-lg">
             <CardHeader className="text-center">
-                <CardTitle className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">Professional Registration</CardTitle>
-                <CardDescription className="mt-2 text-muted-foreground">Join our network of licensed healthcare providers.</CardDescription>
+                <CardTitle className="font-headline text-2xl font-bold">Professional Registration</CardTitle>
+                <CardDescription>Join our network of licensed healthcare providers.</CardDescription>
             </CardHeader>
             <CardContent>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         <FormField control={form.control} name="fullName" render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Full Name</FormLabel>
@@ -184,7 +184,7 @@ function ProfessionalForm() {
                                 <FormMessage />
                             </FormItem>
                         )} />
-                         <Button type="submit" size="lg" className="w-full font-bold">
+                         <Button type="submit" size="lg" className="w-full font-bold mt-6">
                             Create Account
                         </Button>
                     </form>
@@ -209,14 +209,14 @@ function InvestorForm() {
     }
     
     return (
-        <Card>
+        <Card className="shadow-lg">
             <CardHeader className="text-center">
-                <CardTitle className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">Investor Registration</CardTitle>
-                <CardDescription className="mt-2 text-muted-foreground">Join our RAFFIM program and invest in health.</CardDescription>
+                <CardTitle className="font-headline text-2xl font-bold">Investor Registration</CardTitle>
+                <CardDescription>Join our RAFFIM program and invest in health.</CardDescription>
             </CardHeader>
             <CardContent>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         <FormField control={form.control} name="fullName" render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Full Name</FormLabel>
@@ -243,7 +243,7 @@ function InvestorForm() {
                             name="idType"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Identification Type</FormLabel>
+                                    <FormLabel>Identification Type (Optional)</FormLabel>
                                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                                         <FormControl>
                                             <SelectTrigger>
@@ -261,7 +261,7 @@ function InvestorForm() {
                         />
                          <FormField control={form.control} name="idNumber" render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Identification Number</FormLabel>
+                                <FormLabel>Identification Number (Optional)</FormLabel>
                                 <FormControl><Input placeholder="Enter your ID number" {...field} /></FormControl>
                                 <FormMessage />
                             </FormItem>
@@ -273,7 +273,7 @@ function InvestorForm() {
                                 <FormMessage />
                             </FormItem>
                         )} />
-                        <Button type="submit" size="lg" className="w-full font-bold">
+                        <Button type="submit" size="lg" className="w-full font-bold mt-6">
                             Create Account
                         </Button>
                     </form>
@@ -295,15 +295,15 @@ export default function SignupPage() {
                     <Image 
                         src="https://images.unsplash.com/photo-1576091160550-2173dba999ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxkb2N0b3J8ZW58MHx8fHwxNzU1NDc0MDA4fDA&ixlib=rb-4.1.0&q=80&w=1080"
                         width={500}
-                        height={500}
+                        height={600}
                         alt="A doctor using a tablet"
                         data-ai-hint="doctor technology"
-                        className="rounded-2xl shadow-2xl object-cover"
+                        className="rounded-2xl shadow-2xl object-cover h-full"
                     />
                 </div>
-                 <div className="max-w-md mx-auto w-full">
+                 <div className="w-full">
                     <Tabs defaultValue="client" className="w-full">
-                        <TabsList className="grid w-full grid-cols-3">
+                        <TabsList className="grid w-full grid-cols-3 mb-6">
                             <TabsTrigger value="client">Client</TabsTrigger>
                             <TabsTrigger value="professional">Professional</TabsTrigger>
                             <TabsTrigger value="investor">Investor</TabsTrigger>
@@ -336,3 +336,5 @@ export default function SignupPage() {
     </div>
   );
 }
+
+    
