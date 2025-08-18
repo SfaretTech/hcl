@@ -6,6 +6,9 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
+
 
 import { Button } from '@/components/ui/button';
 import {
@@ -29,35 +32,48 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 const clientSchema = z.object({
   fullName: z.string().min(2, { message: 'Full name must be at least 2 characters.' }),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
-  password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
   dateOfBirth: z.string().min(1, { message: 'Date of birth is required.' }),
   phoneNumber: z.string().min(10, { message: 'Please enter a valid phone number.' }),
+  password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
+  confirmPassword: z.string()
+}).refine(data => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
 });
 
 const professionalSchema = z.object({
   fullName: z.string().min(2, { message: 'Full name must be at least 2 characters.' }),
   email: z.string().email({ message: 'Please enter a valid email address.' }),
-  password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
   professionalTitle: z.string().min(2, { message: 'Professional title is required.' }),
   licenseNumber: z.string().min(1, { message: 'License number is required.' }),
   specialization: z.string().min(2, { message: 'Specialization is required.' }),
+  password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
+  confirmPassword: z.string()
+}).refine(data => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
 });
 
 const investorSchema = z.object({
     fullName: z.string().min(2, { message: 'Full name must be at least 2 characters.' }),
     email: z.string().email({ message: 'Please enter a valid email address.' }),
-    password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
     idType: z.enum(['nin', 'bvn']).optional(),
     idNumber: z.string().min(10, { message: 'Please enter a valid identification number.' }).optional().or(z.literal('')),
     phoneNumber: z.string().min(10, { message: 'Please enter a valid phone number.' }),
+    password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
+    confirmPassword: z.string()
+}).refine(data => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
 });
 
 
 function ClientForm() {
     const { toast } = useToast();
+    const [showPassword, setShowPassword] = useState(false);
     const form = useForm<z.infer<typeof clientSchema>>({
         resolver: zodResolver(clientSchema),
-        defaultValues: { fullName: '', email: '', password: '', dateOfBirth: '', phoneNumber: '' },
+        defaultValues: { fullName: '', email: '', dateOfBirth: '', phoneNumber: '', password: '', confirmPassword: '' },
     });
 
     function onSubmit(values: z.infer<typeof clientSchema>) {
@@ -89,13 +105,6 @@ function ClientForm() {
                                 <FormMessage />
                             </FormItem>
                         )} />
-                        <FormField control={form.control} name="password" render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Password</FormLabel>
-                                <FormControl><Input type="password" placeholder="********" {...field} /></FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )} />
                         <FormField control={form.control} name="dateOfBirth" render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Date of Birth</FormLabel>
@@ -107,6 +116,31 @@ function ClientForm() {
                             <FormItem>
                                 <FormLabel>Phone Number</FormLabel>
                                 <FormControl><Input type="tel" placeholder="+234..." {...field} /></FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+                        <FormField control={form.control} name="password" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Password</FormLabel>
+                                <FormControl>
+                                    <div className="relative">
+                                        <Input type={showPassword ? 'text' : 'password'} placeholder="********" {...field} />
+                                        <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7" onClick={() => setShowPassword(!showPassword)}>
+                                            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                        </Button>
+                                    </div>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+                        <FormField control={form.control} name="confirmPassword" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Confirm Password</FormLabel>
+                                <FormControl>
+                                    <div className="relative">
+                                        <Input type={showPassword ? 'text' : 'password'} placeholder="********" {...field} />
+                                    </div>
+                                </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )} />
@@ -122,9 +156,10 @@ function ClientForm() {
 
 function ProfessionalForm() {
     const { toast } = useToast();
+    const [showPassword, setShowPassword] = useState(false);
     const form = useForm<z.infer<typeof professionalSchema>>({
         resolver: zodResolver(professionalSchema),
-        defaultValues: { fullName: '', email: '', password: '', professionalTitle: '', licenseNumber: '', specialization: '' },
+        defaultValues: { fullName: '', email: '', professionalTitle: '', licenseNumber: '', specialization: '', password: '', confirmPassword: '' },
     });
 
     function onSubmit(values: z.infer<typeof professionalSchema>) {
@@ -156,13 +191,6 @@ function ProfessionalForm() {
                                 <FormMessage />
                             </FormItem>
                         )} />
-                         <FormField control={form.control} name="password" render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Password</FormLabel>
-                                <FormControl><Input type="password" placeholder="********" {...field} /></FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )} />
                          <FormField control={form.control} name="professionalTitle" render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Professional Title</FormLabel>
@@ -184,6 +212,31 @@ function ProfessionalForm() {
                                 <FormMessage />
                             </FormItem>
                         )} />
+                         <FormField control={form.control} name="password" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Password</FormLabel>
+                                <FormControl>
+                                    <div className="relative">
+                                        <Input type={showPassword ? 'text' : 'password'} placeholder="********" {...field} />
+                                         <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7" onClick={() => setShowPassword(!showPassword)}>
+                                            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                        </Button>
+                                    </div>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+                        <FormField control={form.control} name="confirmPassword" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Confirm Password</FormLabel>
+                                <FormControl>
+                                    <div className="relative">
+                                        <Input type={showPassword ? 'text' : 'password'} placeholder="********" {...field} />
+                                    </div>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
                          <Button type="submit" size="lg" className="w-full font-bold mt-6">
                             Create Account
                         </Button>
@@ -197,9 +250,10 @@ function ProfessionalForm() {
 
 function InvestorForm() {
     const { toast } = useToast();
+    const [showPassword, setShowPassword] = useState(false);
     const form = useForm<z.infer<typeof investorSchema>>({
         resolver: zodResolver(investorSchema),
-        defaultValues: { fullName: '', email: '', password: '', idNumber: '', phoneNumber: '' },
+        defaultValues: { fullName: '', email: '', idNumber: '', phoneNumber: '', password: '', confirmPassword: '' },
     });
 
     function onSubmit(values: z.infer<typeof investorSchema>) {
@@ -231,13 +285,7 @@ function InvestorForm() {
                                 <FormMessage />
                             </FormItem>
                         )} />
-                         <FormField control={form.control} name="password" render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Password</FormLabel>
-                                <FormControl><Input type="password" placeholder="********" {...field} /></FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )} />
+                        
                         <FormField
                             control={form.control}
                             name="idType"
@@ -270,6 +318,31 @@ function InvestorForm() {
                             <FormItem>
                                 <FormLabel>Phone Number</FormLabel>
                                 <FormControl><Input type="tel" placeholder="+234..." {...field} /></FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+                        <FormField control={form.control} name="password" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Password</FormLabel>
+                                <FormControl>
+                                     <div className="relative">
+                                        <Input type={showPassword ? 'text' : 'password'} placeholder="********" {...field} />
+                                         <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7" onClick={() => setShowPassword(!showPassword)}>
+                                            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                        </Button>
+                                    </div>
+                                </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )} />
+                        <FormField control={form.control} name="confirmPassword" render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Confirm Password</FormLabel>
+                                <FormControl>
+                                    <div className="relative">
+                                        <Input type={showPassword ? 'text' : 'password'} placeholder="********" {...field} />
+                                    </div>
+                                </FormControl>
                                 <FormMessage />
                             </FormItem>
                         )} />
@@ -336,5 +409,3 @@ export default function SignupPage() {
     </div>
   );
 }
-
-    
