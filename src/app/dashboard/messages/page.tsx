@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
-import { Send, Phone, Video, Search } from 'lucide-react';
+import { Send, Phone, Video, Search, Paperclip } from 'lucide-react';
 import { availableDoctors, type Doctor } from '@/components/schedule-appointment-form';
 
 type Conversation = {
@@ -89,6 +89,7 @@ export default function MessagesPage() {
   const filteredConversations = useMemo(() => {
     return conversations.filter(convo => 
         convo.doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        convo.doctor.specialty.toLowerCase().includes(searchTerm.toLowerCase()) ||
         convo.lastMessage.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [conversations, searchTerm]);
@@ -198,6 +199,10 @@ export default function MessagesPage() {
 
                     <CardContent className="pt-4 border-t">
                         <form className="flex items-center gap-2" onSubmit={handleSendMessage}>
+                             <Button variant="ghost" size="icon">
+                                <Paperclip className="h-5 w-5" />
+                                <span className="sr-only">Attach file</span>
+                            </Button>
                             <Input 
                                 placeholder="Type a message..." 
                                 className="flex-1"
