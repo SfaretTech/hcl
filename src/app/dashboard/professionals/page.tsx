@@ -7,10 +7,11 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, UserPlus, X, MapPin } from 'lucide-react';
+import { Search, UserPlus, X, MapPin, MessageSquare, PlusCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { availableDoctors, type Doctor } from '@/components/schedule-appointment-form';
 import Link from 'next/link';
+import { Separator } from '@/components/ui/separator';
 
 const departments = ['All', ...new Set(availableDoctors.map(d => d.department))];
 const locations = ['All', ...new Set(availableDoctors.map(d => d.location))];
@@ -18,7 +19,29 @@ const locations = ['All', ...new Set(availableDoctors.map(d => d.location))];
 // Helper to generate a URL-friendly slug from a name
 const toSlug = (name: string) => name.toLowerCase().replace(/\s+/g, '-');
 
-const DoctorCard = ({ doctor, onAdd, onRemove, isAdded }: { doctor: Doctor, onAdd: (doctor: Doctor) => void, onRemove: (doctor: Doctor) => void, isAdded: boolean }) => {
+const DoctorCard = ({ doctor, onAdd, onRemove, isAdded, variant = 'default' }: { doctor: Doctor, onAdd: (doctor: Doctor) => void, onRemove: (doctor: Doctor) => void, isAdded: boolean, variant?: 'default' | 'compact' }) => {
+    
+    if (variant === 'compact') {
+        return (
+             <Card className="bg-white hover:shadow-lg transition-shadow">
+                <CardContent className="p-4 flex items-center gap-4">
+                    <Avatar className="w-16 h-16 border">
+                        <AvatarImage src={doctor.avatar} alt={doctor.name} />
+                        <AvatarFallback>{doctor.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex-grow">
+                        <CardTitle className="font-headline text-lg">{doctor.name}</CardTitle>
+                        <CardDescription>{doctor.specialty}</CardDescription>
+                    </div>
+                     <div className="flex flex-col gap-2">
+                         <Button size="sm" variant="outline" asChild><Link href={`/dashboard/professionals/${toSlug(doctor.name)}`}>Profile</Link></Button>
+                        <Button size="sm" variant="ghost" className="text-muted-foreground" onClick={() => onRemove(doctor)}><X className="mr-2 h-4 w-4"/>Remove</Button>
+                    </div>
+                </CardContent>
+            </Card>
+        )
+    }
+    
     return (
         <Card className="bg-white hover:shadow-lg transition-shadow flex flex-col">
             <CardHeader className="text-center items-center">
@@ -41,9 +64,12 @@ const DoctorCard = ({ doctor, onAdd, onRemove, isAdded }: { doctor: Doctor, onAd
                     <Link href={`/dashboard/professionals/${toSlug(doctor.name)}`}>View Profile</Link>
                 </Button>
                 {isAdded ? (
-                     <Button variant="secondary" className="w-full" onClick={() => onRemove(doctor)}>
-                        <X className="mr-2 h-4 w-4" /> Remove from My Doctors
-                    </Button>
+                    <div className="w-full flex gap-2">
+                        <Button variant="secondary" className="w-full" asChild><Link href="/dashboard/messages"><MessageSquare className="mr-2 h-4 w-4"/>Message</Link></Button>
+                        <Button variant="ghost" className="text-muted-foreground" onClick={() => onRemove(doctor)}>
+                            <X className="h-4 w-4" />
+                        </Button>
+                    </div>
                 ) : (
                     <Button className="w-full" onClick={() => onAdd(doctor)}>
                         <UserPlus className="mr-2 h-4 w-4" /> Add to My Doctors
@@ -84,72 +110,98 @@ export default function ProfessionalsPage() {
 
     const filteredDoctors = useMemo(() => {
         return availableDoctors.filter(doctor => {
+            const alreadyAdded = myDoctors.some(d => d.name === doctor.name);
+            if (alreadyAdded) return false;
+
             const matchesDepartment = selectedDepartment === 'All' || doctor.department === selectedDepartment;
             const matchesLocation = selectedLocation === 'All' || doctor.location === selectedLocation;
             const matchesSearch = doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                                   doctor.specialty.toLowerCase().includes(searchTerm.toLowerCase());
             return matchesDepartment && matchesSearch && matchesLocation;
         });
-    }, [searchTerm, selectedDepartment, selectedLocation]);
+    }, [searchTerm, selectedDepartment, selectedLocation, myDoctors]);
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-12">
             <div>
-                <h1 className="text-3xl font-bold tracking-tight font-headline">Find a Healthcare Professional</h1>
-                <p className="text-muted-foreground">Search our network of licensed professionals to find the right care for you.</p>
+                <h1 className="text-3xl font-bold tracking-tight font-headline">Your Healthcare Network</h1>
+                <p className="text-muted-foreground">Manage your saved professionals and find new ones.</p>
             </div>
 
-            <Card className="bg-white p-6 shadow-sm">
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div className="relative sm:col-span-3 lg:col-span-1">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                        <Input 
-                            placeholder="Search by name or specialty..."
-                            className="pl-10"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
+            {myDoctors.length > 0 && (
+                 <section>
+                    <h2 className="text-2xl font-bold tracking-tight font-headline mb-4">My Doctors</h2>
+                    <div className="grid gap-6 md:grid-cols-2">
+                        {myDoctors.map(doctor => (
+                            <DoctorCard 
+                                key={doctor.name} 
+                                doctor={doctor}
+                                onAdd={handleAddDoctor}
+                                onRemove={handleRemoveDoctor}
+                                isAdded={true}
+                                variant="compact"
+                            />
+                        ))}
                     </div>
-                    <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
-                        <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Filter by department" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {departments.map(dept => (
-                                <SelectItem key={dept} value={dept}>{dept === 'All' ? 'All Departments' : dept}</SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                     <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                        <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Filter by location" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {locations.map(loc => (
-                                <SelectItem key={loc} value={loc}>{loc === 'All' ? 'All Locations' : loc}</SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-            </Card>
-
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {filteredDoctors.map(doctor => (
-                    <DoctorCard 
-                        key={doctor.name} 
-                        doctor={doctor}
-                        onAdd={handleAddDoctor}
-                        onRemove={handleRemoveDoctor}
-                        isAdded={!!myDoctors.find(d => d.name === doctor.name)}
-                    />
-                ))}
-            </div>
-
-            {filteredDoctors.length === 0 && (
-                <div className="text-center py-16">
-                    <p className="text-lg text-muted-foreground">No professionals found matching your criteria.</p>
-                </div>
+                </section>
             )}
+
+            <Separator />
+            
+            <section>
+                 <h2 className="text-2xl font-bold tracking-tight font-headline mb-4">Find New Professionals</h2>
+                <Card className="bg-white p-6 shadow-sm mb-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div className="relative sm:col-span-3 lg:col-span-1">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                            <Input 
+                                placeholder="Search by name or specialty..."
+                                className="pl-10"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                        </div>
+                        <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Filter by department" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {departments.map(dept => (
+                                    <SelectItem key={dept} value={dept}>{dept === 'All' ? 'All Departments' : dept}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Filter by location" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {locations.map(loc => (
+                                    <SelectItem key={loc} value={loc}>{loc === 'All' ? 'All Locations' : loc}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </Card>
+
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    {filteredDoctors.map(doctor => (
+                        <DoctorCard 
+                            key={doctor.name} 
+                            doctor={doctor}
+                            onAdd={handleAddDoctor}
+                            onRemove={handleRemoveDoctor}
+                            isAdded={false}
+                        />
+                    ))}
+                </div>
+
+                {filteredDoctors.length === 0 && (
+                    <div className="text-center py-16">
+                        <p className="text-lg text-muted-foreground">No new professionals found matching your criteria.</p>
+                    </div>
+                )}
+            </section>
         </div>
     );
 }
