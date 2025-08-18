@@ -1,103 +1,54 @@
 
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, UserPlus, X, MapPin, MessageSquare, PlusCircle } from 'lucide-react';
+import { X, MessageSquare, PlusCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { availableDoctors, type Doctor } from '@/components/schedule-appointment-form';
 import Link from 'next/link';
-import { Separator } from '@/components/ui/separator';
-
-const departments = ['All', ...new Set(availableDoctors.map(d => d.department))];
-const locations = ['All', ...new Set(availableDoctors.map(d => d.location))];
 
 // Helper to generate a URL-friendly slug from a name
 const toSlug = (name: string) => name.toLowerCase().replace(/\s+/g, '-');
 
-const DoctorCard = ({ doctor, onAdd, onRemove, isAdded, variant = 'default' }: { doctor: Doctor, onAdd: (doctor: Doctor) => void, onRemove: (doctor: Doctor) => void, isAdded: boolean, variant?: 'default' | 'compact' }) => {
-    
-    if (variant === 'compact') {
-        return (
-             <Card className="bg-white hover:shadow-lg transition-shadow">
-                <CardContent className="p-4 flex items-center gap-4">
-                    <Avatar className="w-16 h-16 border">
-                        <AvatarImage src={doctor.avatar} alt={doctor.name} />
-                        <AvatarFallback>{doctor.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-grow">
-                        <CardTitle className="font-headline text-lg">{doctor.name}</CardTitle>
-                        <CardDescription>{doctor.specialty}</CardDescription>
-                    </div>
-                     <div className="flex flex-col gap-2">
-                         <Button size="sm" variant="outline" asChild><Link href={`/dashboard/professionals/${toSlug(doctor.name)}`}>Profile</Link></Button>
-                        <Button size="sm" variant="ghost" className="text-muted-foreground" onClick={() => onRemove(doctor)}><X className="mr-2 h-4 w-4"/>Remove</Button>
-                    </div>
-                </CardContent>
-            </Card>
-        )
-    }
-    
+const DoctorCard = ({ doctor, onRemove }: { doctor: Doctor, onRemove: (doctor: Doctor) => void }) => {
     return (
-        <Card className="bg-white hover:shadow-lg transition-shadow flex flex-col">
-            <CardHeader className="text-center items-center">
-                <Avatar className="w-24 h-24 mb-4 border-4 border-primary/20">
+         <Card className="bg-white hover:shadow-lg transition-shadow">
+            <CardContent className="p-4 flex items-center gap-4">
+                <Avatar className="w-16 h-16 border">
                     <AvatarImage src={doctor.avatar} alt={doctor.name} />
                     <AvatarFallback>{doctor.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                 </Avatar>
-                <CardTitle className="font-headline text-xl">{doctor.name}</CardTitle>
-                <CardDescription>{doctor.specialty}</CardDescription>
-                <div className="flex items-center gap-1.5 text-sm text-muted-foreground pt-1">
-                    <MapPin className="h-4 w-4" />
-                    <span>{doctor.location}</span>
+                <div className="flex-grow">
+                    <CardTitle className="font-headline text-lg hover:text-primary transition-colors">
+                        <Link href={`/dashboard/professionals/${toSlug(doctor.name)}`}>
+                            {doctor.name}
+                        </Link>
+                    </CardTitle>
+                    <CardDescription>{doctor.specialty}</CardDescription>
                 </div>
-            </CardHeader>
-            <CardContent className="flex-grow">
-                <p className="text-sm text-muted-foreground text-center line-clamp-3 h-[60px]">{doctor.bio}</p>
-            </CardContent>
-            <CardFooter className="flex-col gap-2 pt-4">
-                <Button variant="outline" className="w-full" asChild>
-                    <Link href={`/dashboard/professionals/${toSlug(doctor.name)}`}>View Profile</Link>
-                </Button>
-                {isAdded ? (
-                    <div className="w-full flex gap-2">
-                        <Button variant="secondary" className="w-full" asChild><Link href="/dashboard/messages"><MessageSquare className="mr-2 h-4 w-4"/>Message</Link></Button>
-                        <Button variant="ghost" className="text-muted-foreground" onClick={() => onRemove(doctor)}>
-                            <X className="h-4 w-4" />
-                        </Button>
-                    </div>
-                ) : (
-                    <Button className="w-full" onClick={() => onAdd(doctor)}>
-                        <UserPlus className="mr-2 h-4 w-4" /> Add to My Doctors
+                 <div className="flex items-center gap-2">
+                     <Button size="sm" asChild>
+                        <Link href="/dashboard/messages">
+                            <MessageSquare className="mr-2 h-4 w-4"/> Message
+                        </Link>
+                     </Button>
+                    <Button size="sm" variant="ghost" className="text-muted-foreground" onClick={() => onRemove(doctor)}>
+                        <X className="mr-2 h-4 w-4"/>Remove
                     </Button>
-                )}
-            </CardFooter>
+                </div>
+            </CardContent>
         </Card>
-    );
-};
+    )
+}
 
-export default function ProfessionalsPage() {
+export default function MyProfessionalsPage() {
     const { toast } = useToast();
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedDepartment, setSelectedDepartment] = useState('All');
-    const [selectedLocation, setSelectedLocation] = useState('All');
     
     // In a real app, this would come from a user data store/context
     const [myDoctors, setMyDoctors] = useState<Doctor[]>([availableDoctors[0]]);
-
-    const handleAddDoctor = (doctor: Doctor) => {
-        if (!myDoctors.find(d => d.name === doctor.name)) {
-            setMyDoctors(prev => [...prev, doctor]);
-            toast({
-                title: "Doctor Added!",
-                description: `${doctor.name} has been added to your list.`,
-            });
-        }
-    };
 
      const handleRemoveDoctor = (doctor: Doctor) => {
         setMyDoctors(prev => prev.filter(d => d.name !== doctor.name));
@@ -108,97 +59,40 @@ export default function ProfessionalsPage() {
         });
     };
 
-    const filteredDoctors = useMemo(() => {
-        return availableDoctors.filter(doctor => {
-            const alreadyAdded = myDoctors.some(d => d.name === doctor.name);
-            if (alreadyAdded) return false;
-
-            const matchesDepartment = selectedDepartment === 'All' || doctor.department === selectedDepartment;
-            const matchesLocation = selectedLocation === 'All' || doctor.location === selectedLocation;
-            const matchesSearch = doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                  doctor.specialty.toLowerCase().includes(searchTerm.toLowerCase());
-            return matchesDepartment && matchesSearch && matchesLocation;
-        });
-    }, [searchTerm, selectedDepartment, selectedLocation, myDoctors]);
-
     return (
-        <div className="space-y-12">
-            <div>
-                <h1 className="text-3xl font-bold tracking-tight font-headline">Your Healthcare Network</h1>
-                <p className="text-muted-foreground">Manage your saved professionals and find new ones.</p>
+        <div className="space-y-8">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                 <div>
+                    <h1 className="text-3xl font-bold tracking-tight font-headline">My Doctors</h1>
+                    <p className="text-muted-foreground">Manage your saved professionals and start a conversation.</p>
+                </div>
+                <Button size="lg" asChild>
+                    <Link href="/dashboard/professionals/find">
+                        <PlusCircle className="mr-2 h-5 w-5"/> Find a New Professional
+                    </Link>
+                </Button>
             </div>
-
-            {myDoctors.length > 0 && (
-                 <section>
-                    <h2 className="text-2xl font-bold tracking-tight font-headline mb-4">My Doctors</h2>
-                    <div className="grid gap-6 md:grid-cols-2">
+            
+            <section>
+                {myDoctors.length > 0 ? (
+                    <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
                         {myDoctors.map(doctor => (
                             <DoctorCard 
                                 key={doctor.name} 
                                 doctor={doctor}
-                                onAdd={handleAddDoctor}
                                 onRemove={handleRemoveDoctor}
-                                isAdded={true}
-                                variant="compact"
                             />
                         ))}
                     </div>
-                </section>
-            )}
-
-            <Separator />
-            
-            <section>
-                 <h2 className="text-2xl font-bold tracking-tight font-headline mb-4">Find New Professionals</h2>
-                <Card className="bg-white p-6 shadow-sm mb-8">
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div className="relative sm:col-span-3 lg:col-span-1">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                            <Input 
-                                placeholder="Search by name or specialty..."
-                                className="pl-10"
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                            />
-                        </div>
-                        <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
-                            <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Filter by department" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {departments.map(dept => (
-                                    <SelectItem key={dept} value={dept}>{dept === 'All' ? 'All Departments' : dept}</SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                        <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-                            <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Filter by location" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {locations.map(loc => (
-                                    <SelectItem key={loc} value={loc}>{loc === 'All' ? 'All Locations' : loc}</SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </div>
-                </Card>
-
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    {filteredDoctors.map(doctor => (
-                        <DoctorCard 
-                            key={doctor.name} 
-                            doctor={doctor}
-                            onAdd={handleAddDoctor}
-                            onRemove={handleRemoveDoctor}
-                            isAdded={false}
-                        />
-                    ))}
-                </div>
-
-                {filteredDoctors.length === 0 && (
-                    <div className="text-center py-16">
-                        <p className="text-lg text-muted-foreground">No new professionals found matching your criteria.</p>
+                ) : (
+                    <div className="text-center py-16 border-2 border-dashed rounded-lg">
+                        <h2 className="text-xl font-semibold mb-2">Your network is empty</h2>
+                        <p className="text-muted-foreground mb-4">Add professionals to your list to quickly schedule appointments and message them.</p>
+                        <Button asChild>
+                            <Link href="/dashboard/professionals/find">
+                                <PlusCircle className="mr-2 h-4 w-4"/> Find Professionals
+                            </Link>
+                        </Button>
                     </div>
                 )}
             </section>

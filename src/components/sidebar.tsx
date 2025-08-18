@@ -3,11 +3,12 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutGrid, CalendarDays, MessageSquare, FileText, User, Settings, LifeBuoy, LogOut, UserSearch } from 'lucide-react';
+import { LayoutGrid, CalendarDays, MessageSquare, FileText, User, Settings, LifeBuoy, LogOut, UserSearch, UserPlus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Logo } from './logo';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
 
 
 const sidebarNavItems = [
@@ -22,9 +23,16 @@ const sidebarNavItems = [
         icon: CalendarDays
     },
     {
-        title: 'Find a Doctor',
+        title: 'My Doctors',
         href: '/dashboard/professionals',
-        icon: UserSearch
+        icon: User,
+        subItems: [
+             {
+                title: 'Find a Doctor',
+                href: '/dashboard/professionals/find',
+                icon: UserSearch,
+            }
+        ]
     },
     {
         title: 'Messages',
@@ -46,6 +54,8 @@ const sidebarNavItems = [
 export function Sidebar() {
     const pathname = usePathname();
 
+    const isProfessionalsActive = pathname.startsWith('/dashboard/professionals');
+
     return (
         <aside className="hidden lg:flex flex-col w-64 border-r bg-white">
             <div className="flex-1 flex flex-col gap-y-7">
@@ -55,20 +65,58 @@ export function Sidebar() {
                         <span className="font-bold text-xl font-headline">HCOM</span>
                     </Link>
                 </div>
-                <nav className="flex-1 px-4 space-y-2">
+                <nav className="flex-1 px-4 space-y-1">
                    {sidebarNavItems.map((item) => (
+                    item.subItems ? (
+                        <Accordion key={item.title} type="single" collapsible defaultValue={isProfessionalsActive ? 'item-1' : ''}>
+                            <AccordionItem value="item-1" className="border-b-0">
+                                <Link
+                                    href={item.href}
+                                    className={cn(
+                                        buttonVariants({ variant: 'ghost' }),
+                                        'w-full justify-start',
+                                        pathname === item.href && 'bg-primary/10 text-primary hover:bg-primary/20'
+                                    )}
+                                >
+                                     <AccordionTrigger className="w-full p-0 hover:no-underline justify-start">
+                                         <div className="flex items-center">
+                                            <item.icon className="mr-3 h-5 w-5" />
+                                            {item.title}
+                                         </div>
+                                     </AccordionTrigger>
+                                </Link>
+                                <AccordionContent className="pb-0 pl-7 space-y-1">
+                                    {item.subItems.map(subItem => (
+                                        <Link
+                                            key={subItem.title}
+                                            href={subItem.href}
+                                            className={cn(
+                                                buttonVariants({ variant: 'ghost' }),
+                                                'w-full justify-start',
+                                                pathname === subItem.href && 'bg-primary/10 text-primary hover:bg-primary/20'
+                                            )}
+                                        >
+                                            <subItem.icon className="mr-3 h-5 w-5" />
+                                            {subItem.title}
+                                        </Link>
+                                    ))}
+                                </AccordionContent>
+                            </AccordionItem>
+                        </Accordion>
+                    ) : (
                        <Link
                            key={item.title}
                            href={item.href}
                            className={cn(
                                buttonVariants({ variant: 'ghost' }),
                                'w-full justify-start',
-                               pathname.startsWith(item.href) && 'bg-primary/10 text-primary hover:bg-primary/20'
+                               pathname.startsWith(item.href) && !item.href.endsWith('professionals') && 'bg-primary/10 text-primary hover:bg-primary/20'
                            )}
                        >
                            <item.icon className="mr-3 h-5 w-5" />
                            {item.title}
                        </Link>
+                    )
                    ))}
                 </nav>
             </div>
