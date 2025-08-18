@@ -178,11 +178,6 @@ export function Header() {
                             <Link href="/signup">Register</Link>
                         </Button>
                     </SheetClose>
-                    <SheetClose asChild>
-                        <Button asChild variant="outline" className="w-full">
-                           <Link href="/login">Log In</Link>
-                        </Button>
-                    </SheetClose>
                 </div>
               </div>
             </SheetContent>
