@@ -3,7 +3,7 @@
 
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
-import { Button } from './ui/button';
+import { Button, buttonVariants } from './ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from './ui/sheet';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
@@ -125,11 +125,11 @@ export function Header() {
           ))}
         </nav>
         
-        <div className="hidden md:flex items-center ml-4 gap-2">
-            <Button variant="ghost" asChild>
+        <div className="hidden md:flex items-center ml-4">
+            <Button variant="ghost" asChild className="rounded-r-none border-r-0">
                 <Link href="/login">Log In</Link>
             </Button>
-            <Button asChild>
+            <Button asChild className="rounded-l-none">
                 <Link href="/signup">Register</Link>
             </Button>
         </div>
