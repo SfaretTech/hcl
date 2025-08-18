@@ -10,9 +10,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Search, UserPlus, X, MapPin } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { availableDoctors, type Doctor } from '@/components/schedule-appointment-form';
+import Link from 'next/link';
 
 const departments = ['All', ...new Set(availableDoctors.map(d => d.department))];
 const locations = ['All', ...new Set(availableDoctors.map(d => d.location))];
+
+// Helper to generate a URL-friendly slug from a name
+const toSlug = (name: string) => name.toLowerCase().replace(/\s+/g, '-');
 
 const DoctorCard = ({ doctor, onAdd, onRemove, isAdded }: { doctor: Doctor, onAdd: (doctor: Doctor) => void, onRemove: (doctor: Doctor) => void, isAdded: boolean }) => {
     return (
@@ -33,7 +37,9 @@ const DoctorCard = ({ doctor, onAdd, onRemove, isAdded }: { doctor: Doctor, onAd
                 <p className="text-sm text-muted-foreground text-center line-clamp-3 h-[60px]">{doctor.bio}</p>
             </CardContent>
             <CardFooter className="flex-col gap-2 pt-4">
-                <Button variant="outline" className="w-full">View Profile</Button>
+                <Button variant="outline" className="w-full" asChild>
+                    <Link href={`/dashboard/professionals/${toSlug(doctor.name)}`}>View Profile</Link>
+                </Button>
                 {isAdded ? (
                      <Button variant="secondary" className="w-full" onClick={() => onRemove(doctor)}>
                         <X className="mr-2 h-4 w-4" /> Remove from My Doctors
