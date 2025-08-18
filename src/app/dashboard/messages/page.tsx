@@ -1,15 +1,16 @@
 
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
-import { Send, Phone, Video, Search, Paperclip } from 'lucide-react';
+import { Send, Phone, Video, Search, Paperclip, X } from 'lucide-react';
 import { availableDoctors, type Doctor } from '@/components/schedule-appointment-form';
+import { Badge } from '@/components/ui/badge';
 
 type Conversation = {
   doctor: Doctor;
@@ -23,6 +24,10 @@ type Message = {
     text: string;
     time: string;
     sender: 'me' | 'doctor';
+    attachment?: {
+        name: string;
+        size: number;
+    }
 };
 
 
@@ -66,10 +71,13 @@ export default function MessagesPage() {
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(conversations.length > 0 ? conversations[0] : null);
   const [newMessage, setNewMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [attachment, setAttachment] = useState<File | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newMessage.trim() || !selectedConversation) return;
+    if ((!newMessage.trim() && !attachment) || !selectedConversation) return;
 
     const currentMessages = messages[selectedConversation.doctor.name] || [];
     const updatedMessages = [
@@ -78,12 +86,23 @@ export default function MessagesPage() {
             id: `m-${Date.now()}`,
             sender: 'me' as const,
             text: newMessage,
-            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            attachment: attachment ? { name: attachment.name, size: attachment.size } : undefined
         }
     ];
 
     setMessages(prev => ({ ...prev, [selectedConversation.doctor.name]: updatedMessages }));
     setNewMessage('');
+    setAttachment(null);
+    if(fileInputRef.current) {
+        fileInputRef.current.value = '';
+    }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setAttachment(e.target.files[0]);
+    }
   };
 
   const filteredConversations = useMemo(() => {
@@ -188,7 +207,16 @@ export default function MessagesPage() {
                                            "rounded-2xl p-3 text-sm",
                                            msg.sender === 'me' ? 'bg-primary text-primary-foreground rounded-br-none' : 'bg-white rounded-bl-none border'
                                        )}>
-                                           <p>{msg.text}</p>
+                                           {msg.text && <p>{msg.text}</p>}
+                                           {msg.attachment && (
+                                                <div className="flex items-center gap-2 mt-2 bg-black/10 p-2 rounded-lg">
+                                                    <Paperclip className="h-5 w-5" />
+                                                    <div className="text-xs">
+                                                        <p className="font-semibold">{msg.attachment.name}</p>
+                                                        <p>{(msg.attachment.size / 1024).toFixed(2)} KB</p>
+                                                    </div>
+                                                </div>
+                                           )}
                                        </div>
                                        <p className={cn("text-xs text-muted-foreground mt-1", msg.sender === 'me' ? 'text-right' : 'text-left')}>{msg.time}</p>
                                     </div>
@@ -198,21 +226,44 @@ export default function MessagesPage() {
                     </ScrollArea>
 
                     <CardContent className="pt-4 border-t">
-                        <form className="flex items-center gap-2" onSubmit={handleSendMessage}>
-                             <Button variant="ghost" size="icon">
-                                <Paperclip className="h-5 w-5" />
-                                <span className="sr-only">Attach file</span>
-                            </Button>
-                            <Input 
-                                placeholder="Type a message..." 
-                                className="flex-1"
-                                value={newMessage}
-                                onChange={(e) => setNewMessage(e.target.value)}
-                            />
-                            <Button size="icon" type="submit">
-                                <Send className="h-5 w-5" />
-                                <span className="sr-only">Send</span>
-                            </Button>
+                        <form className="space-y-2" onSubmit={handleSendMessage}>
+                            {attachment && (
+                                <div className="p-2 border rounded-md">
+                                    <Badge variant="secondary" className="flex justify-between items-center">
+                                       <span>{attachment.name}</span>
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="icon"
+                                            className="h-5 w-5"
+                                            onClick={() => {
+                                                setAttachment(null);
+                                                if(fileInputRef.current) fileInputRef.current.value = '';
+                                            }}
+                                        >
+                                            <X className="h-4 w-4" />
+                                            <span className="sr-only">Remove attachment</span>
+                                        </Button>
+                                    </Badge>
+                                </div>
+                            )}
+                            <div className="flex items-center gap-2">
+                                <Input type="file" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
+                                <Button variant="ghost" size="icon" type="button" onClick={() => fileInputRef.current?.click()}>
+                                    <Paperclip className="h-5 w-5" />
+                                    <span className="sr-only">Attach file</span>
+                                </Button>
+                                <Input 
+                                    placeholder="Type a message..." 
+                                    className="flex-1"
+                                    value={newMessage}
+                                    onChange={(e) => setNewMessage(e.target.value)}
+                                />
+                                <Button size="icon" type="submit" disabled={!newMessage.trim() && !attachment}>
+                                    <Send className="h-5 w-5" />
+                                    <span className="sr-only">Send</span>
+                                </Button>
+                            </div>
                         </form>
                     </CardContent>
                 </>
@@ -225,3 +276,5 @@ export default function MessagesPage() {
     </div>
   );
 }
+
+    
