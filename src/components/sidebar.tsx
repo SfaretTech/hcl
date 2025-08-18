@@ -110,7 +110,7 @@ export function Sidebar() {
                            className={cn(
                                buttonVariants({ variant: 'ghost' }),
                                'w-full justify-start',
-                               pathname.startsWith(item.href) && !item.href.endsWith('professionals') && 'bg-primary/10 text-primary hover:bg-primary/20'
+                               pathname.startsWith(item.href) && !item.href.endsWith('professionals') && pathname !== '/dashboard/professionals/find' && 'bg-primary/10 text-primary hover:bg-primary/20'
                            )}
                        >
                            <item.icon className="mr-3 h-5 w-5" />

@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Menu, X, LayoutGrid, CalendarDays, MessageSquare, FileText, User, UserSearch, UserPlus } from 'lucide-react';
+import { Menu, X, LayoutGrid, CalendarDays, MessageSquare, FileText, User, UserSearch, UserPlus, Settings } from 'lucide-react';
 import Link from 'next/link';
 import { Button, buttonVariants } from './ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle } from './ui/sheet';
@@ -148,7 +148,17 @@ export function Header() {
                              <div className="p-4 mt-auto border-t">
                                 <SheetClose asChild>
                                     <Button asChild className="w-full justify-start text-base mb-2">
-                                        <Link href="/dashboard/settings">Settings</Link>
+                                        <Link
+                                            href="/dashboard/settings"
+                                            className={cn(
+                                                buttonVariants({ variant: 'ghost' }),
+                                                'w-full justify-start',
+                                                pathname === '/dashboard/settings' && 'bg-primary/10 text-primary hover:bg-primary/20'
+                                            )}
+                                        >
+                                            <Settings className="mr-3 h-5 w-5" />
+                                            Settings
+                                        </Link>
                                     </Button>
                                 </SheetClose>
                                 <SheetClose asChild>
