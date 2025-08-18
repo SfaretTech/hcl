@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Calendar as CalendarIcon, Clock, Video, MoreVertical, CheckCircle, XCircle, Info, AlertTriangle, UserPlus, Hourglass } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, Video, MoreVertical, CheckCircle, XCircle, Info, AlertTriangle, UserPlus, Hourglass, CreditCard } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -21,7 +21,7 @@ import { ScheduleAppointmentForm, type Doctor, availableDoctors } from '@/compon
 import Link from 'next/link';
 
 
-const initialAppointments = [
+const initialAppointments: Appointment[] = [
     {
         id: 'appt-1',
         doctor: availableDoctors[0],
@@ -29,6 +29,8 @@ const initialAppointments = [
         status: 'Confirmed' as const,
         notes: 'Follow-up regarding your recent test results. Please ensure you have them available.',
         joinLink: '#',
+        isPaid: false,
+        fee: 15000,
     },
     {
         id: 'appt-2',
@@ -37,6 +39,8 @@ const initialAppointments = [
         status: 'Confirmed' as const,
         notes: 'Initial consultation for your skin concerns.',
         joinLink: '#',
+        isPaid: true,
+        fee: 20000,
     },
      {
         id: 'appt-3',
@@ -45,6 +49,8 @@ const initialAppointments = [
         status: 'Completed' as const,
         notes: 'Discussed statin medication options. Follow-up in 6 months.',
         joinLink: '#',
+        isPaid: true,
+        fee: 0,
     },
      {
         id: 'appt-4',
@@ -53,6 +59,8 @@ const initialAppointments = [
         status: 'Completed' as const,
         notes: 'Annual physical check-up. All vitals are normal.',
         joinLink: '#',
+        isPaid: true,
+        fee: 15000,
     },
     {
         id: 'appt-5',
@@ -61,6 +69,8 @@ const initialAppointments = [
         status: 'Canceled' as const,
         notes: 'Canceled by patient.',
         joinLink: '#',
+        isPaid: false,
+        fee: 18000,
     }
 ];
 
@@ -72,6 +82,8 @@ export type Appointment = {
     status: AppointmentStatus;
     notes: string;
     joinLink: string;
+    isPaid: boolean;
+    fee: number;
 };
 
 
@@ -153,7 +165,7 @@ const ViewDetailsDialog = ({ appointment, children }: { appointment: Appointment
                      </div>
                 </div>
                 <DialogFooter>
-                     {appointment.status === "Confirmed" && (
+                     {appointment.status === "Confirmed" && appointment.isPaid && (
                          <Button className="w-full sm:w-auto">
                             <Video className="mr-2 h-4 w-4"/> Join Video Call
                         </Button>
@@ -167,8 +179,39 @@ const ViewDetailsDialog = ({ appointment, children }: { appointment: Appointment
     )
 }
 
+const PaymentDialog = ({ appointment, onPayment, children }: { appointment: Appointment, onPayment: (id: string) => void, children: React.ReactNode }) => {
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-const AppointmentCard = ({ appointment, onCancel, onReschedule }: { appointment: Appointment, onCancel: (id: string) => void; onReschedule: (id: string, newDate: Date) => void; }) => {
+    const handlePayment = () => {
+        onPayment(appointment.id);
+        setIsDialogOpen(false);
+    }
+    
+    return (
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>{children}</DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Complete Payment</DialogTitle>
+                    <DialogDescription>
+                        Securely pay for your appointment with {appointment.doctor.name}.
+                    </DialogDescription>
+                </DialogHeader>
+                 <div className="py-4">
+                    <p>Total Amount: <strong>{new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(appointment.fee)}</strong></p>
+                    <p className="text-sm text-muted-foreground">This is a placeholder for a real payment form.</p>
+                </div>
+                <DialogFooter>
+                    <Button variant="ghost" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
+                    <Button onClick={handlePayment}><CreditCard className="mr-2 h-4 w-4" /> Pay Now</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
+
+const AppointmentCard = ({ appointment, onCancel, onReschedule, onPay }: { appointment: Appointment, onCancel: (id: string) => void; onReschedule: (id: string, newDate: Date) => void; onPay: (id: string) => void; }) => {
     const isPast = new Date(appointment.date) < new Date() && !['Confirmed', 'Pending'].includes(appointment.status);
 
     const getStatusBadge = (status: AppointmentStatus) => {
@@ -245,6 +288,15 @@ const AppointmentCard = ({ appointment, onCancel, onReschedule }: { appointment:
                     {getStatusBadge(appointment.status)}
                 </div>
             </CardContent>
+            {appointment.status === 'Confirmed' && !appointment.isPaid && appointment.fee > 0 && (
+                <CardFooter>
+                    <PaymentDialog appointment={appointment} onPayment={onPay}>
+                       <Button className="w-full">
+                           <CreditCard className="mr-2 h-4 w-4" /> Pay Now ({new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(appointment.fee)})
+                       </Button>
+                    </PaymentDialog>
+                </CardFooter>
+            )}
         </Card>
     )
 }
@@ -273,6 +325,14 @@ export default function AppointmentsPage() {
             description: `Your appointment has been moved to ${format(newDate, "PPP 'at' p")} and is awaiting confirmation.`,
         });
     }
+    
+    const handlePayAppointment = (id: string) => {
+        setAllAppointments(prev => prev.map(appt => appt.id === id ? { ...appt, isPaid: true } : appt));
+        toast({
+            title: "Payment Successful!",
+            description: "Your appointment fee has been paid.",
+        });
+    }
 
     const handleScheduleAppointment = (doctor: Doctor, date: Date, notes: string) => {
         const newAppointment: Appointment = {
@@ -281,7 +341,9 @@ export default function AppointmentsPage() {
             date: date.toISOString(),
             status: 'Pending',
             notes: notes,
-            joinLink: '#'
+            joinLink: '#',
+            isPaid: false,
+            fee: 15000, // Example fee
         };
         setAllAppointments(prev => [newAppointment, ...prev]);
         setIsScheduling(false);
@@ -347,7 +409,7 @@ export default function AppointmentsPage() {
                 <TabsContent value="upcoming" className="mt-6">
                     <div className="grid gap-6 md:grid-cols-2">
                         {currentUpcoming.map((appt) => (
-                           <AppointmentCard key={appt.id} appointment={appt} onCancel={handleCancelAppointment} onReschedule={handleRescheduleAppointment} />
+                           <AppointmentCard key={appt.id} appointment={appt} onCancel={handleCancelAppointment} onReschedule={handleRescheduleAppointment} onPay={handlePayAppointment} />
                         ))}
                          {currentUpcoming.length === 0 && (
                             <div className="md:col-span-2 text-center py-12">
@@ -359,7 +421,7 @@ export default function AppointmentsPage() {
                 <TabsContent value="past" className="mt-6">
                      <div className="grid gap-6 md:grid-cols-2">
                         {currentPast.map((appt) => (
-                            <AppointmentCard key={appt.id} appointment={appt} onCancel={handleCancelAppointment} onReschedule={handleRescheduleAppointment}/>
+                            <AppointmentCard key={appt.id} appointment={appt} onCancel={handleCancelAppointment} onReschedule={handleRescheduleAppointment} onPay={handlePayAppointment}/>
                         ))}
                          {currentPast.length === 0 && (
                             <div className="md:col-span-2 text-center py-12">
@@ -373,3 +435,5 @@ export default function AppointmentsPage() {
         </div>
     )
 }
+
+    
