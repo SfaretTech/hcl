@@ -27,6 +27,7 @@ import { AIAssistant } from '@/components/ai-assistant';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 
 
 const clientSchema = z.object({
@@ -35,7 +36,10 @@ const clientSchema = z.object({
   dateOfBirth: z.string().min(1, { message: 'Date of birth is required.' }),
   phoneNumber: z.string().min(10, { message: 'Please enter a valid phone number.' }),
   password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
-  confirmPassword: z.string()
+  confirmPassword: z.string(),
+  terms: z.literal(true, {
+    errorMap: () => ({ message: 'You must accept the terms and conditions' }),
+  }),
 }).refine(data => data.password === data.confirmPassword, {
     message: "Passwords don't match",
     path: ["confirmPassword"],
@@ -48,7 +52,10 @@ const professionalSchema = z.object({
   licenseNumber: z.string().min(1, { message: 'License number is required.' }),
   specialization: z.string().min(2, { message: 'Specialization is required.' }),
   password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
-  confirmPassword: z.string()
+  confirmPassword: z.string(),
+  terms: z.literal(true, {
+    errorMap: () => ({ message: 'You must accept the terms and conditions' }),
+  }),
 }).refine(data => data.password === data.confirmPassword, {
     message: "Passwords don't match",
     path: ["confirmPassword"],
@@ -61,7 +68,10 @@ const investorSchema = z.object({
     idNumber: z.string().min(10, { message: 'Please enter a valid identification number.' }).optional().or(z.literal('')),
     phoneNumber: z.string().min(10, { message: 'Please enter a valid phone number.' }),
     password: z.string().min(8, { message: 'Password must be at least 8 characters.' }),
-    confirmPassword: z.string()
+    confirmPassword: z.string(),
+    terms: z.literal(true, {
+        errorMap: () => ({ message: 'You must accept the terms and conditions' }),
+    }),
 }).refine(data => data.password === data.confirmPassword, {
     message: "Passwords don't match",
     path: ["confirmPassword"],
@@ -73,7 +83,7 @@ function ClientForm() {
     const [showPassword, setShowPassword] = useState(false);
     const form = useForm<z.infer<typeof clientSchema>>({
         resolver: zodResolver(clientSchema),
-        defaultValues: { fullName: '', email: '', dateOfBirth: '', phoneNumber: '', password: '', confirmPassword: '' },
+        defaultValues: { fullName: '', email: '', dateOfBirth: '', phoneNumber: '', password: '', confirmPassword: '', terms: false },
     });
 
     function onSubmit(values: z.infer<typeof clientSchema>) {
@@ -144,6 +154,26 @@ function ClientForm() {
                                 <FormMessage />
                             </FormItem>
                         )} />
+                        <FormField
+                            control={form.control}
+                            name="terms"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-row items-start space-x-3 space-y-0 pt-2">
+                                <FormControl>
+                                    <Checkbox
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
+                                    />
+                                </FormControl>
+                                <div className="space-y-1 leading-none">
+                                    <FormLabel>
+                                    I agree to the <Link href="/terms" className="text-primary hover:underline">Terms & Conditions</Link>
+                                    </FormLabel>
+                                    <FormMessage />
+                                </div>
+                                </FormItem>
+                            )}
+                        />
                         <Button type="submit" size="lg" className="w-full font-bold mt-6">
                             Create Account
                         </Button>
@@ -159,7 +189,7 @@ function ProfessionalForm() {
     const [showPassword, setShowPassword] = useState(false);
     const form = useForm<z.infer<typeof professionalSchema>>({
         resolver: zodResolver(professionalSchema),
-        defaultValues: { fullName: '', email: '', professionalTitle: '', licenseNumber: '', specialization: '', password: '', confirmPassword: '' },
+        defaultValues: { fullName: '', email: '', professionalTitle: '', licenseNumber: '', specialization: '', password: '', confirmPassword: '', terms: false },
     });
 
     function onSubmit(values: z.infer<typeof professionalSchema>) {
@@ -237,6 +267,26 @@ function ProfessionalForm() {
                                 <FormMessage />
                             </FormItem>
                         )} />
+                        <FormField
+                            control={form.control}
+                            name="terms"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-row items-start space-x-3 space-y-0 pt-2">
+                                <FormControl>
+                                    <Checkbox
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
+                                    />
+                                </FormControl>
+                                <div className="space-y-1 leading-none">
+                                    <FormLabel>
+                                     I agree to the <Link href="/terms" className="text-primary hover:underline">Terms & Conditions</Link>
+                                    </FormLabel>
+                                    <FormMessage />
+                                </div>
+                                </FormItem>
+                            )}
+                        />
                          <Button type="submit" size="lg" className="w-full font-bold mt-6">
                             Create Account
                         </Button>
@@ -253,7 +303,7 @@ function InvestorForm() {
     const [showPassword, setShowPassword] = useState(false);
     const form = useForm<z.infer<typeof investorSchema>>({
         resolver: zodResolver(investorSchema),
-        defaultValues: { fullName: '', email: '', idNumber: '', phoneNumber: '', password: '', confirmPassword: '' },
+        defaultValues: { fullName: '', email: '', idNumber: '', phoneNumber: '', password: '', confirmPassword: '', terms: false },
     });
 
     function onSubmit(values: z.infer<typeof investorSchema>) {
@@ -346,6 +396,26 @@ function InvestorForm() {
                                 <FormMessage />
                             </FormItem>
                         )} />
+                        <FormField
+                            control={form.control}
+                            name="terms"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-row items-start space-x-3 space-y-0 pt-2">
+                                <FormControl>
+                                    <Checkbox
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
+                                    />
+                                </FormControl>
+                                <div className="space-y-1 leading-none">
+                                    <FormLabel>
+                                    I agree to the <Link href="/terms" className="text-primary hover:underline">Terms & Conditions</Link>
+                                    </FormLabel>
+                                    <FormMessage />
+                                </div>
+                                </FormItem>
+                            )}
+                        />
                         <Button type="submit" size="lg" className="w-full font-bold mt-6">
                             Create Account
                         </Button>
@@ -426,3 +496,5 @@ export default function SignupPage() {
     </div>
   );
 }
+
+    
