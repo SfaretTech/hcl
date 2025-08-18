@@ -366,11 +366,11 @@ export default function SignupPage() {
             <div className="grid lg:grid-cols-2 gap-16 items-center">
                 <div className="hidden lg:flex justify-center">
                     <Image 
-                        src="https://images.unsplash.com/photo-1576091160550-2173dba999ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxkb2N0b3J8ZW58MHx8fHwxNzU1NDc0MDA4fDA&ixlib=rb-4.1.0&q=80&w=1080"
+                        src="https://images.unsplash.com/photo-1521790797524-b2497295b8a0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxDbGllbnR8ZW58MHx8fHwxNzU1NDc1NjA2fDA&ixlib=rb-4.1.0&q=80&w=1080"
                         width={500}
                         height={600}
-                        alt="A doctor using a tablet"
-                        data-ai-hint="doctor technology"
+                        alt="A diverse group of people smiling"
+                        data-ai-hint="happy clients"
                         className="rounded-2xl shadow-2xl object-cover h-full"
                     />
                 </div>
