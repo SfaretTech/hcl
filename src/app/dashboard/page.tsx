@@ -25,7 +25,7 @@ const ClientDashboard = () => (
         <div className="grid gap-8 lg:grid-cols-3">
            {/* Main column */}
            <div className="lg:col-span-2 space-y-8">
-               <Card className="bg-primary/5 text-primary-foreground border-primary/20 shadow-lg">
+               <Card className="bg-gradient-to-br from-primary/80 to-primary text-primary-foreground border-primary/20 shadow-2xl shadow-primary/20">
                     <CardHeader>
                          <div className="flex items-center gap-4">
                             <Avatar className="w-16 h-16 border-2 border-white">
@@ -33,13 +33,13 @@ const ClientDashboard = () => (
                                 <AvatarFallback>SC</AvatarFallback>
                             </Avatar>
                             <div>
-                                <CardDescription className="text-primary/80">Your Next Appointment</CardDescription>
-                                <CardTitle className="text-2xl font-bold text-primary">Follow-up with Dr. Samuel Chen</CardTitle>
+                                <CardDescription className="text-primary-foreground/80">Your Next Appointment</CardDescription>
+                                <CardTitle className="text-2xl font-bold">Follow-up with Dr. Samuel Chen</CardTitle>
                             </div>
                          </div>
                     </CardHeader>
                     <CardContent className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-2">
-                        <div className="flex items-center gap-3 text-primary">
+                        <div className="flex items-center gap-3">
                             <CalendarDays className="h-5 w-5"/>
                             <p className="font-semibold">Monday, August 26, 2024 at 11:00 AM</p>
                         </div>
@@ -111,7 +111,7 @@ const ClientDashboard = () => (
                         <CardTitle>Quick Access</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                         <Link href="/dashboard/messages" className="block p-4 rounded-lg bg-background hover:bg-secondary/50 transition-colors">
+                         <Link href="/dashboard/messages" className="block p-4 rounded-lg bg-background hover:bg-secondary transition-colors">
                             <div className="flex justify-between items-center">
                                 <div className="flex items-center gap-4">
                                      <div className="p-3 rounded-full bg-primary/10 text-primary">
@@ -125,7 +125,7 @@ const ClientDashboard = () => (
                                 <ChevronRight className="h-5 w-5 text-muted-foreground" />
                             </div>
                         </Link>
-                         <Link href="/dashboard/records" className="block p-4 rounded-lg bg-background hover:bg-secondary/50 transition-colors">
+                         <Link href="/dashboard/records" className="block p-4 rounded-lg bg-background hover:bg-secondary transition-colors">
                             <div className="flex justify-between items-center">
                                 <div className="flex items-center gap-4">
                                     <div className="p-3 rounded-full bg-primary/10 text-primary">
@@ -139,7 +139,7 @@ const ClientDashboard = () => (
                                 <ChevronRight className="h-5 w-5 text-muted-foreground" />
                             </div>
                         </Link>
-                        <Link href="/dashboard/shop" className="block p-4 rounded-lg bg-background hover:bg-secondary/50 transition-colors">
+                        <Link href="/dashboard/shop" className="block p-4 rounded-lg bg-background hover:bg-secondary transition-colors">
                             <div className="flex justify-between items-center">
                                 <div className="flex items-center gap-4">
                                     <div className="p-3 rounded-full bg-primary/10 text-primary">

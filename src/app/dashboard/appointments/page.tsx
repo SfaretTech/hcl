@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState } from 'react';
@@ -218,7 +217,7 @@ const AppointmentCard = ({ appointment, onCancel, onReschedule, onPay }: { appoi
     const getStatusBadge = (status: AppointmentStatus) => {
         switch(status) {
             case 'Pending': return <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 border-yellow-200 hover:bg-yellow-200"><Hourglass className="h-4 w-4 mr-1.5" />Pending</Badge>;
-            case 'Confirmed': return <Badge variant="default" className="bg-blue-500 hover:bg-blue-600"><CheckCircle className="h-4 w-4 mr-1.5" />Confirmed</Badge>;
+            case 'Confirmed': return <Badge variant="secondary" className="bg-blue-100 text-blue-800 border-blue-200 hover:bg-blue-200"><CheckCircle className="h-4 w-4 mr-1.5" />Confirmed</Badge>;
             case 'Completed': return <Badge variant="secondary"><CheckCircle className="h-4 w-4 mr-1.5" />Completed</Badge>;
             case 'Canceled': return <Badge variant="destructive"><XCircle className="h-4 w-4 mr-1.5" />Canceled</Badge>;
         }

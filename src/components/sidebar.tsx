@@ -80,7 +80,7 @@ export function Sidebar() {
     const isShopActive = pathname.startsWith('/dashboard/shop');
 
     return (
-        <aside className="hidden lg:flex flex-col w-64 border-r bg-white">
+        <aside className="hidden lg:flex flex-col w-64 border-r bg-card">
             <div className="flex-1 flex flex-col gap-y-7">
                 <div className="h-16 flex items-center px-6 border-b">
                      <Link href="/" className="flex items-center gap-2">
