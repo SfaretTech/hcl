@@ -4,7 +4,7 @@
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { Button, buttonVariants } from './ui/button';
-import { Sheet, SheetContent, SheetTrigger, SheetClose } from './ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle } from './ui/sheet';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
@@ -38,12 +38,14 @@ export function Header() {
                     </SheetTrigger>
                     <SheetContent side="left" className="w-[280px] p-0">
                          <div className="flex flex-col h-full">
-                            <div className="h-16 flex items-center px-6 border-b">
-                                <Link href="/" className="flex items-center gap-2">
-                                <Logo className="h-7 w-7 text-primary" />
-                                <span className="font-bold text-xl font-headline">HCOM</span>
-                            </Link>
-                            </div>
+                            <SheetHeader className="h-16 flex items-center px-6 border-b">
+                                <SheetTitle>
+                                    <Link href="/" className="flex items-center gap-2">
+                                    <Logo className="h-7 w-7 text-primary" />
+                                    <span className="font-bold text-xl font-headline">HCOM</span>
+                                    </Link>
+                                </SheetTitle>
+                            </SheetHeader>
                            <nav className="flex-1 px-4 py-4 space-y-2">
                                 {[{
                                     title: 'Dashboard',
@@ -145,18 +147,20 @@ export function Header() {
             </SheetTrigger>
             <SheetContent side="right" className="w-[280px]">
               <div className="flex flex-col h-full">
-                 <div className="flex items-center justify-between p-4 border-b">
-                   <Link href="/" className="flex items-center gap-2">
-                    <Logo className="h-6 w-6 text-primary" />
-                    <span className="font-bold text-lg font-headline">HCOM</span>
-                  </Link>
+                 <SheetHeader className="flex flex-row items-center justify-between p-4 border-b">
+                   <SheetTitle>
+                    <Link href="/" className="flex items-center gap-2">
+                        <Logo className="h-6 w-6 text-primary" />
+                        <span className="font-bold text-lg font-headline">HCOM</span>
+                    </Link>
+                   </SheetTitle>
                    <SheetClose asChild>
                      <Button variant="ghost" size="icon">
                         <X className="h-6 w-6" />
                         <span className="sr-only">Close menu</span>
                       </Button>
                    </SheetClose>
-                 </div>
+                 </SheetHeader>
                 <nav className="flex flex-col gap-4 p-4 mt-4">
                    {navLinks.map((link) => (
                     <SheetClose asChild key={link.href}>
