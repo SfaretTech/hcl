@@ -363,7 +363,7 @@ const accountImages: Record<string, {src: string, hint: string}> = {
     hint: "happy clients"
   },
   professional: {
-    src: "https://images.unsplash.com/photo-1576091160550-2173dba999ab?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxkb2N0b3J8ZW58MHx8fHwxNzU1NDc0MDA4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+    src: "https://images.unsplash.com/photo-1666886573230-2b730505f298?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxoZWFsdGhjYXJlJTIwcHJvdmlkZXJzfGVufDB8fHx8MTc1NTQ3NTc2Nnww&ixlib=rb-4.1.0&q=80&w=1080",
     hint: "healthcare professional"
   },
   investor: {
