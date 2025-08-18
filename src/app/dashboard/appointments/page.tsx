@@ -5,7 +5,7 @@
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Calendar as CalendarIcon, Clock, Video, MoreVertical, CheckCircle, XCircle, Info, AlertTriangle } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, Video, MoreVertical, CheckCircle, XCircle, Info, AlertTriangle, UserPlus } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -18,17 +18,14 @@ import { Label } from '@/components/ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { ScheduleAppointmentForm, type Doctor } from '@/components/schedule-appointment-form';
+import { ScheduleAppointmentForm, type Doctor, availableDoctors } from '@/components/schedule-appointment-form';
+import Link from 'next/link';
 
 
-const upcomingAppointments = [
+const initialAppointments = [
     {
         id: 'appt-1',
-        doctor: {
-            name: 'Dr. Samuel Chen',
-            specialty: 'General Medicine',
-            avatar: 'https://placehold.co/100x100.png'
-        },
+        doctor: availableDoctors[0],
         date: '2024-08-26T11:00:00',
         status: 'Confirmed' as const,
         notes: 'Follow-up regarding your recent test results. Please ensure you have them available.',
@@ -36,26 +33,15 @@ const upcomingAppointments = [
     },
     {
         id: 'appt-2',
-        doctor: {
-            name: 'Dr. Amina Khan',
-            specialty: 'Dermatology',
-            avatar: 'https://placehold.co/100x100.png'
-        },
+        doctor: availableDoctors[1],
         date: '2024-09-05T14:30:00',
         status: 'Confirmed' as const,
         notes: 'Initial consultation for your skin concerns.',
         joinLink: '#',
-    }
-];
-
-const pastAppointments = [
-    {
+    },
+     {
         id: 'appt-3',
-        doctor: {
-            name: 'Dr. Evelyn Reed',
-            specialty: 'Cardiology',
-            avatar: 'https://placehold.co/100x100.png'
-        },
+        doctor: availableDoctors[2],
         date: '2024-07-15T10:00:00',
         status: 'Completed' as const,
         notes: 'Discussed statin medication options. Follow-up in 6 months.',
@@ -63,11 +49,7 @@ const pastAppointments = [
     },
      {
         id: 'appt-4',
-        doctor: {
-            name: 'Dr. Samuel Chen',
-            specialty: 'General Medicine',
-            avatar: 'https://placehold.co/100x100.png'
-        },
+        doctor: availableDoctors[0],
         date: '2024-06-20T09:00:00',
         status: 'Completed' as const,
         notes: 'Annual physical check-up. All vitals are normal.',
@@ -75,19 +57,15 @@ const pastAppointments = [
     },
     {
         id: 'appt-5',
-        doctor: {
-            name: 'Dr. Ben Carter',
-            specialty: 'Pediatrics',
-            avatar: 'https://placehold.co/100x100.png'
-        },
+        doctor: availableDoctors[3],
         date: '2024-05-18T15:00:00',
         status: 'Canceled' as const,
         notes: 'Canceled by patient.',
         joinLink: '#',
     }
-]
+];
 
-export type Appointment = typeof upcomingAppointments[0] | typeof pastAppointments[0];
+export type Appointment = typeof initialAppointments[0];
 
 
 const RescheduleDialog = ({ appointment, onReschedule, children }: { appointment: Appointment, onReschedule: (id: string, newDate: Date) => void, children: React.ReactNode }) => {
@@ -263,8 +241,11 @@ const AppointmentCard = ({ appointment, onCancel, onReschedule }: { appointment:
 
 export default function AppointmentsPage() {
     const { toast } = useToast();
-    const [allAppointments, setAllAppointments] = useState<Appointment[]>([...upcomingAppointments, ...pastAppointments]);
+    const [allAppointments, setAllAppointments] = useState<Appointment[]>(initialAppointments);
     const [isScheduling, setIsScheduling] = useState(false);
+    
+    // In a real app, this would come from user data
+    const [myDoctors, setMyDoctors] = useState<Doctor[]>([availableDoctors[0], availableDoctors[1]]);
 
     const handleCancelAppointment = (id: string) => {
         setAllAppointments(prev => prev.map(appt => appt.id === id ? { ...appt, status: 'Canceled' } : appt));
@@ -321,10 +302,24 @@ export default function AppointmentsPage() {
                         <DialogHeader>
                             <DialogTitle>Schedule a New Appointment</DialogTitle>
                             <DialogDescription>
-                                Choose a doctor and find a time that works for you.
+                                Choose one of your saved doctors and find a time that works for you.
                             </DialogDescription>
                         </DialogHeader>
-                        <ScheduleAppointmentForm onSchedule={handleScheduleAppointment} />
+                        {myDoctors.length > 0 ? (
+                           <ScheduleAppointmentForm 
+                                myDoctors={myDoctors} 
+                                onSchedule={handleScheduleAppointment} 
+                            />
+                        ) : (
+                            <div className="py-8 text-center">
+                                <p className="text-muted-foreground mb-4">You haven't added any doctors to your list yet.</p>
+                                 <Button asChild>
+                                    <Link href="/dashboard/professionals" onClick={() => setIsScheduling(false)}>
+                                        <UserPlus className="mr-2 h-4 w-4"/> Find a Doctor
+                                    </Link>
+                                </Button>
+                            </div>
+                        )}
                     </DialogContent>
                 </Dialog>
             </div>

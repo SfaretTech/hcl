@@ -42,7 +42,7 @@ export type Doctor = {
     bio: string;
 };
 
-const availableDoctors: Doctor[] = [
+export const availableDoctors: Doctor[] = [
     {
         name: 'Dr. Samuel Chen',
         specialty: 'General Medicine',
@@ -73,12 +73,7 @@ const availableDoctors: Doctor[] = [
     },
 ];
 
-const departments = [...new Set(availableDoctors.map(d => d.department))];
-
 const formSchema = z.object({
-  department: z.string({
-    required_error: 'Please select a department.',
-  }),
   doctorId: z.string({
     required_error: 'Please select a doctor.',
   }),
@@ -88,27 +83,10 @@ const formSchema = z.object({
   notes: z.string().optional(),
 });
 
-export function ScheduleAppointmentForm({ onSchedule }: { onSchedule: (doctor: Doctor, date: Date, notes: string) => void; }) {
+export function ScheduleAppointmentForm({ myDoctors, onSchedule }: { myDoctors: Doctor[], onSchedule: (doctor: Doctor, date: Date, notes: string) => void; }) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
-
-  const selectedDepartment = form.watch('department');
-  const selectedDoctorId = form.watch('doctorId');
-
-  const filteredDoctors = useMemo(() => {
-    return availableDoctors.filter(d => d.department === selectedDepartment);
-  }, [selectedDepartment]);
-  
-  const selectedDoctor = useMemo(() => {
-      return availableDoctors.find(d => d.name === selectedDoctorId);
-  }, [selectedDoctorId]);
-
-  // Reset doctor selection when department changes
-  React.useEffect(() => {
-    form.resetField('doctorId');
-  }, [selectedDepartment, form]);
-
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     const doctor = availableDoctors.find(d => d.name === values.doctorId);
@@ -121,46 +99,28 @@ export function ScheduleAppointmentForm({ onSchedule }: { onSchedule: (doctor: D
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 pt-4">
-         <FormField
-          control={form.control}
-          name="department"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Select a Department</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Choose a department" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {departments.map((dept) => (
-                    <SelectItem key={dept} value={dept}>
-                      {dept}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <FormField
           control={form.control}
           name="doctorId"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Select a Doctor</FormLabel>
-              <Select onValueChange={field.onChange} value={field.value} disabled={!selectedDepartment}>
+              <Select onValueChange={field.onChange} value={field.value}>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Choose a healthcare professional" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {filteredDoctors.map((doc) => (
+                  {myDoctors.map((doc) => (
                     <SelectItem key={doc.name} value={doc.name}>
-                      {doc.name} - {doc.specialty}
+                        <div className="flex items-center gap-2">
+                           <Avatar className="w-6 h-6">
+                                <AvatarImage src={doc.avatar} alt={doc.name} />
+                                <AvatarFallback>{doc.name.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                           {doc.name} - {doc.specialty}
+                        </div>
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -169,24 +129,6 @@ export function ScheduleAppointmentForm({ onSchedule }: { onSchedule: (doctor: D
             </FormItem>
           )}
         />
-
-        {selectedDoctor && (
-             <Card className="bg-background/50 border-primary/20">
-                <CardHeader className="flex flex-row items-center gap-4">
-                    <Avatar className="w-16 h-16">
-                        <AvatarImage src={selectedDoctor.avatar} alt={selectedDoctor.name} />
-                        <AvatarFallback>{selectedDoctor.name.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                        <CardTitle className="text-lg">{selectedDoctor.name}</CardTitle>
-                        <CardDescription>{selectedDoctor.specialty}</CardDescription>
-                    </div>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-sm text-muted-foreground">{selectedDoctor.bio}</p>
-                </CardContent>
-            </Card>
-        )}
 
         <FormField
           control={form.control}

@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutGrid, CalendarDays, MessageSquare, FileText, User, Settings, LifeBuoy, LogOut } from 'lucide-react';
+import { LayoutGrid, CalendarDays, MessageSquare, FileText, User, Settings, LifeBuoy, LogOut, UserSearch } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -20,6 +20,11 @@ const sidebarNavItems = [
         title: 'Appointments',
         href: '/dashboard/appointments',
         icon: CalendarDays
+    },
+    {
+        title: 'Find a Doctor',
+        href: '/dashboard/professionals',
+        icon: UserSearch
     },
     {
         title: 'Messages',
@@ -58,7 +63,7 @@ export function Sidebar() {
                            className={cn(
                                buttonVariants({ variant: 'ghost' }),
                                'w-full justify-start',
-                               pathname === item.href && 'bg-primary/10 text-primary hover:bg-primary/20'
+                               pathname.startsWith(item.href) && 'bg-primary/10 text-primary hover:bg-primary/20'
                            )}
                        >
                            <item.icon className="mr-3 h-5 w-5" />

@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Menu, X } from 'lucide-react';
+import { Menu, X, LayoutGrid, CalendarDays, MessageSquare, FileText, User, UserSearch } from 'lucide-react';
 import Link from 'next/link';
 import { Button, buttonVariants } from './ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle } from './ui/sheet';
@@ -17,6 +17,39 @@ const navLinks = [
   { href: '/product', label: 'Product' },
   { href: '/outreach', label: 'Outreach' },
   { href: '/contact', label: 'Contact' },
+];
+
+const dashboardNavItems = [
+    {
+        title: 'Dashboard',
+        href: '/dashboard',
+        icon: LayoutGrid
+    },
+    {
+        title: 'Appointments',
+        href: '/dashboard/appointments',
+        icon: CalendarDays
+    },
+    {
+        title: 'Find a Doctor',
+        href: '/dashboard/professionals',
+        icon: UserSearch
+    },
+    {
+        title: 'Messages',
+        href: '/dashboard/messages',
+        icon: MessageSquare
+    },
+    {
+        title: 'Health Records',
+        href: '/dashboard/records',
+        icon: FileText
+    },
+    {
+        title: 'Profile',
+        href: '/dashboard/profile',
+        icon: User
+    },
 ];
 
 export function Header() {
@@ -47,40 +80,17 @@ export function Header() {
                                 </SheetTitle>
                             </SheetHeader>
                            <nav className="flex-1 px-4 py-4 space-y-2">
-                                {[{
-                                    title: 'Dashboard',
-                                    href: '/dashboard',
-                                    icon: 'LayoutGrid'
-                                },
-                                {
-                                    title: 'Appointments',
-                                    href: '/dashboard/appointments',
-                                    icon: 'CalendarDays'
-                                },
-                                {
-                                    title: 'Messages',
-                                    href: '/dashboard/messages',
-                                    icon: 'MessageSquare'
-                                },
-                                {
-                                    title: 'Health Records',
-                                    href: '/dashboard/records',
-                                    icon: 'FileText'
-                                },
-                                {
-                                    title: 'Profile',
-                                    href: '/dashboard/profile',
-                                    icon: 'User'
-                                }].map((item) => (
+                                {dashboardNavItems.map((item) => (
                                     <SheetClose asChild key={item.href}>
                                         <Link
                                             href={item.href}
                                              className={cn(
                                                 buttonVariants({ variant: 'ghost' }),
                                                 'w-full justify-start text-base',
-                                                pathname === item.href && 'bg-primary/10 text-primary hover:bg-primary/20'
+                                                pathname.startsWith(item.href) && 'bg-primary/10 text-primary hover:bg-primary/20'
                                             )}
                                         >
+                                           <item.icon className="mr-3 h-5 w-5" />
                                            {item.title}
                                         </Link>
                                     </SheetClose>
