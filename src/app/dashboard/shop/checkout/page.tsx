@@ -13,6 +13,7 @@ import { Separator } from '@/components/ui/separator';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useToast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 
 const cartItems = [
   {
@@ -40,6 +41,7 @@ const formatCurrency = (amount: number) => {
 
 export default function CheckoutPage() {
     const { toast } = useToast();
+    const router = useRouter();
     const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
     const shipping = 2000;
     const total = subtotal + shipping;
@@ -49,8 +51,7 @@ export default function CheckoutPage() {
             title: 'Order Placed!',
             description: 'Thank you for your purchase. You will receive a confirmation email shortly.',
         });
-        // Here you would typically redirect to an order confirmation page
-        // For now, we'll just show the toast.
+        router.push('/dashboard/shop/confirmation');
     }
 
     return (
