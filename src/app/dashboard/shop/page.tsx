@@ -8,6 +8,7 @@ import { Stethoscope, Pill, Leaf, Search, ArrowRight, ShoppingCart, HeartPulse, 
 import Link from 'next/link';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
 
 const categories = [
     {
@@ -96,6 +97,15 @@ const featuredProducts = [
 
 
 export default function ShopPage() {
+    const { toast } = useToast();
+
+    const handleAddToCart = (productName: string) => {
+        toast({
+            title: "Added to Cart!",
+            description: `${productName} has been added to your cart.`,
+        });
+    };
+
     return (
         <div className="space-y-12">
             <section className="bg-primary/5 rounded-xl p-8 text-center flex flex-col items-center">
@@ -157,7 +167,7 @@ export default function ShopPage() {
                                 </div>
                                 <div className="flex items-end justify-between mt-4">
                                    <p className="text-2xl font-bold text-primary">{product.price}</p>
-                                   <Button>
+                                   <Button onClick={() => handleAddToCart(product.name)}>
                                         <ShoppingCart className="mr-2 h-4 w-4" />
                                         Add to Cart
                                    </Button>
