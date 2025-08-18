@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Button, buttonVariants } from './ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle } from './ui/sheet';
 import { useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Logo } from './logo';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
@@ -14,6 +14,7 @@ import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Avatar, AvatarFallback } from './ui/avatar';
 import { Separator } from './ui/separator';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from './ui/dropdown-menu';
+import { useToast } from '@/hooks/use-toast';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -150,6 +151,16 @@ function Notifications() {
 export function Header() {
   const [isSheetOpen, setSheetOpen] = useState(false);
   const pathname = usePathname();
+  const router = useRouter();
+  const { toast } = useToast();
+
+  const handleLogout = () => {
+    toast({
+        title: "Logged Out",
+        description: "You have been successfully logged out.",
+    });
+    router.push('/login');
+  };
 
   const isDashboard = pathname.startsWith('/dashboard');
 
@@ -250,7 +261,7 @@ export function Header() {
                                         </Button>
                                     </SheetClose>
                                     <SheetClose asChild>
-                                        <Button variant="outline" className="w-full justify-start text-base">Logout</Button>
+                                        <Button variant="outline" className="w-full justify-start text-base" onClick={handleLogout}>Logout</Button>
                                     </SheetClose>
                                 </div>
                             </div>
@@ -288,7 +299,7 @@ export function Header() {
                                  <Link href="/dashboard/settings"><Settings className="mr-2 h-4 w-4" />Settings</Link>
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>
+                            <DropdownMenuItem onClick={handleLogout}>
                                <LogOut className="mr-2 h-4 w-4" />
                                Logout
                             </DropdownMenuItem>

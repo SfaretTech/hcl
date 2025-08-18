@@ -10,10 +10,12 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 
 
 export default function SettingsPage() {
     const { toast } = useToast();
+    const router = useRouter();
     const [notificationSettings, setNotificationSettings] = useState({
         email: true,
         sms: true,
@@ -54,6 +56,14 @@ export default function SettingsPage() {
             return newSettings;
         });
     }
+
+    const handleLogout = () => {
+        toast({
+            title: "Logged Out",
+            description: "You have been successfully logged out.",
+        });
+        router.push('/login');
+    };
 
     return (
         <div className="space-y-8">
@@ -137,7 +147,7 @@ export default function SettingsPage() {
                         <Link href="/dashboard/profile">Go to Profile Settings</Link>
                     </Button>
                      <Separator />
-                     <Button variant="destructive" className="w-full sm:w-auto">
+                     <Button variant="destructive" className="w-full sm:w-auto" onClick={handleLogout}>
                         <LogOut className="mr-2 h-4 w-4" /> Log Out
                     </Button>
                 </CardContent>

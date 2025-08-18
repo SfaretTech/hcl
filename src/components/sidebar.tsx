@@ -2,13 +2,14 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { LayoutGrid, CalendarDays, MessageSquare, FileText, User, Settings, LifeBuoy, LogOut, UserSearch, UserPlus, ShoppingCart, CreditCard, CheckCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Logo } from './logo';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
+import { useToast } from '@/hooks/use-toast';
 
 
 const sidebarNavItems = [
@@ -75,6 +76,16 @@ const sidebarNavItems = [
 
 export function Sidebar() {
     const pathname = usePathname();
+    const router = useRouter();
+    const { toast } = useToast();
+
+    const handleLogout = () => {
+        toast({
+            title: "Logged Out",
+            description: "You have been successfully logged out.",
+        });
+        router.push('/login');
+    };
 
     const isProfessionalsActive = pathname.startsWith('/dashboard/professionals');
     const isShopActive = pathname.startsWith('/dashboard/shop');
@@ -155,7 +166,7 @@ export function Sidebar() {
                     <Settings className="mr-3 h-5 w-5" />
                     Settings
                 </Link>
-                <Button variant="outline" className="w-full justify-start">
+                <Button variant="outline" className="w-full justify-start" onClick={handleLogout}>
                      <LogOut className="mr-3 h-5 w-5" />
                      Logout
                 </Button>
