@@ -7,27 +7,32 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, UserPlus, Check, X } from 'lucide-react';
+import { Search, UserPlus, X, MapPin } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { availableDoctors, type Doctor } from '@/components/schedule-appointment-form';
 
 const departments = ['All', ...new Set(availableDoctors.map(d => d.department))];
+const locations = ['All', ...new Set(availableDoctors.map(d => d.location))];
 
 const DoctorCard = ({ doctor, onAdd, onRemove, isAdded }: { doctor: Doctor, onAdd: (doctor: Doctor) => void, onRemove: (doctor: Doctor) => void, isAdded: boolean }) => {
     return (
-        <Card className="bg-white hover:shadow-lg transition-shadow">
-            <CardHeader className="text-center">
-                <Avatar className="w-24 h-24 mx-auto mb-4 border-4 border-primary/20">
+        <Card className="bg-white hover:shadow-lg transition-shadow flex flex-col">
+            <CardHeader className="text-center items-center">
+                <Avatar className="w-24 h-24 mb-4 border-4 border-primary/20">
                     <AvatarImage src={doctor.avatar} alt={doctor.name} />
                     <AvatarFallback>{doctor.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                 </Avatar>
                 <CardTitle className="font-headline text-xl">{doctor.name}</CardTitle>
                 <CardDescription>{doctor.specialty}</CardDescription>
+                <div className="flex items-center gap-1.5 text-sm text-muted-foreground pt-1">
+                    <MapPin className="h-4 w-4" />
+                    <span>{doctor.location}</span>
+                </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-grow">
                 <p className="text-sm text-muted-foreground text-center line-clamp-3 h-[60px]">{doctor.bio}</p>
             </CardContent>
-            <CardFooter className="flex-col gap-2">
+            <CardFooter className="flex-col gap-2 pt-4">
                 <Button variant="outline" className="w-full">View Profile</Button>
                 {isAdded ? (
                      <Button variant="secondary" className="w-full" onClick={() => onRemove(doctor)}>
@@ -47,6 +52,7 @@ export default function ProfessionalsPage() {
     const { toast } = useToast();
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedDepartment, setSelectedDepartment] = useState('All');
+    const [selectedLocation, setSelectedLocation] = useState('All');
     
     // In a real app, this would come from a user data store/context
     const [myDoctors, setMyDoctors] = useState<Doctor[]>([availableDoctors[0]]);
@@ -73,11 +79,12 @@ export default function ProfessionalsPage() {
     const filteredDoctors = useMemo(() => {
         return availableDoctors.filter(doctor => {
             const matchesDepartment = selectedDepartment === 'All' || doctor.department === selectedDepartment;
+            const matchesLocation = selectedLocation === 'All' || doctor.location === selectedLocation;
             const matchesSearch = doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                                   doctor.specialty.toLowerCase().includes(searchTerm.toLowerCase());
-            return matchesDepartment && matchesSearch;
+            return matchesDepartment && matchesSearch && matchesLocation;
         });
-    }, [searchTerm, selectedDepartment]);
+    }, [searchTerm, selectedDepartment, selectedLocation]);
 
     return (
         <div className="space-y-8">
@@ -86,9 +93,9 @@ export default function ProfessionalsPage() {
                 <p className="text-muted-foreground">Search our network of licensed professionals to find the right care for you.</p>
             </div>
 
-            <Card className="bg-white p-6">
-                <div className="flex flex-col sm:flex-row gap-4">
-                    <div className="relative flex-1">
+            <Card className="bg-white p-6 shadow-sm">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="relative sm:col-span-3 lg:col-span-1">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                         <Input 
                             placeholder="Search by name or specialty..."
@@ -98,12 +105,22 @@ export default function ProfessionalsPage() {
                         />
                     </div>
                     <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
-                        <SelectTrigger className="w-full sm:w-[240px]">
+                        <SelectTrigger className="w-full">
                             <SelectValue placeholder="Filter by department" />
                         </SelectTrigger>
                         <SelectContent>
                             {departments.map(dept => (
-                                <SelectItem key={dept} value={dept}>{dept}</SelectItem>
+                                <SelectItem key={dept} value={dept}>{dept === 'All' ? 'All Departments' : dept}</SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                     <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+                        <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Filter by location" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {locations.map(loc => (
+                                <SelectItem key={loc} value={loc}>{loc === 'All' ? 'All Locations' : loc}</SelectItem>
                             ))}
                         </SelectContent>
                     </Select>

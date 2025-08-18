@@ -40,6 +40,7 @@ export type Doctor = {
     avatar: string;
     department: 'Technology' | 'Outreach' | 'General Medicine' | 'Dermatology' | 'Cardiology' | 'Pediatrics';
     bio: string;
+    location: string;
 };
 
 export const availableDoctors: Doctor[] = [
@@ -48,28 +49,32 @@ export const availableDoctors: Doctor[] = [
         specialty: 'General Medicine',
         department: 'General Medicine',
         avatar: 'https://placehold.co/100x100.png',
-        bio: 'Dr. Chen has over 10 years of experience in general medicine and is passionate about preventative care.'
+        bio: 'Dr. Chen has over 10 years of experience in general medicine and is passionate about preventative care.',
+        location: 'Port Harcourt, NG',
     },
     {
         name: 'Dr. Amina Khan',
         specialty: 'Dermatology',
         department: 'Dermatology',
         avatar: 'https://placehold.co/100x100.png',
-        bio: 'Dr. Khan is a board-certified dermatologist specializing in both medical and cosmetic dermatology.'
+        bio: 'Dr. Khan is a board-certified dermatologist specializing in both medical and cosmetic dermatology.',
+        location: 'Lagos, NG',
     },
     {
         name: 'Dr. Evelyn Reed',
         specialty: 'Cardiology',
         department: 'Cardiology',
         avatar: 'https://placehold.co/100x100.png',
-        bio: 'Dr. Reed is a leading cardiologist with expertise in managing complex heart conditions.'
+        bio: 'Dr. Reed is a leading cardiologist with expertise in managing complex heart conditions.',
+        location: 'Abuja, FCT',
     },
     {
         name: 'Dr. Ben Carter',
         specialty: 'Pediatrics',
         department: 'Pediatrics',
         avatar: 'https://placehold.co/100x100.png',
-        bio: 'Dr. Carter is a dedicated pediatrician with a friendly approach to child healthcare.'
+        bio: 'Dr. Carter is a dedicated pediatrician with a friendly approach to child healthcare.',
+        location: 'Port Harcourt, NG',
     },
 ];
 
