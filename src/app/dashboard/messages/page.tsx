@@ -106,10 +106,15 @@ export default function MessagesPage() {
                         )}
                         onClick={() => setSelectedConversation(convo)}
                     >
-                        <Avatar className="w-12 h-12">
-                            <AvatarImage src={convo.doctor.avatar} />
-                            <AvatarFallback>{convo.doctor.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
+                        <div className="relative">
+                            <Avatar className="w-12 h-12">
+                                <AvatarImage src={convo.doctor.avatar} />
+                                <AvatarFallback>{convo.doctor.name.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                             {convo.doctor.status === 'online' && (
+                                <span className="absolute bottom-0 right-0 block h-3 w-3 rounded-full bg-green-500 ring-2 ring-white" />
+                            )}
+                        </div>
                         <div className="flex-1 overflow-hidden">
                             <div className="flex justify-between items-center">
                                 <h3 className="font-semibold truncate">{convo.doctor.name}</h3>
@@ -135,10 +140,15 @@ export default function MessagesPage() {
                 <>
                     <CardHeader className="flex-row items-center justify-between border-b">
                         <div className="flex items-center gap-4">
-                            <Avatar>
-                                <AvatarImage src={selectedConversation.doctor.avatar} />
-                                <AvatarFallback>{selectedConversation.doctor.name.charAt(0)}</AvatarFallback>
-                            </Avatar>
+                            <div className="relative">
+                                <Avatar>
+                                    <AvatarImage src={selectedConversation.doctor.avatar} />
+                                    <AvatarFallback>{selectedConversation.doctor.name.charAt(0)}</AvatarFallback>
+                                </Avatar>
+                                {selectedConversation.doctor.status === 'online' && (
+                                    <span className="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full bg-green-500 ring-2 ring-white" />
+                                )}
+                            </div>
                             <div>
                                 <h2 className="text-lg font-bold">{selectedConversation.doctor.name}</h2>
                                 <p className="text-sm text-muted-foreground">{selectedConversation.doctor.specialty}</p>
@@ -163,7 +173,7 @@ export default function MessagesPage() {
                                     <div className="max-w-[70%]">
                                        <div className={cn(
                                            "rounded-2xl p-3 text-sm",
-                                           msg.sender === 'me' ? 'bg-primary text-primary-foreground rounded-br-none' : 'bg-white rounded-bl-none'
+                                           msg.sender === 'me' ? 'bg-primary text-primary-foreground rounded-br-none' : 'bg-white rounded-bl-none border'
                                        )}>
                                            <p>{msg.text}</p>
                                        </div>

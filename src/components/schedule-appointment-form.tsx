@@ -41,6 +41,7 @@ export type Doctor = {
     department: 'Technology' | 'Outreach' | 'General Medicine' | 'Dermatology' | 'Cardiology' | 'Pediatrics';
     bio: string;
     location: string;
+    status: 'online' | 'offline';
 };
 
 export const availableDoctors: Doctor[] = [
@@ -51,6 +52,7 @@ export const availableDoctors: Doctor[] = [
         avatar: 'https://placehold.co/100x100.png',
         bio: 'Dr. Chen has over 10 years of experience in general medicine and is passionate about preventative care.',
         location: 'Port Harcourt, NG',
+        status: 'online',
     },
     {
         name: 'Dr. Amina Khan',
@@ -59,6 +61,7 @@ export const availableDoctors: Doctor[] = [
         avatar: 'https://placehold.co/100x100.png',
         bio: 'Dr. Khan is a board-certified dermatologist specializing in both medical and cosmetic dermatology.',
         location: 'Lagos, NG',
+        status: 'offline',
     },
     {
         name: 'Dr. Evelyn Reed',
@@ -67,6 +70,7 @@ export const availableDoctors: Doctor[] = [
         avatar: 'https://placehold.co/100x100.png',
         bio: 'Dr. Reed is a leading cardiologist with expertise in managing complex heart conditions.',
         location: 'Abuja, FCT',
+        status: 'online',
     },
     {
         name: 'Dr. Ben Carter',
@@ -75,6 +79,7 @@ export const availableDoctors: Doctor[] = [
         avatar: 'https://placehold.co/100x100.png',
         bio: 'Dr. Carter is a dedicated pediatrician with a friendly approach to child healthcare.',
         location: 'Port Harcourt, NG',
+        status: 'offline',
     },
 ];
 
