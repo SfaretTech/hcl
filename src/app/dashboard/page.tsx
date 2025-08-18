@@ -43,8 +43,10 @@ const ClientDashboard = () => (
                             <CalendarDays className="h-5 w-5"/>
                             <p className="font-semibold">Monday, August 26, 2024 at 11:00 AM</p>
                         </div>
-                        <Button variant="secondary" className="bg-white text-primary hover:bg-white/90">
-                           Manage Appointment <ChevronRight className="ml-2 h-4 w-4"/>
+                        <Button asChild variant="secondary" className="bg-white text-primary hover:bg-white/90">
+                           <Link href="/dashboard/appointments">
+                             Manage Appointment <ChevronRight className="ml-2 h-4 w-4"/>
+                           </Link>
                         </Button>
                     </CardContent>
                 </Card>
