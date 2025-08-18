@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -63,12 +63,13 @@ const initialMessages: Record<string, Message[]> = {
 export default function MessagesPage() {
   const [conversations, setConversations] = useState(initialConversations);
   const [messages, setMessages] = useState(initialMessages);
-  const [selectedConversation, setSelectedConversation] = useState(conversations[0]);
+  const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(conversations.length > 0 ? conversations[0] : null);
   const [newMessage, setNewMessage] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handleSendMessage = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newMessage.trim()) return;
+    if (!newMessage.trim() || !selectedConversation) return;
 
     const currentMessages = messages[selectedConversation.doctor.name] || [];
     const updatedMessages = [
@@ -85,6 +86,12 @@ export default function MessagesPage() {
     setNewMessage('');
   };
 
+  const filteredConversations = useMemo(() => {
+    return conversations.filter(convo => 
+        convo.doctor.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        convo.lastMessage.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [conversations, searchTerm]);
 
   return (
     <div className="flex h-full max-h-[calc(100vh-10rem)] border bg-white rounded-lg overflow-hidden">
@@ -93,16 +100,21 @@ export default function MessagesPage() {
             <div className="p-4 border-b">
                  <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                    <Input placeholder="Search messages..." className="pl-10"/>
+                    <Input 
+                        placeholder="Search conversations..." 
+                        className="pl-10"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
                 </div>
             </div>
             <ScrollArea className="flex-1">
-                {conversations.map(convo => (
+                {filteredConversations.map(convo => (
                     <button 
                         key={convo.doctor.name}
                         className={cn(
                             "flex items-center gap-4 p-4 w-full text-left hover:bg-accent transition-colors",
-                            selectedConversation.doctor.name === convo.doctor.name && "bg-secondary"
+                            selectedConversation?.doctor.name === convo.doctor.name && "bg-secondary"
                         )}
                         onClick={() => setSelectedConversation(convo)}
                     >
