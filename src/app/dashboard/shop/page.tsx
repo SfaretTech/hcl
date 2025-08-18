@@ -133,7 +133,7 @@ export default function ShopPage() {
 
             <section>
                 <h2 className="text-2xl font-bold font-headline mb-6">Featured Products</h2>
-                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                     {featuredProducts.map((product) => (
                        <Card key={product.name} className="bg-white hover:shadow-xl transition-shadow flex flex-col overflow-hidden group">
                             <CardContent className="p-0">
