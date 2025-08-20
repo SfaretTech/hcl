@@ -23,12 +23,15 @@ import { useToast } from '@/hooks/use-toast';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { AIAssistant } from '@/components/ai-assistant';
-import { Checkbox } from '@/components/ui/checkbox';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   password: z.string().min(1, { message: 'Password is required.' }),
 });
+
+// A hardcoded list of professional users for simulation
+const professionalUsers = ['dr.chen@hcom.com', 'dr.aminakhan@hcom.com', 'dr.evelynreed@hcom.com', 'dr.bencarter@hcom.com'];
+
 
 export default function LoginPage() {
   const { toast } = useToast();
@@ -48,9 +51,8 @@ export default function LoginPage() {
       description: "Redirecting to your dashboard...",
     });
     
-    // Simulate role-based login
-    // In a real app, you would fetch the user's role from your database
-    if (values.email.toLowerCase().includes('dr.')) {
+    // Check if the logging-in user's email is in our list of professionals
+    if (professionalUsers.includes(values.email.toLowerCase())) {
         router.push('/dashboard/professional');
     } else {
         router.push('/dashboard');
