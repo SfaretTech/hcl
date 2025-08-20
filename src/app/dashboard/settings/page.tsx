@@ -22,12 +22,23 @@ export default function ProfessionalSettingsPage() {
         emailNewMessage: false,
     });
     const [activeTheme, setActiveTheme] = useState('light');
+    const [showLogoutToast, setShowLogoutToast] = useState(false);
 
     useEffect(() => {
         const savedTheme = localStorage.getItem('theme') || 'light';
         setActiveTheme(savedTheme);
         document.documentElement.classList.toggle('dark', savedTheme === 'dark');
     }, []);
+
+    useEffect(() => {
+        if (showLogoutToast) {
+            toast({
+                title: "Logged Out",
+                description: "You have been successfully logged out.",
+            });
+            router.push('/login');
+        }
+    }, [showLogoutToast, toast, router]);
 
 
     const handleThemeChange = (theme: 'light' | 'dark' | 'system') => {
@@ -57,11 +68,7 @@ export default function ProfessionalSettingsPage() {
     }
 
     const handleLogout = () => {
-        toast({
-            title: "Logged Out",
-            description: "You have been successfully logged out.",
-        });
-        router.push('/login');
+        setShowLogoutToast(true);
     };
 
     return (

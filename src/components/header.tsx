@@ -5,7 +5,7 @@ import { Menu, X, LayoutGrid, CalendarDays, MessageSquare, FileText, User, UserS
 import Link from 'next/link';
 import { Button, buttonVariants } from './ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle } from './ui/sheet';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Logo } from './logo';
@@ -169,13 +169,20 @@ function Notifications({role}: {role: 'client' | 'professional'}) {
 function UserNav({role}: {role: 'client' | 'professional'}) {
     const router = useRouter();
     const { toast } = useToast();
+    const [showLogoutToast, setShowLogoutToast] = useState(false);
+
+    useEffect(() => {
+        if (showLogoutToast) {
+            toast({
+                title: "Logged Out",
+                description: "You have been successfully logged out.",
+            });
+            router.push('/login');
+        }
+    }, [showLogoutToast, toast, router]);
 
     const handleLogout = () => {
-        toast({
-            title: "Logged Out",
-            description: "You have been successfully logged out.",
-        });
-        router.push('/login');
+        setShowLogoutToast(true);
     };
     
     const profileLink = role === 'professional' ? '/dashboard/profile' : '/dashboard/client/profile';
@@ -231,13 +238,20 @@ export function Header() {
   const pathname = usePathname();
   const router = useRouter();
   const { toast } = useToast();
+  const [showLogoutToast, setShowLogoutToast] = useState(false);
+
+  useEffect(() => {
+    if (showLogoutToast) {
+        toast({
+            title: "Logged Out",
+            description: "You have been successfully logged out.",
+        });
+        router.push('/login');
+    }
+  }, [showLogoutToast, toast, router]);
 
   const handleLogout = () => {
-    toast({
-        title: "Logged Out",
-        description: "You have been successfully logged out.",
-    });
-    router.push('/login');
+    setShowLogoutToast(true);
   };
 
   const isDashboard = pathname.startsWith('/dashboard');
