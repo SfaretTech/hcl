@@ -50,7 +50,7 @@ export default function LoginPage() {
     
     // Simulate role-based login
     // In a real app, you would fetch the user's role from your database
-    if (values.email.toLowerCase().startsWith('dr.')) {
+    if (values.email.toLowerCase().includes('dr.')) {
         router.push('/dashboard/professional');
     } else {
         router.push('/dashboard');
