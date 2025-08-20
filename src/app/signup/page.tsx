@@ -8,6 +8,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 
 import { Button } from '@/components/ui/button';
@@ -78,6 +79,7 @@ const investorSchema = z.object({
 
 function ClientForm() {
     const { toast } = useToast();
+    const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
     const form = useForm<z.infer<typeof clientSchema>>({
         resolver: zodResolver(clientSchema),
@@ -86,8 +88,9 @@ function ClientForm() {
 
     function onSubmit(values: z.infer<typeof clientSchema>) {
         console.log('Client Account created:', values);
-        toast({ title: "Account Created!", description: "Please check your email to verify your account." });
+        toast({ title: "Account Created!", description: "Redirecting you to the login page..." });
         form.reset();
+        router.push('/login');
     }
     
     return (
@@ -184,6 +187,7 @@ function ClientForm() {
 
 function ProfessionalForm() {
     const { toast } = useToast();
+    const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
     const form = useForm<z.infer<typeof professionalSchema>>({
         resolver: zodResolver(professionalSchema),
@@ -192,8 +196,9 @@ function ProfessionalForm() {
 
     function onSubmit(values: z.infer<typeof professionalSchema>) {
         console.log('Professional Account created:', values);
-        toast({ title: "Account Created!", description: "Please check your email to verify your account." });
+        toast({ title: "Account Created!", description: "Redirecting you to the login page..." });
         form.reset();
+        router.push('/login');
     }
     
     return (
@@ -297,6 +302,7 @@ function ProfessionalForm() {
 
 function InvestorForm() {
     const { toast } = useToast();
+    const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
     const form = useForm<z.infer<typeof investorSchema>>({
         resolver: zodResolver(investorSchema),
@@ -305,8 +311,9 @@ function InvestorForm() {
 
     function onSubmit(values: z.infer<typeof investorSchema>) {
         console.log('Investor Account created:', values);
-        toast({ title: "Account Created!", description: "Thank you for your interest. We will be in touch with you shortly." });
+        toast({ title: "Account Created!", description: "Redirecting you to the login page..." });
         form.reset();
+        router.push('/login');
     }
     
     return (
@@ -480,4 +487,3 @@ export default function SignupPage() {
     </div>
   );
 }
-
