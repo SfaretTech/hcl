@@ -7,6 +7,7 @@ import { z } from 'zod';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 
 import { Button } from '@/components/ui/button';
@@ -23,19 +24,18 @@ import { useToast } from '@/hooks/use-toast';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { AIAssistant } from '@/components/ai-assistant';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   password: z.string().min(1, { message: 'Password is required.' }),
 });
 
-// A hardcoded list of professional users for simulation
-const professionalUsers = ['dr.chen@hcom.com', 'dr.aminakhan@hcom.com', 'dr.evelynreed@hcom.com', 'dr.bencarter@hcom.com'];
-
-
 export default function LoginPage() {
   const { toast } = useToast();
   const router = useRouter();
+  const [role, setRole] = useState('client');
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -45,17 +45,24 @@ export default function LoginPage() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log('Login submitted:', values);
+    console.log('Login submitted for role', role, 'with values:', values);
     toast({
       title: "Logged In Successfully!",
       description: "Redirecting to your dashboard...",
     });
     
-    // Check if the logging-in user's email is in our list of professionals
-    if (professionalUsers.includes(values.email.toLowerCase())) {
+    switch(role) {
+      case 'professional':
         router.push('/dashboard/professional');
-    } else {
+        break;
+      case 'investor':
+        // As there is no investor dashboard yet, redirecting to the client dashboard
         router.push('/dashboard');
+        break;
+      case 'client':
+      default:
+        router.push('/dashboard');
+        break;
     }
   }
 
@@ -81,6 +88,15 @@ export default function LoginPage() {
                             <h1 className="font-headline text-3xl font-bold tracking-tight sm:text-4xl">Welcome Back</h1>
                             <p className="mt-2 text-muted-foreground">Log in to access your HCOM account.</p>
                         </div>
+
+                        <Tabs defaultValue="client" className="w-full" onValueChange={setRole}>
+                            <TabsList className="grid w-full grid-cols-3 mb-6">
+                                <TabsTrigger value="client">Client</TabsTrigger>
+                                <TabsTrigger value="professional">Professional</TabsTrigger>
+                                <TabsTrigger value="investor">Investor</TabsTrigger>
+                            </TabsList>
+                        </Tabs>
+
                         <Form {...form}>
                           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                              <FormField
@@ -113,7 +129,7 @@ export default function LoginPage() {
                               )}
                             />
                             <Button type="submit" size="lg" className="w-full font-bold">
-                              Log In
+                              Log In as {role.charAt(0).toUpperCase() + role.slice(1)}
                             </Button>
                           </form>
                         </Form>
