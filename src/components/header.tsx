@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils';
 import { Logo } from './logo';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
-import { Avatar, AvatarFallback } from './ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Separator } from './ui/separator';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
@@ -25,7 +25,7 @@ const navLinks = [
   { href: '/contact', label: 'Contact' },
 ];
 
-const dashboardNavItems = [
+const clientNavItems = [
     {
         title: 'Dashboard',
         href: '/dashboard',
@@ -87,6 +87,15 @@ const dashboardNavItems = [
     },
 ];
 
+const professionalNavItems = [
+     {
+        title: 'Dashboard',
+        href: '/dashboard/professional',
+        icon: LayoutGrid
+    },
+    // Add more professional-specific nav items here
+]
+
 
 const notifications = [
     {
@@ -112,7 +121,7 @@ const notifications = [
     },
 ];
 
-function Notifications() {
+function Notifications({role}: {role: 'client' | 'professional'}) {
     return (
         <Popover>
             <PopoverTrigger asChild>
@@ -148,6 +157,55 @@ function Notifications() {
     )
 }
 
+function UserNav({role}: {role: 'client' | 'professional'}) {
+    const router = useRouter();
+    const { toast } = useToast();
+
+    const handleLogout = () => {
+        toast({
+            title: "Logged Out",
+            description: "You have been successfully logged out.",
+        });
+        router.push('/login');
+    };
+    
+    const profileLink = role === 'professional' ? '/dashboard/professional/profile' : '/dashboard/profile';
+    const settingsLink = role === 'professional' ? '/dashboard/professional/settings' : '/dashboard/settings';
+
+    return (
+         <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                    <Avatar className="h-10 w-10">
+                        <AvatarImage src={role === 'professional' ? 'https://placehold.co/100x100.png' : 'https://placehold.co/100x100.png'} />
+                        <AvatarFallback>{role === 'professional' ? 'DC' : 'JP'}</AvatarFallback>
+                    </Avatar>
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none">{role === 'professional' ? 'Dr. Chen' : 'Jessica Peterson'}</p>
+                        <p className="text-xs leading-none text-muted-foreground">{role === 'professional' ? 'dr.chen@hcom.com' : 'jessica.peterson@example.com'}</p>
+                    </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                    <Link href={profileLink}><User className="mr-2 h-4 w-4" />Profile</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                        <Link href={settingsLink}><Settings className="mr-2 h-4 w-4" />Settings</Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Logout
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
+    )
+}
+
 export function Header() {
   const [isSheetOpen, setSheetOpen] = useState(false);
   const pathname = usePathname();
@@ -163,6 +221,9 @@ export function Header() {
   };
 
   const isDashboard = pathname.startsWith('/dashboard');
+  const role = pathname.includes('/professional') ? 'professional' : 'client';
+  const dashboardNavItems = role === 'professional' ? professionalNavItems : clientNavItems;
+
 
   if (isDashboard) {
     return (
@@ -269,42 +330,16 @@ export function Header() {
                     </Sheet>
                  </div>
                  <div className="flex items-center gap-2 ml-auto">
-                    <Button asChild variant="ghost" size="icon">
-                        <Link href="/dashboard/shop/cart">
-                            <ShoppingCart className="h-5 w-5" />
-                            <span className="sr-only">Cart</span>
-                        </Link>
-                    </Button>
-                    <Notifications />
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                             <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                                <Avatar className="h-10 w-10">
-                                    <AvatarFallback>JP</AvatarFallback>
-                                </Avatar>
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-56" align="end" forceMount>
-                            <DropdownMenuLabel className="font-normal">
-                                <div className="flex flex-col space-y-1">
-                                    <p className="text-sm font-medium leading-none">Jessica Peterson</p>
-                                    <p className="text-xs leading-none text-muted-foreground">jessica.peterson@example.com</p>
-                                </div>
-                            </DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                             <DropdownMenuItem asChild>
-                                <Link href="/dashboard/profile"><User className="mr-2 h-4 w-4" />Profile</Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuItem asChild>
-                                 <Link href="/dashboard/settings"><Settings className="mr-2 h-4 w-4" />Settings</Link>
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={handleLogout}>
-                               <LogOut className="mr-2 h-4 w-4" />
-                               Logout
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    {role === 'client' && (
+                        <Button asChild variant="ghost" size="icon">
+                            <Link href="/dashboard/shop/cart">
+                                <ShoppingCart className="h-5 w-5" />
+                                <span className="sr-only">Cart</span>
+                            </Link>
+                        </Button>
+                    )}
+                    <Notifications role={role} />
+                    <UserNav role={role} />
                  </div>
             </div>
        </header>

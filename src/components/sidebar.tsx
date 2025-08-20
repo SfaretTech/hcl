@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutGrid, CalendarDays, MessageSquare, FileText, User, Settings, LifeBuoy, LogOut, UserSearch, UserPlus, ShoppingCart, CreditCard, CheckCircle } from 'lucide-react';
+import { LayoutGrid, CalendarDays, MessageSquare, FileText, User, Settings, LifeBuoy, LogOut, UserSearch, UserPlus, ShoppingCart, CreditCard, CheckCircle, Briefcase } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -16,18 +16,27 @@ const sidebarNavItems = [
     {
         title: 'Dashboard',
         href: '/dashboard',
-        icon: LayoutGrid
+        icon: LayoutGrid,
+        role: 'client'
+    },
+    {
+        title: 'Dashboard',
+        href: '/dashboard/professional',
+        icon: LayoutGrid,
+        role: 'professional'
     },
     {
         title: 'Appointments',
         href: '/dashboard/appointments',
-        icon: CalendarDays
+        icon: CalendarDays,
+        role: 'client'
     },
     {
         title: 'My Doctors',
         href: '/dashboard/professionals',
         icon: User,
-        subItems: [
+        role: 'client',
+         subItems: [
              {
                 title: 'Find a Doctor',
                 href: '/dashboard/professionals/find',
@@ -38,17 +47,20 @@ const sidebarNavItems = [
     {
         title: 'Messages',
         href: '/dashboard/messages',
-        icon: MessageSquare
+        icon: MessageSquare,
+        role: 'client'
     },
     {
         title: 'Health Records',
         href: '/dashboard/records',
-        icon: FileText
+        icon: FileText,
+        role: 'client'
     },
      {
         title: 'Shop',
         href: '/dashboard/shop',
         icon: ShoppingCart,
+        role: 'client',
         subItems: [
             {
                 title: 'Cart',
@@ -70,7 +82,8 @@ const sidebarNavItems = [
     {
         title: 'Profile',
         href: '/dashboard/profile',
-        icon: User
+        icon: User,
+        role: 'client'
     },
 ];
 
@@ -78,6 +91,9 @@ export function Sidebar() {
     const pathname = usePathname();
     const router = useRouter();
     const { toast } = useToast();
+    
+    // In a real app, role would come from a user session
+    const role = pathname.includes('/professional') ? 'professional' : 'client';
 
     const handleLogout = () => {
         toast({
@@ -90,6 +106,8 @@ export function Sidebar() {
     const isProfessionalsActive = pathname.startsWith('/dashboard/professionals');
     const isShopActive = pathname.startsWith('/dashboard/shop');
 
+    const filteredNav = sidebarNavItems.filter(item => !item.role || item.role === role);
+
     return (
         <aside className="hidden lg:flex flex-col w-64 border-r bg-card">
             <div className="flex-1 flex flex-col gap-y-7">
@@ -100,7 +118,7 @@ export function Sidebar() {
                     </Link>
                 </div>
                 <nav className="flex-1 px-4 space-y-1">
-                   {sidebarNavItems.map((item) => (
+                   {filteredNav.map((item) => (
                     item.subItems ? (
                         <Accordion key={item.title} type="single" collapsible defaultValue={isProfessionalsActive || isShopActive ? 'item-1' : ''}>
                             <AccordionItem value="item-1" className="border-b-0">

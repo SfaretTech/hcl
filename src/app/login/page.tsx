@@ -51,9 +51,13 @@ export default function LoginPage() {
     });
     
     // Simulate role-based login
-    const role = values.email.toLowerCase().includes('dr.') ? 'professional' : 'client';
+    const isProfessional = values.email.toLowerCase().includes('dr.');
     
-    router.push(`/dashboard?role=${role}`);
+    if (isProfessional) {
+        router.push('/dashboard/professional');
+    } else {
+        router.push('/dashboard');
+    }
   }
 
   return (
