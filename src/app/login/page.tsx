@@ -28,7 +28,6 @@ import { Checkbox } from '@/components/ui/checkbox';
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address.' }),
   password: z.string().min(1, { message: 'Password is required.' }),
-  rememberMe: z.boolean().optional(),
 });
 
 export default function LoginPage() {
@@ -39,7 +38,6 @@ export default function LoginPage() {
     defaultValues: {
       email: '',
       password: '',
-      rememberMe: false,
     },
   });
 
@@ -103,36 +101,15 @@ export default function LoginPage() {
                                 <FormItem>
                                   <div className="flex justify-between items-baseline">
                                       <FormLabel>Password</FormLabel>
+                                      <Link href="#" className="text-sm font-medium text-primary hover:underline">Forgot password?</Link>
                                   </div>
                                   <FormControl>
                                     <Input type="password" placeholder="********" {...field} />
                                   </FormControl>
-                                   <div className="flex justify-end">
-                                      <Link href="#" className="text-sm font-medium text-primary hover:underline -mt-1">Forgot password?</Link>
-                                  </div>
                                   <FormMessage />
                                 </FormItem>
                               )}
                             />
-                            <FormField
-                                control={form.control}
-                                name="rememberMe"
-                                render={({ field }) => (
-                                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                                    <FormControl>
-                                        <Checkbox
-                                            checked={field.value}
-                                            onCheckedChange={field.onChange}
-                                        />
-                                    </FormControl>
-                                    <div className="space-y-1 leading-none">
-                                        <FormLabel>
-                                        Remember me
-                                        </FormLabel>
-                                    </div>
-                                    </FormItem>
-                                )}
-                                />
                             <Button type="submit" size="lg" className="w-full font-bold">
                               Log In
                             </Button>
