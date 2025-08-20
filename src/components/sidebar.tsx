@@ -75,7 +75,21 @@ const professionalNavItems = [
         href: '/dashboard/professional',
         icon: LayoutGrid
     },
-    // Add more professional-specific nav items here
+    {
+        title: 'Appointments',
+        href: '/dashboard/professional/appointments',
+        icon: CalendarDays
+    },
+    {
+        title: 'Messaging',
+        href: '/dashboard/professional/messages',
+        icon: MessageSquare
+    },
+    {
+        title: 'Patient Records',
+        href: '/dashboard/professional/records',
+        icon: FileText
+    }
 ];
 
 export function Sidebar() {
@@ -84,7 +98,7 @@ export function Sidebar() {
     const { toast } = useToast();
     
     // In a real app, role would come from a user session
-    const role = pathname.includes('/professional') ? 'professional' : 'client';
+    const role = pathname.startsWith('/dashboard/professional') ? 'professional' : 'client';
 
     const handleLogout = () => {
         toast({
@@ -110,7 +124,7 @@ export function Sidebar() {
                     </Link>
                 </div>
                 <nav className="flex-1 px-4 space-y-1">
-                   {sidebarNavItems.map((item) => (
+                   {sidebarNavItems.map((item: any) => (
                     item.subItems ? (
                         <Accordion key={item.title} type="single" collapsible defaultValue={isProfessionalsActive || isShopActive ? 'item-1' : ''}>
                             <AccordionItem value="item-1" className="border-b-0">
@@ -130,7 +144,7 @@ export function Sidebar() {
                                      </AccordionTrigger>
                                 </Link>
                                 <AccordionContent className="pb-0 pl-7 space-y-1">
-                                    {item.subItems.map(subItem => (
+                                    {item.subItems.map((subItem: any) => (
                                         <Link
                                             key={subItem.title}
                                             href={subItem.href}
@@ -185,5 +199,3 @@ export function Sidebar() {
         </aside>
     )
 }
-
-    

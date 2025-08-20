@@ -88,8 +88,22 @@ const professionalNavItems = [
         href: '/dashboard/professional',
         icon: LayoutGrid
     },
-    // Add more professional-specific nav items here
-]
+    {
+        title: 'Appointments',
+        href: '/dashboard/professional/appointments',
+        icon: CalendarDays
+    },
+    {
+        title: 'Messaging',
+        href: '/dashboard/professional/messages',
+        icon: MessageSquare
+    },
+    {
+        title: 'Patient Records',
+        href: '/dashboard/professional/records',
+        icon: FileText
+    }
+];
 
 
 const notifications = [
@@ -243,9 +257,9 @@ export function Header() {
                                     </SheetTitle>
                                 </SheetHeader>
                             <nav className="flex-1 px-4 py-4 space-y-1">
-                                    {dashboardNavItems.map((item) => (
+                                    {dashboardNavItems.map((item: any) => (
                                         item.subItems ? (
-                                            <Accordion key={item.title} type="single" collapsible defaultValue={item.subItems?.some(sub => pathname.startsWith(sub.href)) ? 'item-1' : ''}>
+                                            <Accordion key={item.title} type="single" collapsible defaultValue={item.subItems?.some((sub: any) => pathname.startsWith(sub.href)) ? 'item-1' : ''}>
                                                 <AccordionItem value="item-1" className="border-b-0">
                                                     <SheetClose asChild>
                                                         <Link
@@ -265,7 +279,7 @@ export function Header() {
                                                         </Link>
                                                     </SheetClose>
                                                     <AccordionContent className="pb-0 pl-7 space-y-1">
-                                                        {item.subItems.map(subItem => (
+                                                        {item.subItems.map((subItem: any) => (
                                                             <SheetClose asChild key={subItem.href}>
                                                                 <Link
                                                                     href={subItem.href}
@@ -428,5 +442,3 @@ export function Header() {
     </header>
   );
 }
-
-    
