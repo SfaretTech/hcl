@@ -51,9 +51,8 @@ export default function LoginPage() {
     });
     
     // Simulate role-based login
-    const isProfessional = values.email.toLowerCase().includes('dr.');
-    
-    if (isProfessional) {
+    // In a real app, you would fetch the user's role from your database
+    if (values.email.toLowerCase().startsWith('dr.')) {
         router.push('/dashboard/professional');
     } else {
         router.push('/dashboard');

@@ -95,7 +95,7 @@ function ClientForm() {
     }
     
     return (
-        <Card className="shadow-lg border">
+        <Card className="shadow-lg border-transparent">
             <CardHeader className="text-center">
                 <CardTitle className="font-headline text-2xl font-bold">Create Client Account</CardTitle>
                 <CardDescription>Join HCOM to manage your health journey.</CardDescription>
@@ -203,7 +203,7 @@ function ProfessionalForm() {
     }
     
     return (
-        <Card className="shadow-lg border">
+        <Card className="shadow-lg border-transparent">
             <CardHeader className="text-center">
                 <CardTitle className="font-headline text-2xl font-bold">Professional Registration</CardTitle>
                 <CardDescription>Join our network of licensed healthcare providers.</CardDescription>
@@ -319,7 +319,7 @@ function InvestorForm() {
     }
     
     return (
-        <Card className="shadow-lg border">
+        <Card className="shadow-lg border-transparent">
             <CardHeader className="text-center">
                 <CardTitle className="font-headline text-2xl font-bold">Investor Registration</CardTitle>
                 <CardDescription>Join our RAFFIM program and invest in health.</CardDescription>
