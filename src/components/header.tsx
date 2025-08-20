@@ -164,8 +164,8 @@ function UserNav({role}: {role: 'client' | 'professional'}) {
         router.push('/login');
     };
     
-    const profileLink = role === 'professional' ? '/dashboard/professional/profile' : '/dashboard/profile';
-    const settingsLink = role === 'professional' ? '/dashboard/professional/settings' : '/dashboard/settings';
+    const profileLink = role === 'professional' ? '/dashboard/profile' : '/dashboard/client/profile';
+    const settingsLink = role === 'professional' ? '/dashboard/settings' : '/dashboard/client/settings';
 
     return (
          <DropdownMenu>
@@ -245,7 +245,7 @@ export function Header() {
                             <nav className="flex-1 px-4 py-4 space-y-1">
                                     {dashboardNavItems.map((item) => (
                                         item.subItems ? (
-                                            <Accordion key={item.title} type="single" collapsible defaultValue={pathname.startsWith(item.href) ? 'item-1' : ''}>
+                                            <Accordion key={item.title} type="single" collapsible defaultValue={item.subItems?.some(sub => pathname.startsWith(sub.href)) ? 'item-1' : ''}>
                                                 <AccordionItem value="item-1" className="border-b-0">
                                                     <SheetClose asChild>
                                                         <Link
@@ -253,7 +253,7 @@ export function Header() {
                                                             className={cn(
                                                                 buttonVariants({ variant: 'ghost' }),
                                                                 'w-full justify-start text-base',
-                                                                pathname === item.href && 'bg-primary/10 text-primary hover:bg-primary/20'
+                                                                pathname.startsWith(item.href) && 'bg-primary/10 text-primary hover:bg-primary/20'
                                                             )}
                                                         >
                                                             <AccordionTrigger className="w-full p-0 hover:no-underline justify-start text-base">
@@ -304,11 +304,11 @@ export function Header() {
                                     <SheetClose asChild>
                                         <Button asChild className="w-full justify-start text-base mb-2">
                                             <Link
-                                                href={role === 'professional' ? '/dashboard/professional/settings' : '/dashboard/settings'}
+                                                href={role === 'professional' ? '/dashboard/settings' : '/dashboard/client/settings'}
                                                 className={cn(
                                                     buttonVariants({ variant: 'ghost' }),
                                                     'w-full justify-start',
-                                                    pathname === (role === 'professional' ? '/dashboard/professional/settings' : '/dashboard/settings') && 'bg-primary/10 text-primary hover:bg-primary/20'
+                                                     (pathname === '/dashboard/settings' || pathname === '/dashboard/client/settings') && 'bg-primary/10 text-primary hover:bg-primary/20'
                                                 )}
                                             >
                                                 <Settings className="mr-3 h-5 w-5" />
@@ -428,3 +428,5 @@ export function Header() {
     </header>
   );
 }
+
+    

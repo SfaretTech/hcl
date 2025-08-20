@@ -98,7 +98,7 @@ export function Sidebar() {
     const isShopActive = pathname.startsWith('/dashboard/shop');
 
     const sidebarNavItems = role === 'professional' ? professionalNavItems : clientNavItems;
-    const settingsLink = role === 'professional' ? '/dashboard/professional/settings' : '/dashboard/settings';
+    const settingsLink = role === 'professional' ? '/dashboard/settings' : '/dashboard/client/settings';
 
     return (
         <aside className="hidden lg:flex flex-col w-64 border-r bg-card">
@@ -154,7 +154,8 @@ export function Sidebar() {
                            className={cn(
                                buttonVariants({ variant: 'ghost' }),
                                'w-full justify-start',
-                               (pathname === item.href || (pathname.startsWith(item.href) && item.href !== '/dashboard')) && 'bg-primary/10 text-primary hover:bg-primary/20'
+                               (pathname.startsWith(item.href) && item.href !== '/dashboard' && !item.href.endsWith('/professional')) && 'bg-primary/10 text-primary hover:bg-primary/20',
+                               pathname === item.href && 'bg-primary/10 text-primary hover:bg-primary/20'
                            )}
                        >
                            <item.icon className="mr-3 h-5 w-5" />
@@ -184,3 +185,5 @@ export function Sidebar() {
         </aside>
     )
 }
+
+    
