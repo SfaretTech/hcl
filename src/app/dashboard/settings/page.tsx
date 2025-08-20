@@ -13,13 +13,13 @@ import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 
 
-export default function SettingsPage() {
+export default function ProfessionalSettingsPage() {
     const { toast } = useToast();
     const router = useRouter();
     const [notificationSettings, setNotificationSettings] = useState({
-        email: true,
-        sms: true,
-        push: false,
+        emailNewAppointment: true,
+        emailCancellation: true,
+        emailNewMessage: false,
     });
     const [activeTheme, setActiveTheme] = useState('light');
 
@@ -51,7 +51,6 @@ export default function SettingsPage() {
             const newSettings = { ...prev, [id]: !prev[id] };
             toast({
                 title: 'Notification Settings Updated',
-                description: `${id.charAt(0).toUpperCase() + id.slice(1)} notifications ${newSettings[id] ? 'enabled' : 'disabled'}.`
             });
             return newSettings;
         });
@@ -69,7 +68,7 @@ export default function SettingsPage() {
         <div className="space-y-8">
             <div>
                 <h1 className="text-3xl font-bold tracking-tight font-headline">Settings</h1>
-                <p className="text-muted-foreground">Manage your account settings, notifications, and appearance.</p>
+                <p className="text-muted-foreground">Manage your account settings, notifications, and availability.</p>
             </div>
 
             <Card className="bg-white">
@@ -78,40 +77,40 @@ export default function SettingsPage() {
                         <Bell className="w-6 h-6 text-primary"/>
                         <CardTitle>Notifications</CardTitle>
                     </div>
-                    <CardDescription>Choose how you want to be notified about appointments, messages, and updates.</CardDescription>
+                    <CardDescription>Choose how you want to be notified.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                     <div className="flex items-center justify-between p-4 rounded-lg bg-background">
                         <div>
-                            <Label htmlFor="email-notifications" className="font-semibold">Email Notifications</Label>
-                            <p className="text-sm text-muted-foreground">Receive updates and reminders via email.</p>
+                            <Label htmlFor="email-new-appointment" className="font-semibold">New Appointment</Label>
+                            <p className="text-sm text-muted-foreground">Notify me via email of new appointment bookings.</p>
                         </div>
                         <Switch 
-                            id="email-notifications" 
-                            checked={notificationSettings.email}
-                            onCheckedChange={() => handleNotificationChange('email')}
+                            id="email-new-appointment" 
+                            checked={notificationSettings.emailNewAppointment}
+                            onCheckedChange={() => handleNotificationChange('emailNewAppointment')}
                         />
                     </div>
                     <div className="flex items-center justify-between p-4 rounded-lg bg-background">
                         <div>
-                            <Label htmlFor="sms-notifications" className="font-semibold">SMS Reminders</Label>
-                            <p className="text-sm text-muted-foreground">Get appointment reminders via text message.</p>
+                            <Label htmlFor="email-cancellation" className="font-semibold">Cancellations</Label>
+                            <p className="text-sm text-muted-foreground">Notify me via email when a patient cancels.</p>
                         </div>
                         <Switch 
-                            id="sms-notifications"
-                            checked={notificationSettings.sms}
-                            onCheckedChange={() => handleNotificationChange('sms')}
+                            id="email-cancellation"
+                            checked={notificationSettings.emailCancellation}
+                            onCheckedChange={() => handleNotificationChange('emailCancellation')}
                         />
                     </div>
                      <div className="flex items-center justify-between p-4 rounded-lg bg-background">
                         <div>
-                            <Label htmlFor="push-notifications" className="font-semibold">Push Notifications</Label>
-                            <p className="text-sm text-muted-foreground">Get real-time alerts on your device.</p>
+                            <Label htmlFor="email-new-message" className="font-semibold">New Messages</Label>
+                            <p className="text-sm text-muted-foreground">Notify me when I receive a new message from a patient.</p>
                         </div>
                          <Switch 
-                            id="push-notifications"
-                            checked={notificationSettings.push}
-                            onCheckedChange={() => handleNotificationChange('push')}
+                            id="email-new-message"
+                            checked={notificationSettings.emailNewMessage}
+                            onCheckedChange={() => handleNotificationChange('emailNewMessage')}
                         />
                     </div>
                 </CardContent>
@@ -140,7 +139,7 @@ export default function SettingsPage() {
                         <UserCircle className="w-6 h-6 text-primary"/>
                         <CardTitle>Account</CardTitle>
                     </div>
-                    <CardDescription>Manage your personal information and log out.</CardDescription>
+                    <CardDescription>Manage your professional profile and log out.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <Button asChild variant="outline" className="w-full sm:w-auto">
