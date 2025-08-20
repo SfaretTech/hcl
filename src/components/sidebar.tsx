@@ -12,30 +12,21 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './
 import { useToast } from '@/hooks/use-toast';
 
 
-const sidebarNavItems = [
+const clientNavItems = [
     {
         title: 'Dashboard',
         href: '/dashboard',
         icon: LayoutGrid,
-        role: 'client'
-    },
-    {
-        title: 'Dashboard',
-        href: '/dashboard/professional',
-        icon: LayoutGrid,
-        role: 'professional'
     },
     {
         title: 'Appointments',
         href: '/dashboard/appointments',
         icon: CalendarDays,
-        role: 'client'
     },
     {
         title: 'My Doctors',
         href: '/dashboard/professionals',
         icon: User,
-        role: 'client',
          subItems: [
              {
                 title: 'Find a Doctor',
@@ -48,19 +39,16 @@ const sidebarNavItems = [
         title: 'Messages',
         href: '/dashboard/messages',
         icon: MessageSquare,
-        role: 'client'
     },
     {
         title: 'Health Records',
         href: '/dashboard/records',
         icon: FileText,
-        role: 'client'
     },
      {
         title: 'Shop',
         href: '/dashboard/shop',
         icon: ShoppingCart,
-        role: 'client',
         subItems: [
             {
                 title: 'Cart',
@@ -79,12 +67,15 @@ const sidebarNavItems = [
             }
         ]
     },
-    {
-        title: 'Profile',
-        href: '/dashboard/profile',
-        icon: User,
-        role: 'client'
+];
+
+const professionalNavItems = [
+     {
+        title: 'Dashboard',
+        href: '/dashboard/professional',
+        icon: LayoutGrid
     },
+    // Add more professional-specific nav items here
 ];
 
 export function Sidebar() {
@@ -106,7 +97,8 @@ export function Sidebar() {
     const isProfessionalsActive = pathname.startsWith('/dashboard/professionals');
     const isShopActive = pathname.startsWith('/dashboard/shop');
 
-    const filteredNav = sidebarNavItems.filter(item => !item.role || item.role === role);
+    const sidebarNavItems = role === 'professional' ? professionalNavItems : clientNavItems;
+    const settingsLink = role === 'professional' ? '/dashboard/professional/settings' : '/dashboard/settings';
 
     return (
         <aside className="hidden lg:flex flex-col w-64 border-r bg-card">
@@ -118,7 +110,7 @@ export function Sidebar() {
                     </Link>
                 </div>
                 <nav className="flex-1 px-4 space-y-1">
-                   {filteredNav.map((item) => (
+                   {sidebarNavItems.map((item) => (
                     item.subItems ? (
                         <Accordion key={item.title} type="single" collapsible defaultValue={isProfessionalsActive || isShopActive ? 'item-1' : ''}>
                             <AccordionItem value="item-1" className="border-b-0">
@@ -162,7 +154,7 @@ export function Sidebar() {
                            className={cn(
                                buttonVariants({ variant: 'ghost' }),
                                'w-full justify-start',
-                               pathname.startsWith(item.href) && !item.href.endsWith('professionals') && !item.href.endsWith('shop') && pathname !== '/dashboard/professionals/find' && 'bg-primary/10 text-primary hover:bg-primary/20'
+                               (pathname === item.href || (pathname.startsWith(item.href) && item.href !== '/dashboard')) && 'bg-primary/10 text-primary hover:bg-primary/20'
                            )}
                        >
                            <item.icon className="mr-3 h-5 w-5" />
@@ -174,11 +166,11 @@ export function Sidebar() {
             </div>
              <div className="p-4 border-t">
                 <Link
-                    href="/dashboard/settings"
+                    href={settingsLink}
                     className={cn(
                         buttonVariants({ variant: 'ghost' }),
                         'w-full justify-start mb-2',
-                        pathname === '/dashboard/settings' && 'bg-primary/10 text-primary hover:bg-primary/20'
+                        pathname === settingsLink && 'bg-primary/10 text-primary hover:bg-primary/20'
                     )}
                     >
                     <Settings className="mr-3 h-5 w-5" />

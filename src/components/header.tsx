@@ -80,11 +80,6 @@ const clientNavItems = [
             }
         ]
     },
-    {
-        title: 'Profile',
-        href: '/dashboard/profile',
-        icon: User
-    },
 ];
 
 const professionalNavItems = [
@@ -309,11 +304,11 @@ export function Header() {
                                     <SheetClose asChild>
                                         <Button asChild className="w-full justify-start text-base mb-2">
                                             <Link
-                                                href="/dashboard/settings"
+                                                href={role === 'professional' ? '/dashboard/professional/settings' : '/dashboard/settings'}
                                                 className={cn(
                                                     buttonVariants({ variant: 'ghost' }),
                                                     'w-full justify-start',
-                                                    pathname === '/dashboard/settings' && 'bg-primary/10 text-primary hover:bg-primary/20'
+                                                    pathname === (role === 'professional' ? '/dashboard/professional/settings' : '/dashboard/settings') && 'bg-primary/10 text-primary hover:bg-primary/20'
                                                 )}
                                             >
                                                 <Settings className="mr-3 h-5 w-5" />
