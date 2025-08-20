@@ -49,7 +49,11 @@ export default function LoginPage() {
       title: "Logged In Successfully!",
       description: "Redirecting to your dashboard...",
     });
-    router.push('/dashboard');
+    
+    // Simulate role-based login
+    const role = values.email.toLowerCase().includes('dr.') ? 'professional' : 'client';
+    
+    router.push(`/dashboard?role=${role}`);
   }
 
   return (

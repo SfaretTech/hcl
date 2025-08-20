@@ -1,7 +1,8 @@
 
 'use client';
 
-import { useState } from 'react';
+import { Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CalendarDays, Video, MessageSquare, FileText, User, Bell, ChevronRight, CheckCircle2, ArrowRight, ShoppingCart, Users, Activity, Briefcase } from 'lucide-react';
@@ -267,23 +268,21 @@ const ProfessionalDashboard = () => {
     );
 };
 
-export default function DashboardPage() {
-    const [userRole, setUserRole] = useState<'client' | 'professional'>('client');
+function DashboardView() {
+    const searchParams = useSearchParams();
+    const role = searchParams.get('role');
     
     return (
         <div className="space-y-8">
-            <div className="absolute top-2 right-6 flex items-center space-x-2 bg-secondary p-2 rounded-lg">
-                <Label htmlFor="role-switch" className="font-semibold text-sm">Client</Label>
-                <Switch 
-                    id="role-switch"
-                    checked={userRole === 'professional'}
-                    onCheckedChange={(checked) => setUserRole(checked ? 'professional' : 'client')}
-                />
-                <Label htmlFor="role-switch" className="font-semibold text-sm">Professional</Label>
-            </div>
-            {userRole === 'client' ? <ClientDashboard /> : <ProfessionalDashboard />}
+            {role === 'professional' ? <ProfessionalDashboard /> : <ClientDashboard />}
         </div>
     );
 }
 
-    
+export default function DashboardPage() {
+    return (
+      <Suspense fallback={<div>Loading...</div>}>
+        <DashboardView />
+      </Suspense>
+    );
+}
