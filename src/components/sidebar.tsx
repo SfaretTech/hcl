@@ -92,13 +92,24 @@ const professionalNavItems = [
     }
 ];
 
+const professionalRoutes = [
+    '/dashboard/professional',
+    '/dashboard/profile',
+    '/dashboard/settings',
+];
+
+const isProfessionalRoute = (pathname: string) => {
+    return professionalRoutes.some(route => pathname.startsWith(route));
+};
+
 export function Sidebar() {
     const pathname = usePathname();
     const router = useRouter();
     const { toast } = useToast();
     
     // In a real app, role would come from a user session
-    const role = pathname.startsWith('/dashboard/professional') ? 'professional' : 'client';
+    const role = isProfessionalRoute(pathname) ? 'professional' : 'client';
+
 
     const handleLogout = () => {
         toast({

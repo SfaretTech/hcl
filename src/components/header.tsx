@@ -215,6 +215,17 @@ function UserNav({role}: {role: 'client' | 'professional'}) {
     )
 }
 
+const professionalRoutes = [
+    '/dashboard/professional',
+    '/dashboard/profile',
+    '/dashboard/settings',
+];
+
+const isProfessionalRoute = (pathname: string) => {
+    return professionalRoutes.some(route => pathname.startsWith(route));
+};
+
+
 export function Header() {
   const [isSheetOpen, setSheetOpen] = useState(false);
   const pathname = usePathname();
@@ -230,7 +241,7 @@ export function Header() {
   };
 
   const isDashboard = pathname.startsWith('/dashboard');
-  const role = pathname.includes('/professional') ? 'professional' : 'client';
+  const role = isProfessionalRoute(pathname) ? 'professional' : 'client';
   const dashboardNavItems = role === 'professional' ? professionalNavItems : clientNavItems;
 
 
