@@ -21,9 +21,11 @@ const ProfessionalDashboard = () => {
                     <h1 className="text-3xl font-bold tracking-tight font-headline">Welcome back, Dr. Chen!</h1>
                     <p className="text-muted-foreground">Here is a summary of your activities for today.</p>
                 </div>
-                <Button size="lg">
-                    <CalendarDays className="mr-2 h-5 w-5" />
-                    View Full Schedule
+                <Button size="lg" asChild>
+                    <Link href="/dashboard/professional/appointments">
+                        <CalendarDays className="mr-2 h-5 w-5" />
+                        View Full Schedule
+                    </Link>
                 </Button>
             </div>
             
@@ -115,4 +117,3 @@ export default function ProfessionalPage() {
     );
 }
 
-    
