@@ -71,3 +71,73 @@ export const allAppointments: Appointment[] = [
         fee: 18000,
     }
 ];
+
+// --- Health Records Data ---
+
+export type DocumentType = 'Lab Report' | 'Prescription' | 'Imaging Result' | 'Consultation Note' | 'Other';
+
+export type HealthRecord = {
+    id: string;
+    name: string;
+    type: DocumentType;
+    date: string;
+    uploadedBy: 'Client' | 'Me' | 'Dr. Samuel Chen';
+    fileUrl: string;
+};
+
+export type Patient = {
+  id: string;
+  name: string;
+  avatar: string;
+  records: HealthRecord[];
+};
+
+export const allPatients: Patient[] = [
+    {
+        id: 'pat-1',
+        name: 'Jessica Peterson',
+        avatar: 'https://placehold.co/100x100.png',
+        records: [
+            { id: 'rec-1', name: 'Annual Blood Panel Results', type: 'Lab Report', date: '2024-08-15T10:00:00', uploadedBy: 'Dr. Samuel Chen', fileUrl: '#' },
+            { id: 'rec-2', name: 'Vitamin D Prescription', type: 'Prescription', date: '2024-08-10T14:30:00', uploadedBy: 'Dr. Samuel Chen', fileUrl: '#' },
+            { id: 'rec-3', name: 'Follow-up Notes - August', type: 'Consultation Note', date: '2024-08-10T15:00:00', uploadedBy: 'Client', fileUrl: '#' },
+            { id: 'rec-4', name: 'Chest X-Ray', type: 'Imaging Result', date: '2024-07-22T09:00:00', uploadedBy: 'Client', fileUrl: '#' },
+        ]
+    },
+    {
+        id: 'pat-2',
+        name: 'David Lee',
+        avatar: 'https://placehold.co/100x100.png',
+        records: [
+            { id: 'rec-5', name: 'Dermatology Follow-up', type: 'Consultation Note', date: '2024-08-20T11:00:00', uploadedBy: 'Dr. Samuel Chen', fileUrl: '#' },
+        ]
+    },
+    {
+        id: 'pat-3',
+        name: 'Aisha Bello',
+        avatar: 'https://placehold.co/100x100.png',
+        records: []
+    },
+];
+
+// Helper to find the main client's records
+export const getClientRecords = (): HealthRecord[] => {
+    const client = allPatients.find(p => p.name === 'Jessica Peterson');
+    return client ? client.records : [];
+};
+
+// Helper to add a record for the main client
+export const addClientRecord = (record: HealthRecord) => {
+    const client = allPatients.find(p => p.name === 'Jessica Peterson');
+    if (client) {
+        client.records.unshift(record);
+    }
+};
+
+// Helper to add a record for a specific patient
+export const addPatientRecord = (patientId: string, record: HealthRecord) => {
+    const patient = allPatients.find(p => p.id === patientId);
+    if (patient) {
+        patient.records.unshift(record);
+    }
+};

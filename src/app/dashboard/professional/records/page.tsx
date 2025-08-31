@@ -4,70 +4,126 @@
 import { useState, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { FileText, Eye, Download, Search, UploadCloud, User } from 'lucide-react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { FileText, Eye, Download, Search, UploadCloud, FileUp } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { format } from 'date-fns';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { useToast } from '@/hooks/use-toast';
+import { allPatients, addPatientRecord, type HealthRecord, type DocumentType, type Patient } from '@/lib/data';
 
-type DocumentType = 'Lab Report' | 'Prescription' | 'Imaging Result' | 'Consultation Note' | 'Other';
 
-type HealthRecord = {
-    id: string;
-    name: string;
-    type: DocumentType;
-    date: string;
-    uploadedBy: 'Client' | 'Me';
-    fileUrl: string;
-};
+const uploadSchema = z.object({
+  documentName: z.string().min(3, 'Document name must be at least 3 characters.'),
+  documentType: z.string().min(1, 'Please select a document type.'),
+  documentFile: z.any().refine((files) => files?.length === 1, 'A file is required.'),
+});
 
-type Patient = {
-  id: string;
-  name: string;
-  avatar: string;
-  records: HealthRecord[];
-};
+function ProfessionalUploadDocumentForm({ patient, onUpload }: { patient: Patient; onUpload: (data: z.infer<typeof uploadSchema>) => void; }) {
+    const form = useForm<z.infer<typeof uploadSchema>>({
+        resolver: zodResolver(uploadSchema),
+        defaultValues: { documentName: '', documentType: '', documentFile: undefined },
+    });
+    const fileRef = form.register("documentFile");
+    const documentFile = form.watch("documentFile");
 
-const initialPatients: Patient[] = [
-    { 
-        id: 'pat-1', 
-        name: 'Jessica Peterson', 
-        avatar: 'https://placehold.co/100x100.png',
-        records: [
-            { id: 'rec-1', name: 'Annual Blood Panel Results', type: 'Lab Report', date: '2024-08-15T10:00:00', uploadedBy: 'Me', fileUrl: '#' },
-            { id: 'rec-2', name: 'Vitamin D Prescription', type: 'Prescription', date: '2024-08-10T14:30:00', uploadedBy: 'Me', fileUrl: '#' },
-            { id: 'rec-3', name: 'Follow-up Notes - August', type: 'Consultation Note', date: '2024-08-10T15:00:00', uploadedBy: 'Client', fileUrl: '#' },
-            { id: 'rec-4', name: 'Chest X-Ray', type: 'Imaging Result', date: '2024-07-22T09:00:00', uploadedBy: 'Client', fileUrl: '#' },
-        ]
-    },
-    { 
-        id: 'pat-2', 
-        name: 'David Lee', 
-        avatar: 'https://placehold.co/100x100.png',
-        records: [
-            { id: 'rec-5', name: 'Dermatology Follow-up', type: 'Consultation Note', date: '2024-08-20T11:00:00', uploadedBy: 'Me', fileUrl: '#' },
-        ]
-    },
-    { 
-        id: 'pat-3', 
-        name: 'Aisha Bello', 
-        avatar: 'https://placehold.co/100x100.png',
-        records: []
-    },
-];
+    function onSubmit(values: z.infer<typeof uploadSchema>) {
+        onUpload(values);
+        form.reset();
+    }
+    
+    return (
+         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <div className="space-y-4">
+                 <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-lg text-center relative cursor-pointer hover:bg-accent">
+                    <FileUp className="h-12 w-12 text-muted-foreground mb-2" />
+                     <p className="font-semibold">{documentFile?.[0]?.name || 'Drag & drop or click to upload'}</p>
+                    <p className="text-xs text-muted-foreground">PDF, PNG, JPG up to 10MB</p>
+                    <Input type="file" className="w-full h-full opacity-0 absolute inset-0 z-10 cursor-pointer" {...fileRef} />
+                </div>
+                 {form.formState.errors.documentFile && (
+                    <p className="text-sm font-medium text-destructive">{form.formState.errors.documentFile.message as string}</p>
+                )}
+            </div>
+
+            <FormField
+                control={form.control}
+                name="documentName"
+                render={({ field }) => (
+                    <div className="space-y-2">
+                        <label>Document Name</label>
+                        <Input placeholder="e.g. 'Lab Results Analysis'" {...field} />
+                        {form.formState.errors.documentName && <p className="text-sm font-medium text-destructive">{form.formState.errors.documentName.message}</p>}
+                    </div>
+                )}
+            />
+
+            <FormField
+                control={form.control}
+                name="documentType"
+                render={({ field }) => (
+                     <div className="space-y-2">
+                        <label>Document Type</label>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select document type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {['Lab Report', 'Prescription', 'Imaging Result', 'Consultation Note', 'Other'].map(type => (
+                                    <SelectItem key={type} value={type}>{type}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                         {form.formState.errors.documentType && <p className="text-sm font-medium text-destructive">{form.formState.errors.documentType.message}</p>}
+                    </div>
+                )}
+            />
+             <DialogFooter>
+                <DialogTrigger asChild>
+                    <Button type="button" variant="ghost">Cancel</Button>
+                </DialogTrigger>
+                <Button type="submit">Upload for {patient.name.split(' ')[0]}</Button>
+            </DialogFooter>
+        </form>
+    );
+}
+
 
 export default function ProfessionalRecordsPage() {
-    const [patients, setPatients] = useState<Patient[]>(initialPatients);
-    const [selectedPatient, setSelectedPatient] = useState<Patient>(initialPatients[0]);
+    const { toast } = useToast();
+    const [patients, setPatients] = useState<Patient[]>(allPatients);
+    const [selectedPatient, setSelectedPatient] = useState<Patient>(allPatients[0]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [isUploadOpen, setUploadOpen] = useState(false);
 
     const filteredPatients = useMemo(() => {
         return patients.filter(patient =>
             patient.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
     }, [patients, searchTerm]);
+
+    const handleUpload = (data: z.infer<typeof uploadSchema>) => {
+        const newRecord: HealthRecord = {
+            id: `rec-${Date.now()}`,
+            name: data.documentName,
+            type: data.documentType as DocumentType,
+            date: new Date().toISOString(),
+            uploadedBy: 'Me',
+            fileUrl: '#'
+        };
+        addPatientRecord(selectedPatient.id, newRecord);
+        setPatients([...allPatients]);
+        setUploadOpen(false);
+        toast({
+            title: "Document Uploaded!",
+            description: `${data.documentName} has been added for ${selectedPatient.name}.`,
+        });
+    }
 
     return (
         <div className="space-y-8">
@@ -119,10 +175,23 @@ export default function ProfessionalRecordsPage() {
                                     <CardTitle className="text-2xl">Records for {selectedPatient.name}</CardTitle>
                                     <CardDescription>A total of {selectedPatient.records.length} documents found.</CardDescription>
                                 </div>
-                                <Button>
-                                    <UploadCloud className="mr-2 h-4 w-4" />
-                                    Upload Document
-                                </Button>
+                                 <Dialog open={isUploadOpen} onOpenChange={setUploadOpen}>
+                                    <DialogTrigger asChild>
+                                        <Button>
+                                            <UploadCloud className="mr-2 h-4 w-4" />
+                                            Upload Document
+                                        </Button>
+                                    </DialogTrigger>
+                                    <DialogContent className="sm:max-w-lg">
+                                        <DialogHeader>
+                                            <DialogTitle>Upload Document for {selectedPatient.name}</DialogTitle>
+                                            <DialogDescription>
+                                               Add a new file to the patient's secure health records. They will be notified.
+                                            </DialogDescription>
+                                        </DialogHeader>
+                                        <ProfessionalUploadDocumentForm patient={selectedPatient} onUpload={handleUpload} />
+                                    </DialogContent>
+                                </Dialog>
                             </div>
                         </CardHeader>
                         <CardContent>
@@ -156,10 +225,23 @@ export default function ProfessionalRecordsPage() {
                             {selectedPatient.records.length === 0 && (
                                 <div className="text-center py-16">
                                     <p className="text-lg text-muted-foreground">No records found for {selectedPatient.name}.</p>
-                                     <Button variant="outline" className="mt-4">
-                                        <UploadCloud className="mr-2 h-4 w-4" />
-                                        Upload First Document
-                                    </Button>
+                                     <Dialog open={isUploadOpen} onOpenChange={setUploadOpen}>
+                                        <DialogTrigger asChild>
+                                            <Button variant="outline" className="mt-4">
+                                                <UploadCloud className="mr-2 h-4 w-4" />
+                                                Upload First Document
+                                            </Button>
+                                        </DialogTrigger>
+                                        <DialogContent className="sm:max-w-lg">
+                                            <DialogHeader>
+                                                <DialogTitle>Upload Document for {selectedPatient.name}</DialogTitle>
+                                                <DialogDescription>
+                                                Add a new file to the patient's secure health records. They will be notified.
+                                                </DialogDescription>
+                                            </DialogHeader>
+                                            <ProfessionalUploadDocumentForm patient={selectedPatient} onUpload={handleUpload} />
+                                        </DialogContent>
+                                    </Dialog>
                                 </div>
                             )}
                         </CardContent>

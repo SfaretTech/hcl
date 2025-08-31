@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Button } from '@/components/ui/button';
 import { UploadCloud, FileText, MoreVertical, Eye, Download, Search, FileUp } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -15,24 +15,7 @@ import { format } from 'date-fns';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-
-type DocumentType = 'Lab Report' | 'Prescription' | 'Imaging Result' | 'Consultation Note' | 'Other';
-
-type HealthRecord = {
-    id: string;
-    name: string;
-    type: DocumentType;
-    date: string;
-    uploadedBy: 'Me' | 'Dr. Samuel Chen';
-    fileUrl: string;
-};
-
-const initialRecords: HealthRecord[] = [
-    { id: 'rec-1', name: 'Annual Blood Panel Results', type: 'Lab Report', date: '2024-08-15T10:00:00', uploadedBy: 'Dr. Samuel Chen', fileUrl: '#' },
-    { id: 'rec-2', name: 'Vitamin D Prescription', type: 'Prescription', date: '2024-08-10T14:30:00', uploadedBy: 'Dr. Samuel Chen', fileUrl: '#' },
-    { id: 'rec-3', name: 'Follow-up Notes - August', type: 'Consultation Note', date: '2024-08-10T15:00:00', uploadedBy: 'Me', fileUrl: '#' },
-    { id: 'rec-4', name: 'Chest X-Ray', type: 'Imaging Result', date: '2024-07-22T09:00:00', uploadedBy: 'Me', fileUrl: '#' },
-];
+import { getClientRecords, addClientRecord, type HealthRecord, type DocumentType } from '@/lib/data';
 
 const uploadSchema = z.object({
   documentName: z.string().min(3, 'Document name must be at least 3 characters.'),
@@ -57,7 +40,7 @@ function UploadDocumentForm({ onUpload }: { onUpload: (data: z.infer<typeof uplo
     return (
          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-4">
-                 <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-lg text-center">
+                 <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-lg text-center relative cursor-pointer hover:bg-accent">
                     <FileUp className="h-12 w-12 text-muted-foreground mb-2" />
                      <p className="font-semibold">{documentFile?.[0]?.name || 'Drag & drop or click to upload'}</p>
                     <p className="text-xs text-muted-foreground">PDF, PNG, JPG up to 10MB</p>
@@ -68,35 +51,38 @@ function UploadDocumentForm({ onUpload }: { onUpload: (data: z.infer<typeof uplo
                 )}
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                 <div className="sm:col-span-2">
-                    <FormField
-                        control={form.control}
-                        name="documentName"
-                        render={({ field }) => (
-                           <Input placeholder="Document Name (e.g. 'August Blood Test')" {...field} />
-                        )}
-                    />
-                 </div>
-                 <div>
-                    <FormField
-                        control={form.control}
-                        name="documentType"
-                        render={({ field }) => (
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                 <SelectTrigger>
-                                    <SelectValue placeholder="Select document type" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {['Lab Report', 'Prescription', 'Imaging Result', 'Consultation Note', 'Other'].map(type => (
-                                        <SelectItem key={type} value={type}>{type}</SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        )}
-                    />
-                 </div>
-            </div>
+            <FormField
+                control={form.control}
+                name="documentName"
+                render={({ field }) => (
+                    <div className="space-y-2">
+                        <label>Document Name</label>
+                        <Input placeholder="e.g. 'August Blood Test'" {...field} />
+                        {form.formState.errors.documentName && <p className="text-sm font-medium text-destructive">{form.formState.errors.documentName.message}</p>}
+                    </div>
+                )}
+            />
+
+            <FormField
+                control={form.control}
+                name="documentType"
+                render={({ field }) => (
+                     <div className="space-y-2">
+                        <label>Document Type</label>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select document type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {['Lab Report', 'Prescription', 'Imaging Result', 'Consultation Note', 'Other'].map(type => (
+                                    <SelectItem key={type} value={type}>{type}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                         {form.formState.errors.documentType && <p className="text-sm font-medium text-destructive">{form.formState.errors.documentType.message}</p>}
+                    </div>
+                )}
+            />
              <DialogFooter>
                 <DialogTrigger asChild>
                     <Button type="button" variant="ghost">Cancel</Button>
@@ -110,7 +96,7 @@ function UploadDocumentForm({ onUpload }: { onUpload: (data: z.infer<typeof uplo
 
 export default function HealthRecordsPage() {
     const { toast } = useToast();
-    const [records, setRecords] = useState<HealthRecord[]>(initialRecords);
+    const [records, setRecords] = useState<HealthRecord[]>(getClientRecords());
     const [searchTerm, setSearchTerm] = useState('');
     const [filterType, setFilterType] = useState('All');
     const [isUploadOpen, setUploadOpen] = useState(false);
@@ -134,7 +120,8 @@ export default function HealthRecordsPage() {
             uploadedBy: 'Me',
             fileUrl: '#' // This would be the URL from the file upload service
         };
-        setRecords(prev => [newRecord, ...prev]);
+        addClientRecord(newRecord);
+        setRecords([...getClientRecords()]); // Re-fetch to update state
         setUploadOpen(false);
         toast({
             title: "Document Uploaded!",
@@ -272,5 +259,3 @@ export default function HealthRecordsPage() {
         </div>
     );
 }
-
-    
