@@ -11,20 +11,14 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
+import { allAppointments } from '@/lib/data';
 
-const appointments = [
-    { id: 'appt-1', patientName: 'Jessica Peterson', avatar: 'https://placehold.co/100x100.png', reason: 'Annual Check-up', time: '2024-08-26T11:00:00', status: 'Upcoming' },
-    { id: 'appt-2', patientName: 'David Lee', avatar: 'https://placehold.co/100x100.png', reason: 'Follow-up', time: '2024-08-26T13:30:00', status: 'Upcoming' },
-    { id: 'appt-3', patientName: 'Aisha Bello', avatar: 'https://placehold.co/100x100.png', reason: 'New Consultation', time: '2024-08-26T15:00:00', status: 'Upcoming' },
-    { id: 'appt-4', patientName: 'Michael Brown', avatar: 'https://placehold.co/100x100.png', reason: 'Medication Review', time: '2024-08-25T10:00:00', status: 'Completed' },
-    { id: 'appt-5', patientName: 'Sarah Williams', avatar: 'https://placehold.co/100x100.png', reason: 'Test Results Review', time: '2024-08-25T11:30:00', status: 'Completed' },
-];
 
 export default function ProfessionalAppointmentsPage() {
   const [date, setDate] = React.useState<Date | undefined>(new Date());
 
-  const filteredAppointments = appointments.filter(appt => 
-      format(new Date(appt.time), 'yyyy-MM-dd') === (date ? format(date, 'yyyy-MM-dd') : '')
+  const filteredAppointments = allAppointments.filter(appt => 
+      format(new Date(appt.date), 'yyyy-MM-dd') === (date ? format(date, 'yyyy-MM-dd') : '')
   );
 
   return (
@@ -70,18 +64,18 @@ export default function ProfessionalAppointmentsPage() {
                             <li key={appt.id} className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 rounded-lg bg-background hover:bg-secondary/80">
                                 <div className="flex items-center gap-4 flex-1">
                                     <Avatar className="h-12 w-12">
-                                        <AvatarImage src={appt.avatar} />
+                                        <AvatarImage src={'https://placehold.co/100x100.png'} />
                                         <AvatarFallback>{appt.patientName.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                                     </Avatar>
                                     <div className="flex-1">
                                         <p className="font-semibold">{appt.patientName}</p>
-                                        <p className="text-sm text-muted-foreground">{appt.reason}</p>
+                                        <p className="text-sm text-muted-foreground">{appt.notes}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-4 w-full sm:w-auto">
                                     <div className="flex items-center gap-1.5 text-sm">
                                         <Clock className="h-4 w-4 text-muted-foreground" />
-                                        <span>{format(new Date(appt.time), "p")}</span>
+                                        <span>{format(new Date(appt.date), "p")}</span>
                                     </div>
                                     <Badge variant={appt.status === 'Completed' ? 'secondary' : 'default'}>{appt.status}</Badge>
                                 </div>
@@ -106,3 +100,4 @@ export default function ProfessionalAppointmentsPage() {
     </div>
   );
 }
+

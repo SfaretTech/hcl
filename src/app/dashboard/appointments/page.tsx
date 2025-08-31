@@ -19,72 +19,7 @@ import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { ScheduleAppointmentForm, type Doctor, availableDoctors } from '@/components/schedule-appointment-form';
 import Link from 'next/link';
-
-
-const initialAppointments: Appointment[] = [
-    {
-        id: 'appt-1',
-        doctor: availableDoctors[0],
-        date: '2024-08-26T11:00:00',
-        status: 'Confirmed' as const,
-        notes: 'Follow-up regarding your recent test results. Please ensure you have them available.',
-        joinLink: '#',
-        isPaid: false,
-        fee: 15000,
-    },
-    {
-        id: 'appt-2',
-        doctor: availableDoctors[1],
-        date: '2024-09-05T14:30:00',
-        status: 'Confirmed' as const,
-        notes: 'Initial consultation for your skin concerns.',
-        joinLink: '#',
-        isPaid: true,
-        fee: 20000,
-    },
-     {
-        id: 'appt-3',
-        doctor: availableDoctors[2],
-        date: '2024-07-15T10:00:00',
-        status: 'Completed' as const,
-        notes: 'Discussed statin medication options. Follow-up in 6 months.',
-        joinLink: '#',
-        isPaid: true,
-        fee: 0,
-    },
-     {
-        id: 'appt-4',
-        doctor: availableDoctors[0],
-        date: '2024-06-20T09:00:00',
-        status: 'Completed' as const,
-        notes: 'Annual physical check-up. All vitals are normal.',
-        joinLink: '#',
-        isPaid: true,
-        fee: 15000,
-    },
-    {
-        id: 'appt-5',
-        doctor: availableDoctors[3],
-        date: '2024-05-18T15:00:00',
-        status: 'Canceled' as const,
-        notes: 'Canceled by patient.',
-        joinLink: '#',
-        isPaid: false,
-        fee: 18000,
-    }
-];
-
-export type AppointmentStatus = 'Pending' | 'Confirmed' | 'Completed' | 'Canceled';
-export type Appointment = {
-    id: string;
-    doctor: Doctor;
-    date: string;
-    status: AppointmentStatus;
-    notes: string;
-    joinLink: string;
-    isPaid: boolean;
-    fee: number;
-};
+import { allAppointments, type Appointment, type AppointmentStatus } from '@/lib/data';
 
 
 const RescheduleDialog = ({ appointment, onReschedule, children }: { appointment: Appointment, onReschedule: (id: string, newDate: Date) => void, children: React.ReactNode }) => {
@@ -303,14 +238,14 @@ const AppointmentCard = ({ appointment, onCancel, onReschedule, onPay }: { appoi
 
 export default function AppointmentsPage() {
     const { toast } = useToast();
-    const [allAppointments, setAllAppointments] = useState<Appointment[]>(initialAppointments);
+    const [appointments, setAppointments] = useState<Appointment[]>(allAppointments);
     const [isScheduling, setIsScheduling] = useState(false);
     
     // In a real app, this would come from user data
     const [myDoctors, setMyDoctors] = useState<Doctor[]>([availableDoctors[0], availableDoctors[1]]);
 
     const handleCancelAppointment = (id: string) => {
-        setAllAppointments(prev => prev.map(appt => appt.id === id ? { ...appt, status: 'Canceled' } : appt));
+        setAppointments(prev => prev.map(appt => appt.id === id ? { ...appt, status: 'Canceled' } : appt));
         toast({
             title: "Appointment Canceled",
             description: "Your appointment has been successfully canceled.",
@@ -319,7 +254,7 @@ export default function AppointmentsPage() {
     }
 
     const handleRescheduleAppointment = (id: string, newDate: Date) => {
-        setAllAppointments(prev => prev.map(appt => appt.id === id ? { ...appt, date: newDate.toISOString(), status: 'Pending' } : appt));
+        setAppointments(prev => prev.map(appt => appt.id === id ? { ...appt, date: newDate.toISOString(), status: 'Pending' } : appt));
          toast({
             title: "Appointment Rescheduled",
             description: `Your appointment has been moved to ${format(newDate, "PPP 'at' p")} and is awaiting confirmation.`,
@@ -327,7 +262,7 @@ export default function AppointmentsPage() {
     }
     
     const handlePayAppointment = (id: string) => {
-        setAllAppointments(prev => prev.map(appt => appt.id === id ? { ...appt, isPaid: true } : appt));
+        setAppointments(prev => prev.map(appt => appt.id === id ? { ...appt, isPaid: true } : appt));
         toast({
             title: "Payment Successful!",
             description: "Your appointment fee has been paid.",
@@ -337,15 +272,17 @@ export default function AppointmentsPage() {
     const handleScheduleAppointment = (doctor: Doctor, date: Date, notes: string) => {
         const newAppointment: Appointment = {
             id: `appt-${Date.now()}`,
+            patientName: 'Jessica Peterson',
             doctor: doctor,
             date: date.toISOString(),
-            status: 'Pending',
+            status: 'Confirmed',
             notes: notes,
             joinLink: '#',
             isPaid: false,
             fee: 15000, // Example fee
         };
-        setAllAppointments(prev => [newAppointment, ...prev]);
+        allAppointments.unshift(newAppointment);
+        setAppointments([...allAppointments]);
         setIsScheduling(false);
         toast({
             title: "Appointment Request Sent!",
@@ -353,11 +290,11 @@ export default function AppointmentsPage() {
         });
     }
     
-    const currentUpcoming = allAppointments
+    const currentUpcoming = appointments
         .filter(a => ['Confirmed', 'Pending'].includes(a.status) && new Date(a.date) >= new Date())
         .sort((a,b) => new Date(a.date).getTime() - new Date(b.date).getTime());
         
-    const currentPast = allAppointments
+    const currentPast = appointments
         .filter(a => !['Confirmed', 'Pending'].includes(a.status) || new Date(a.date) < new Date())
         .sort((a,b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
