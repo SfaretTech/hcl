@@ -1,5 +1,4 @@
 
-
 import { type Doctor, availableDoctors } from "@/components/schedule-appointment-form";
 import { z } from "zod";
 
@@ -225,6 +224,78 @@ export const professionalProducts: Product[] = [
         reviews: 15,
         sales: 320,
     },
+    {
+        id: 'prod-3',
+        name: 'Digital Blood Pressure Monitor',
+        price: 25000,
+        stock: 120,
+        images: ['https://placehold.co/400x400.png'],
+        category: 'Equipment',
+        rating: 4.5,
+        reviews: 120,
+        sales: 450,
+        description: 'Easy to use digital blood pressure monitor for accurate readings at home. Includes a large LCD display and memory function for two users.'
+    },
+    {
+        id: 'prod-4',
+        name: 'Vitamin C (1000mg)',
+        price: 5500,
+        stock: 500,
+        images: ['https://placehold.co/400x400.png'],
+        category: 'Supplements',
+        rating: 4.8,
+        reviews: 350,
+        sales: 1200,
+        description: 'High-potency Vitamin C supplements to support your immune system. 100 tablets per bottle.'
+    },
+    {
+        id: 'prod-5',
+        name: 'Smart Glucometer Kit',
+        price: 32000,
+        stock: 80,
+        images: ['https://placehold.co/400x400.png'],
+        category: 'AI Health Devices',
+        rating: 4.9,
+        reviews: 95,
+        sales: 210,
+        description: 'Bluetooth-enabled smart glucometer that syncs with the HCOM app to track your blood sugar levels effortlessly. Includes 50 test strips.'
+    },
+    {
+        id: 'prod-6',
+        name: 'Electric Pulse Oximeter',
+        price: 15000,
+        stock: 150,
+        images: ['https://placehold.co/400x400.png'],
+        category: 'Equipment',
+        rating: 4.6,
+        reviews: 210,
+        sales: 600,
+        description: 'Measures your blood oxygen saturation (SpO2) and pulse rate quickly and accurately. Bright OLED display and one-button operation.'
+    },
+    {
+        id: 'prod-7',
+        name: 'Omega-3 Fish Oil',
+        price: 8000,
+        stock: 300,
+        images: ['https://placehold.co/400x400.png'],
+        category: 'Supplements',
+        rating: 4.7,
+        reviews: 412,
+        sales: 950,
+        description: 'Supports heart and brain health with high-quality Omega-3 fatty acids. 120 softgels per bottle.'
+    },
+    {
+        id: 'prod-8',
+        name: 'Beginner\'s Wellness Kit',
+        price: 18500,
+        stock: 75,
+        images: ['https://placehold.co/400x400.png'],
+        category: 'Wellness Kits',
+        rating: 4.9,
+        reviews: 78,
+        sales: 180,
+        description: 'A curated kit for starting your wellness journey, including a yoga mat, resistance bands, and a digital guide to home workouts.'
+    },
 ];
 
 export const addProfessionalProduct = (product: Product) => {
@@ -282,3 +353,4 @@ export const professionalOrders: Order[] = [
         total: 386000
     },
 ];
+

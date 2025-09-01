@@ -9,6 +9,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
+import { professionalProducts } from '@/lib/data';
 
 const categories = [
     {
@@ -38,64 +39,6 @@ const categories = [
     }
 ];
 
-const featuredProducts = [
-  {
-    name: 'Digital Blood Pressure Monitor',
-    price: '₦25,000',
-    image: 'https://placehold.co/400x400.png',
-    hint: 'blood pressure monitor',
-    category: 'Equipment',
-    rating: 4.5,
-    reviews: 120,
-  },
-  {
-    name: 'Vitamin C (1000mg)',
-    price: '₦5,500',
-    image: 'https://placehold.co/400x400.png',
-    hint: 'vitamin bottle',
-    category: 'Supplements',
-    rating: 4.8,
-    reviews: 350,
-  },
-  {
-    name: 'Smart Glucometer Kit',
-    price: '₦32,000',
-    image: 'https://placehold.co/400x400.png',
-    hint: 'glucometer kit',
-    category: 'AI Health Devices',
-    rating: 4.9,
-    reviews: 95,
-  },
-  {
-    name: 'Electric Pulse Oximeter',
-    price: '₦15,000',
-    image: 'https://placehold.co/400x400.png',
-    hint: 'pulse oximeter',
-    category: 'Equipment',
-    rating: 4.6,
-    reviews: 210,
-  },
-   {
-    name: 'Omega-3 Fish Oil',
-    price: '₦8,000',
-    image: 'https://placehold.co/400x400.png',
-    hint: 'fish oil supplement',
-    category: 'Supplements',
-    rating: 4.7,
-    reviews: 412,
-  },
-   {
-    name: 'Beginner\'s Wellness Kit',
-    price: '₦18,500',
-    image: 'https://placehold.co/400x400.png',
-    hint: 'wellness kit box',
-    category: 'Wellness Kits',
-    rating: 4.9,
-    reviews: 78,
-  },
-];
-
-
 export default function ShopPage() {
     const { toast } = useToast();
 
@@ -105,6 +48,13 @@ export default function ShopPage() {
             description: `${productName} has been added to your cart.`,
         });
     };
+
+    const formatCurrency = (amount: number) => {
+        return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(amount);
+    }
+
+    // Use a subset for featured or all for the main list
+    const featuredProducts = professionalProducts.slice(0, 6);
 
     return (
         <div className="space-y-12">
@@ -149,10 +99,10 @@ export default function ShopPage() {
                             <CardContent className="p-0">
                                 <div className="aspect-square overflow-hidden">
                                 <Image 
-                                    src={product.image} 
+                                    src={product.images[0]}
                                     alt={product.name}
                                     width={400} height={400}
-                                    data-ai-hint={product.hint}
+                                    data-ai-hint={product.name.split(' ').slice(0,2).join(' ').toLowerCase()}
                                     className="w-full h-full object-cover transition-transform group-hover:scale-105"
                                 />
                                 </div>
@@ -166,7 +116,7 @@ export default function ShopPage() {
                                     <span className="text-muted-foreground">({product.reviews} reviews)</span>
                                 </div>
                                 <div className="flex items-end justify-between mt-4">
-                                   <p className="text-2xl font-bold text-primary">{product.price}</p>
+                                   <p className="text-2xl font-bold text-primary">{formatCurrency(product.price)}</p>
                                    <Button onClick={() => handleAddToCart(product.name)}>
                                         <ShoppingCart className="mr-2 h-4 w-4" />
                                         Add to Cart
@@ -186,4 +136,3 @@ export default function ShopPage() {
     );
 }
 
-    
