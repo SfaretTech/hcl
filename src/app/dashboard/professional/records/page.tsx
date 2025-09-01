@@ -16,6 +16,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useToast } from '@/hooks/use-toast';
 import { allPatients, addPatientRecord, type HealthRecord, type DocumentType, type Patient } from '@/lib/data';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 
 
 const uploadSchema = z.object({
@@ -38,58 +39,64 @@ function ProfessionalUploadDocumentForm({ patient, onUpload }: { patient: Patien
     }
     
     return (
-         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="space-y-4">
-                 <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-lg text-center relative cursor-pointer hover:bg-accent">
-                    <FileUp className="h-12 w-12 text-muted-foreground mb-2" />
-                     <p className="font-semibold">{documentFile?.[0]?.name || 'Drag & drop or click to upload'}</p>
-                    <p className="text-xs text-muted-foreground">PDF, PNG, JPG up to 10MB</p>
-                    <Input type="file" className="w-full h-full opacity-0 absolute inset-0 z-10 cursor-pointer" {...fileRef} />
+         <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                <div className="space-y-4">
+                    <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-lg text-center relative cursor-pointer hover:bg-accent">
+                        <FileUp className="h-12 w-12 text-muted-foreground mb-2" />
+                        <p className="font-semibold">{documentFile?.[0]?.name || 'Drag & drop or click to upload'}</p>
+                        <p className="text-xs text-muted-foreground">PDF, PNG, JPG up to 10MB</p>
+                        <Input type="file" className="w-full h-full opacity-0 absolute inset-0 z-10 cursor-pointer" {...fileRef} />
+                    </div>
+                    {form.formState.errors.documentFile && (
+                        <p className="text-sm font-medium text-destructive">{form.formState.errors.documentFile.message as string}</p>
+                    )}
                 </div>
-                 {form.formState.errors.documentFile && (
-                    <p className="text-sm font-medium text-destructive">{form.formState.errors.documentFile.message as string}</p>
-                )}
-            </div>
 
-            <FormField
-                control={form.control}
-                name="documentName"
-                render={({ field }) => (
-                    <div className="space-y-2">
-                        <label>Document Name</label>
-                        <Input placeholder="e.g. 'Lab Results Analysis'" {...field} />
-                        {form.formState.errors.documentName && <p className="text-sm font-medium text-destructive">{form.formState.errors.documentName.message}</p>}
-                    </div>
-                )}
-            />
+                <FormField
+                    control={form.control}
+                    name="documentName"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Document Name</FormLabel>
+                            <FormControl>
+                                <Input placeholder="e.g. 'Lab Results Analysis'" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 
-            <FormField
-                control={form.control}
-                name="documentType"
-                render={({ field }) => (
-                     <div className="space-y-2">
-                        <label>Document Type</label>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <SelectTrigger>
-                                <SelectValue placeholder="Select document type" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {['Lab Report', 'Prescription', 'Imaging Result', 'Consultation Note', 'Other'].map(type => (
-                                    <SelectItem key={type} value={type}>{type}</SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                         {form.formState.errors.documentType && <p className="text-sm font-medium text-destructive">{form.formState.errors.documentType.message}</p>}
-                    </div>
-                )}
-            />
-             <DialogFooter>
-                <DialogTrigger asChild>
-                    <Button type="button" variant="ghost">Cancel</Button>
-                </DialogTrigger>
-                <Button type="submit">Upload for {patient.name.split(' ')[0]}</Button>
-            </DialogFooter>
-        </form>
+                <FormField
+                    control={form.control}
+                    name="documentType"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Document Type</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select document type" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    {['Lab Report', 'Prescription', 'Imaging Result', 'Consultation Note', 'Other'].map(type => (
+                                        <SelectItem key={type} value={type}>{type}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <DialogFooter>
+                    <DialogTrigger asChild>
+                        <Button type="button" variant="ghost">Cancel</Button>
+                    </DialogTrigger>
+                    <Button type="submit">Upload for {patient.name.split(' ')[0]}</Button>
+                </DialogFooter>
+            </form>
+        </Form>
     );
 }
 
