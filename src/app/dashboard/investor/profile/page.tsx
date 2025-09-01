@@ -12,11 +12,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useToast } from '@/hooks/use-toast';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Upload, User, ShieldCheck, FileUp, Banknote, Landmark, Eye, EyeOff, AlertTriangle, BadgeCheck } from 'lucide-react';
+import { Upload, User, ShieldCheck, FileUp, Banknote, Landmark, Eye, EyeOff, AlertTriangle, BadgeCheck, Trash2 } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { BankAccountForm } from '@/components/bank-account-form';
 
 const profileSchema = z.object({
   fullName: z.string().min(2, 'Full name must be at least 2 characters.'),
@@ -40,6 +41,13 @@ const kycSchema = z.object({
   documentNumber: z.string().min(3, 'Document number is required.'),
   documentFile: z.any().refine((files) => files?.length === 1, 'A file is required.'),
 });
+
+export type BankAccount = {
+    id: string;
+    bankName: string;
+    accountNumber: string;
+    accountName: string;
+};
 
 function KycForm({ onUpload, status }: { onUpload: (data: z.infer<typeof kycSchema>) => void; status: 'Not Verified' | 'Pending' | 'Verified' }) {
     const form = useForm<z.infer<typeof kycSchema>>({
@@ -117,6 +125,10 @@ function KycForm({ onUpload, status }: { onUpload: (data: z.infer<typeof kycSche
 export default function InvestorProfilePage() {
     const { toast } = useToast();
     const [kycStatus, setKycStatus] = React.useState<'Not Verified' | 'Pending' | 'Verified'>('Not Verified');
+    const [isBankDialogOpen, setBankDialogOpen] = React.useState(false);
+    const [bankAccounts, setBankAccounts] = React.useState<BankAccount[]>([
+        { id: 'bank-1', bankName: 'GTBank', accountNumber: '... ... 6789', accountName: 'Alex Johnson' }
+    ]);
     
     const profileForm = useForm<z.infer<typeof profileSchema>>({
         resolver: zodResolver(profileSchema),
@@ -132,6 +144,22 @@ export default function InvestorProfilePage() {
     const onProfileSubmit = (values: z.infer<typeof profileSchema>) => {
         console.log('Profile updated:', values);
         toast({ title: 'Profile Updated', description: 'Your personal information has been saved.' });
+    }
+
+    const handleAddBankAccount = (data: Omit<BankAccount, 'id'>) => {
+        const newAccount = {
+            id: `bank-${Date.now()}`,
+            ...data,
+            accountNumber: `... ... ${data.accountNumber.slice(-4)}`
+        };
+        setBankAccounts(prev => [...prev, newAccount]);
+        setBankDialogOpen(false);
+        toast({ title: 'Bank Account Added', description: `${data.bankName} has been successfully linked.` });
+    }
+
+    const handleRemoveBankAccount = (id: string) => {
+        setBankAccounts(prev => prev.filter(acc => acc.id !== id));
+        toast({ title: 'Bank Account Removed', variant: 'destructive'});
     }
 
     return (
@@ -197,9 +225,37 @@ export default function InvestorProfilePage() {
                         </CardContent>
                     </Card>
                      <Card className="bg-white">
-                        <CardHeader><CardTitle className="flex items-center gap-3"><Landmark className="w-6 h-6 text-primary"/> Bank Details</CardTitle><CardDescription>Your details for withdrawals.</CardDescription></CardHeader>
-                        <CardContent>
-                             <Button variant="outline" className="w-full">Add Bank Account</Button>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-3"><Landmark className="w-6 h-6 text-primary"/> Bank Details</CardTitle>
+                            <CardDescription>Your details for withdrawals.</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                            {bankAccounts.map(account => (
+                               <div key={account.id} className="flex items-center justify-between p-3 rounded-md bg-background">
+                                   <div>
+                                       <p className="font-semibold">{account.bankName}</p>
+                                       <p className="text-sm text-muted-foreground">{account.accountNumber}</p>
+                                   </div>
+                                    <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive" onClick={() => handleRemoveBankAccount(account.id)}>
+                                        <Trash2 className="w-4 h-4"/>
+                                    </Button>
+                               </div>
+                            ))}
+
+                             <Dialog open={isBankDialogOpen} onOpenChange={setBankDialogOpen}>
+                                <DialogTrigger asChild>
+                                    <Button variant="outline" className="w-full mt-4">Add Bank Account</Button>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>Add New Bank Account</DialogTitle>
+                                        <DialogDescription>
+                                            Link your bank account for seamless withdrawals.
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <BankAccountForm onSave={handleAddBankAccount} />
+                                </DialogContent>
+                            </Dialog>
                         </CardContent>
                     </Card>
                 </div>
