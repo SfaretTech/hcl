@@ -261,6 +261,10 @@ const professionalRoutes = [
     '/dashboard/profile',
     '/dashboard/settings',
     '/dashboard/notifications',
+    '/dashboard/shop',
+    '/dashboard/shop/cart',
+    '/dashboard/shop/checkout',
+    '/dashboard/shop/confirmation',
 ];
 
 const isProfessionalRoute = (pathname: string, roleQueryParam: string | null) => {

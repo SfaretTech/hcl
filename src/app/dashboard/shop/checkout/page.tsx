@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -41,6 +41,7 @@ const formatCurrency = (amount: number) => {
 export default function CheckoutPage() {
     const { toast } = useToast();
     const router = useRouter();
+    const searchParams = useSearchParams();
     const [paymentMethod, setPaymentMethod] = useState('card');
 
     const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
@@ -52,8 +53,16 @@ export default function CheckoutPage() {
             title: 'Order Placed!',
             description: 'Thank you for your purchase. You will receive a confirmation email shortly.',
         });
-        router.push('/dashboard/shop/confirmation');
+        const role = searchParams.get('role');
+        const confirmationUrl = role === 'professional' 
+            ? '/dashboard/shop/confirmation?role=professional' 
+            : '/dashboard/shop/confirmation';
+        router.push(confirmationUrl);
     }
+
+    const role = searchParams.get('role');
+    const cartUrl = role === 'professional' ? '/dashboard/shop/cart?role=professional' : '/dashboard/shop/cart';
+
 
     return (
         <div className="space-y-8">
@@ -190,7 +199,7 @@ export default function CheckoutPage() {
                                 <Lock className="mr-2 h-4 w-4"/> Place Order
                             </Button>
                              <Button asChild variant="link" className="w-full text-muted-foreground">
-                                <Link href="/dashboard/shop/cart">
+                                <Link href={cartUrl}>
                                      <ArrowLeft className="mr-2 h-4 w-4" /> Back to Cart
                                 </Link>
                             </Button>
