@@ -107,8 +107,10 @@ export default function MarketplaceProductsPage() {
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
-                                                <DropdownMenuItem>
-                                                    <Edit className="mr-2 h-4 w-4"/> Edit
+                                                <DropdownMenuItem asChild>
+                                                   <Link href={`/dashboard/professional/marketplace/products/${product.id}/edit`}>
+                                                     <Edit className="mr-2 h-4 w-4"/> Edit
+                                                   </Link>
                                                 </DropdownMenuItem>
                                                 <AlertDialog>
                                                     <AlertDialogTrigger asChild>
