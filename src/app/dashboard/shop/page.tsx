@@ -53,9 +53,6 @@ export default function ShopPage() {
         return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(amount);
     }
 
-    // Use a subset for featured or all for the main list
-    const featuredProducts = professionalProducts.slice(0, 6);
-
     return (
         <div className="space-y-12">
             <section className="bg-primary/5 rounded-xl p-8 text-center flex flex-col items-center">
@@ -94,7 +91,7 @@ export default function ShopPage() {
             <section>
                 <h2 className="text-2xl font-bold font-headline mb-6">Featured Products</h2>
                  <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-                    {featuredProducts.map((product) => (
+                    {professionalProducts.map((product) => (
                        <Card key={product.name} className="bg-white hover:shadow-xl transition-shadow flex flex-col overflow-hidden group">
                             <CardContent className="p-0">
                                 <div className="aspect-square overflow-hidden">
@@ -135,4 +132,5 @@ export default function ShopPage() {
         </div>
     );
 }
+
 
