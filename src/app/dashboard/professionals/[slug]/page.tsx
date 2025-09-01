@@ -2,11 +2,11 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { availableDoctors, Doctor } from '@/components/schedule-appointment-form';
+import { availableDoctors, Doctor, Credential } from '@/components/schedule-appointment-form';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CalendarDays, Mail, MapPin, Phone, UserPlus, X, Award, BadgeCheck } from 'lucide-react';
+import { CalendarDays, Mail, MapPin, Phone, UserPlus, X, Award, BadgeCheck, FileText, RefreshCw, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import React from 'react';
 import Link from 'next/link';
@@ -48,6 +48,15 @@ export default function ProfessionalProfilePage() {
             variant: "destructive",
         });
     };
+    
+    const getStatusBadge = (status: Credential['status']) => {
+      switch(status) {
+          case 'Verified': return <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200"><BadgeCheck className="mr-1 h-3 w-3" />Verified</Badge>;
+          case 'Pending': return <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 border-yellow-200"><RefreshCw className="mr-1 h-3 w-3 animate-spin" />Pending</Badge>;
+          case 'Rejected': return <Badge variant="destructive"><AlertCircle className="mr-1 h-3 w-3" />Rejected</Badge>;
+          default: return <Badge variant="outline">Unknown</Badge>;
+      }
+  }
 
 
     if (!doctor) {
@@ -78,7 +87,7 @@ export default function ProfessionalProfilePage() {
                         <div className="flex-1 mt-4 sm:mt-0 text-center sm:text-left">
                             <div className="flex items-center gap-2 justify-center sm:justify-start">
                                 <h1 className="text-3xl font-bold font-headline">{doctor.name}</h1>
-                                {doctor.credential?.verified && <BadgeCheck className="h-7 w-7 text-green-600"/>}
+                                {doctor.credentials?.some(c => c.status === 'Verified') && <BadgeCheck className="h-7 w-7 text-green-600"/>}
                             </div>
                             <p className="text-lg text-muted-foreground">{doctor.specialty}</p>
                             <div className="flex items-center gap-2 text-sm text-muted-foreground justify-center sm:justify-start mt-1">
@@ -117,21 +126,29 @@ export default function ProfessionalProfilePage() {
                             <p className="text-muted-foreground">{doctor.bio}</p>
                         </CardContent>
                     </Card>
-                     {doctor.credential && (
+                     {doctor.credentials && doctor.credentials.length > 0 && (
                         <Card className="bg-white">
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-2"><Award className="text-primary"/> Credentials</CardTitle>
                             </CardHeader>
-                            <CardContent>
-                                <div className="p-4 bg-background rounded-lg flex items-center justify-between">
-                                    <div>
-                                        <p className="font-semibold">{doctor.credential.name}</p>
-                                        <p className="text-sm text-muted-foreground">Status: <Badge variant={doctor.credential.verified ? "secondary" : "destructive"} className={doctor.credential.verified ? "bg-green-100 text-green-800 border-green-200" : ""}>{doctor.credential.verified ? "Verified" : "Pending"}</Badge></p>
+                            <CardContent className="space-y-3">
+                                {doctor.credentials.map((cred) => (
+                                    <div key={cred.id} className="p-3 bg-background rounded-lg flex items-center justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <FileText className="h-6 w-6 text-muted-foreground"/>
+                                            <div>
+                                                <p className="font-semibold">{cred.name}</p>
+                                                <p className="text-sm text-muted-foreground">{cred.type}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-4">
+                                            {getStatusBadge(cred.status)}
+                                            <Button variant="outline" size="sm" asChild>
+                                                <Link href={cred.url} target="_blank">View</Link>
+                                            </Button>
+                                        </div>
                                     </div>
-                                    <Button variant="outline" size="sm" asChild>
-                                        <Link href={doctor.credential.url} target="_blank">View Credential</Link>
-                                    </Button>
-                                </div>
+                                ))}
                             </CardContent>
                         </Card>
                      )}

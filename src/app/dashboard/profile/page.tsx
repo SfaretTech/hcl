@@ -18,22 +18,22 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Upload, KeyRound, User, Award, Briefcase, Info, BadgeCheck, FileUp } from 'lucide-react';
-import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
+import { Upload, KeyRound, User, Award, Info, BadgeCheck, FileUp, FileText, AlertCircle, RefreshCw } from 'lucide-react';
 import React from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Credential, CredentialType, availableDoctors } from '@/components/schedule-appointment-form';
+import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
+
 
 const profileSchema = z.object({
   fullName: z.string().min(2, 'Full name must be at least 2 characters.'),
   email: z.string().email('Please enter a valid email.'),
   professionalTitle: z.string().min(2, 'Title must be at least 2 characters.'),
-  
   specialization: z.string().min(2, 'Specialization is required.'),
   yearsOfExperience: z.coerce.number().min(0, 'Years of experience cannot be negative.'),
   bio: z.string().min(20, 'Bio should be at least 20 characters.'),
-  
-  licenseNumber: z.string().min(1, 'License number is required.'),
 });
 
 const passwordSchema = z.object({
@@ -46,16 +46,20 @@ const passwordSchema = z.object({
 });
 
 const credentialSchema = z.object({
+  credentialType: z.string().min(1, 'Please select a credential type.'),
+  credentialName: z.string().min(3, 'Credential name must be at least 3 characters.'),
   credentialFile: z.any().refine((files) => files?.length === 1, 'A file is required.'),
 });
+
 
 function CredentialUploadForm({ onUpload }: { onUpload: (data: z.infer<typeof credentialSchema>) => void; }) {
     const form = useForm<z.infer<typeof credentialSchema>>({
         resolver: zodResolver(credentialSchema),
-        defaultValues: { credentialFile: undefined },
+        defaultValues: { credentialType: '', credentialName: '', credentialFile: undefined },
     });
     const fileRef = form.register("credentialFile");
     const credentialFile = form.watch("credentialFile");
+    const credentialTypes: CredentialType[] = ['Medical License', 'Professional Certification', 'Business Registration', 'Other'];
 
     function onSubmit(values: z.infer<typeof credentialSchema>) {
         onUpload(values);
@@ -72,17 +76,49 @@ function CredentialUploadForm({ onUpload }: { onUpload: (data: z.infer<typeof cr
                         <p className="text-xs text-muted-foreground">PDF, PNG, JPG up to 10MB</p>
                         <Input type="file" className="w-full h-full opacity-0 absolute inset-0 z-10 cursor-pointer" {...fileRef} />
                     </div>
-                    <FormField
+                     <FormField
                       control={form.control}
                       name="credentialFile"
-                      render={() => (
-                        <FormItem>
-                          <FormMessage />
-                        </FormItem>
-                      )}
+                      render={() => ( <FormItem><FormMessage /></FormItem>)}
                     />
                 </div>
-                <div className="flex justify-end gap-2">
+                 <FormField
+                    control={form.control}
+                    name="credentialType"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Credential Type</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select the type of document" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    {credentialTypes.map(type => (
+                                        <SelectItem key={type} value={type}>{type}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                 <FormField
+                    control={form.control}
+                    name="credentialName"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Document Name / Number</FormLabel>
+                            <FormControl>
+                                <Input placeholder="e.g., 'MDCN/12345' or 'Advanced Cardiology Cert.'" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <div className="flex justify-end gap-2 pt-4">
                      <DialogTrigger asChild>
                         <Button type="button" variant="ghost">Cancel</Button>
                     </DialogTrigger>
@@ -96,17 +132,17 @@ function CredentialUploadForm({ onUpload }: { onUpload: (data: z.infer<typeof cr
 export default function ProfessionalProfilePage() {
   const { toast } = useToast();
   const [isCredentialUploadOpen, setCredentialUploadOpen] = React.useState(false);
+  const [doctor, setDoctor] = React.useState(() => availableDoctors.find(d => d.id === 'doc-1')); // Assuming current user is Dr. Chen
 
   const profileForm = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      fullName: 'Dr. Samuel Chen',
+      fullName: doctor?.name,
       email: 'dr.chen@hcom.com',
       professionalTitle: 'Medical Doctor',
-      specialization: 'General Medicine',
+      specialization: doctor?.specialty,
       yearsOfExperience: 10,
-      bio: 'Dr. Chen has over 10 years of experience in general medicine and is passionate about preventative care and leveraging technology to improve patient outcomes.',
-      licenseNumber: 'MDCN/12345/2014',
+      bio: doctor?.bio,
     },
   });
 
@@ -114,6 +150,10 @@ export default function ProfessionalProfilePage() {
       resolver: zodResolver(passwordSchema),
       defaultValues: { currentPassword: '', newPassword: '', confirmPassword: '' }
   })
+  
+  if (!doctor) {
+      return <div>Loading professional profile...</div>;
+  }
 
   function onProfileSubmit(values: z.infer<typeof profileSchema>) {
     console.log('Profile updated:', values);
@@ -133,12 +173,31 @@ export default function ProfessionalProfilePage() {
   }
 
   function onCredentialUpload(values: z.infer<typeof credentialSchema>) {
-    console.log("Credential uploaded:", values.credentialFile[0].name);
+    console.log("Credential uploaded:", values);
+    const newCredential: Credential = {
+      id: `cred-${Date.now()}`,
+      type: values.credentialType as CredentialType,
+      name: values.credentialName,
+      url: '#', // Placeholder URL
+      status: 'Pending',
+    }
+
+    setDoctor(prev => prev ? { ...prev, credentials: [...(prev.credentials || []), newCredential] } : undefined);
+    
     setCredentialUploadOpen(false);
     toast({
         title: "Credential Submitted",
         description: "Your new credential has been submitted for review. This may take 2-3 business days.",
     });
+  }
+  
+  const getStatusBadge = (status: Credential['status']) => {
+      switch(status) {
+          case 'Verified': return <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200"><BadgeCheck className="mr-1 h-3 w-3" />Verified</Badge>;
+          case 'Pending': return <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 border-yellow-200"><RefreshCw className="mr-1 h-3 w-3 animate-spin" />Pending</Badge>;
+          case 'Rejected': return <Badge variant="destructive"><AlertCircle className="mr-1 h-3 w-3" />Rejected</Badge>;
+          default: return <Badge variant="outline">Unknown</Badge>;
+      }
   }
 
   return (
@@ -219,50 +278,56 @@ export default function ProfessionalProfilePage() {
 
             <Card className="bg-white">
                 <CardHeader>
-                <div className="flex items-center gap-3">
-                    <Award className="w-6 h-6 text-primary"/>
-                    <CardTitle>Credential Management</CardTitle>
-                </div>
-                <CardDescription>Upload and manage your professional credentials for verification.</CardDescription>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <div className="flex items-center gap-3">
+                          <Award className="w-6 h-6 text-primary"/>
+                          <CardTitle>Credential Management</CardTitle>
+                      </div>
+                      <CardDescription>Upload and manage your professional credentials for verification.</CardDescription>
+                    </div>
+                     <Dialog open={isCredentialUploadOpen} onOpenChange={setCredentialUploadOpen}>
+                        <DialogTrigger asChild>
+                            <Button type="button">
+                                <FileUp className="mr-2 h-4 w-4"/>
+                                Upload New Credential
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Upload New Credential</DialogTitle>
+                                <DialogDescription>
+                                    Please upload your updated credential document. It will be reviewed by our team within 2-3 business days.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <CredentialUploadForm onUpload={onCredentialUpload} />
+                        </DialogContent>
+                    </Dialog>
+                  </div>
                 </CardHeader>
                 <CardContent>
-                    <div className="space-y-4">
-                        <FormField control={profileForm.control} name="licenseNumber" render={({ field }) => (
-                            <FormItem><FormLabel>Medical License Number</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-                        )} />
-                        <div>
-                             <FormLabel>Credential Document</FormLabel>
-                             <div className="p-4 mt-2 bg-background rounded-lg flex items-center justify-between">
+                    <div className="space-y-3">
+                      {(doctor.credentials && doctor.credentials.length > 0) ? (
+                        doctor.credentials.map((cred) => (
+                           <div key={cred.id} className="p-3 bg-background rounded-lg flex items-center justify-between">
                                 <div className="flex items-center gap-3">
-                                    <BadgeCheck className="h-6 w-6 text-green-600"/>
+                                    <FileText className="h-6 w-6 text-muted-foreground"/>
                                     <div>
-                                        <p className="font-semibold">Medical License - MDCN/12345/2014</p>
-                                        <div className="text-sm text-muted-foreground">Status: <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200">Verified</Badge></div>
+                                        <p className="font-semibold">{cred.name}</p>
+                                        <p className="text-sm text-muted-foreground">{cred.type}</p>
                                     </div>
                                 </div>
-                                <Button variant="outline">View</Button>
-                             </div>
+                                <div className="flex items-center gap-4">
+                                  {getStatusBadge(cred.status)}
+                                  <Button variant="outline" size="sm">View</Button>
+                                </div>
+                           </div>
+                        ))
+                      ) : (
+                        <div className="text-center py-8">
+                          <p className="text-muted-foreground">No credentials uploaded yet.</p>
                         </div>
-                        <div className="pt-2">
-                            <Dialog open={isCredentialUploadOpen} onOpenChange={setCredentialUploadOpen}>
-                                <DialogTrigger asChild>
-                                    <Button type="button">
-                                        <FileUp className="mr-2 h-4 w-4"/>
-                                        Upload New Credential
-                                    </Button>
-                                </DialogTrigger>
-                                <DialogContent>
-                                    <DialogHeader>
-                                        <DialogTitle>Upload New Credential</DialogTitle>
-                                        <DialogDescription>
-                                            Please upload your updated credential document. It will be reviewed by our team within 2-3 business days.
-                                        </DialogDescription>
-                                    </DialogHeader>
-                                    <CredentialUploadForm onUpload={onCredentialUpload} />
-                                </DialogContent>
-                            </Dialog>
-                             <p className="text-xs text-muted-foreground mt-2">Upload a new document to replace the existing one. It will be reviewed by our team.</p>
-                        </div>
+                      )}
                     </div>
                 </CardContent>
             </Card>

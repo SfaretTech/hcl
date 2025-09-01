@@ -100,8 +100,8 @@ export const allPatients: Patient[] = [
         records: [
             { id: 'rec-1', name: 'Annual Blood Panel Results', type: 'Lab Report', date: '2024-08-15T10:00:00', uploadedBy: 'Dr. Samuel Chen', fileUrl: '#' },
             { id: 'rec-2', name: 'Vitamin D Prescription', type: 'Prescription', date: '2024-08-10T14:30:00', uploadedBy: 'Dr. Samuel Chen', fileUrl: '#' },
-            { id: 'rec-3', name: 'Follow-up Notes - August', type: 'Consultation Note', date: '2024-08-10T15:00:00', uploadedBy: 'Client', fileUrl: '#' },
-            { id: 'rec-4', name: 'Chest X-Ray', type: 'Imaging Result', date: '2024-07-22T09:00:00', uploadedBy: 'Client', fileUrl: '#' },
+            { id: 'rec-3', name: 'Follow-up Notes - August', type: 'Consultation Note', date: '2024-08-10T15:00:00', uploadedBy: 'Me', fileUrl: '#' },
+            { id: 'rec-4', name: 'Chest X-Ray', type: 'Imaging Result', date: '2024-07-22T09:00:00', uploadedBy: 'Me', fileUrl: '#' },
         ]
     },
     {
