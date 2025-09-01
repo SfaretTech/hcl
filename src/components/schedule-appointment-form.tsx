@@ -118,7 +118,7 @@ export function ScheduleAppointmentForm({ myDoctors, onSchedule }: { myDoctors: 
     resolver: zodResolver(formSchema),
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>>) {
+  function onSubmit(values: z.infer<typeof formSchema>) {
     const doctor = availableDoctors.find(d => d.name === values.doctorId);
     if (doctor) {
         onSchedule(doctor, values.date, values.notes || '');
