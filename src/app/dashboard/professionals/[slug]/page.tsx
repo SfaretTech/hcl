@@ -6,10 +6,11 @@ import { availableDoctors, Doctor } from '@/components/schedule-appointment-form
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CalendarDays, Mail, MapPin, Phone, UserPlus, X } from 'lucide-react';
+import { CalendarDays, Mail, MapPin, Phone, UserPlus, X, Award, BadgeCheck } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import React from 'react';
 import Link from 'next/link';
+import { Badge } from '@/components/ui/badge';
 
 // Helper to find a doctor by slug
 const getDoctorBySlug = (slug: string): Doctor | undefined => {
@@ -75,7 +76,10 @@ export default function ProfessionalProfilePage() {
                             <AvatarFallback>{doctor.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                         </Avatar>
                         <div className="flex-1 mt-4 sm:mt-0 text-center sm:text-left">
-                            <h1 className="text-3xl font-bold font-headline">{doctor.name}</h1>
+                            <div className="flex items-center gap-2 justify-center sm:justify-start">
+                                <h1 className="text-3xl font-bold font-headline">{doctor.name}</h1>
+                                {doctor.credential?.verified && <BadgeCheck className="h-7 w-7 text-green-600"/>}
+                            </div>
                             <p className="text-lg text-muted-foreground">{doctor.specialty}</p>
                             <div className="flex items-center gap-2 text-sm text-muted-foreground justify-center sm:justify-start mt-1">
                                 <MapPin className="h-4 w-4" />
@@ -103,7 +107,7 @@ export default function ProfessionalProfilePage() {
             </Card>
 
             {/* Profile Details */}
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-3 gap-8 items-start">
                 <div className="md:col-span-2 space-y-8">
                     <Card className="bg-white">
                         <CardHeader>
@@ -113,9 +117,27 @@ export default function ProfessionalProfilePage() {
                             <p className="text-muted-foreground">{doctor.bio}</p>
                         </CardContent>
                     </Card>
+                     {doctor.credential && (
+                        <Card className="bg-white">
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2"><Award className="text-primary"/> Credentials</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="p-4 bg-background rounded-lg flex items-center justify-between">
+                                    <div>
+                                        <p className="font-semibold">{doctor.credential.name}</p>
+                                        <p className="text-sm text-muted-foreground">Status: <Badge variant={doctor.credential.verified ? "secondary" : "destructive"} className={doctor.credential.verified ? "bg-green-100 text-green-800 border-green-200" : ""}>{doctor.credential.verified ? "Verified" : "Pending"}</Badge></p>
+                                    </div>
+                                    <Button variant="outline" size="sm" asChild>
+                                        <Link href={doctor.credential.url} target="_blank">View Credential</Link>
+                                    </Button>
+                                </div>
+                            </CardContent>
+                        </Card>
+                     )}
                 </div>
                 <div className="md:col-span-1">
-                     <Card className="bg-white">
+                     <Card className="bg-white sticky top-24">
                         <CardHeader>
                             <CardTitle>Contact Information</CardTitle>
                         </CardHeader>

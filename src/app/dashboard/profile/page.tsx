@@ -18,8 +18,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Upload, KeyRound, User, Award, Briefcase, Info } from 'lucide-react';
+import { Upload, KeyRound, User, Award, Briefcase, Info, BadgeCheck, FileUp } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
 
 const profileSchema = z.object({
   fullName: z.string().min(2, 'Full name must be at least 2 characters.'),
@@ -156,21 +157,43 @@ export default function ProfessionalProfilePage() {
                 </CardContent>
             </Card>
 
-             <Card className="bg-white">
+            <Card className="bg-white">
                 <CardHeader>
                 <div className="flex items-center gap-3">
                     <Award className="w-6 h-6 text-primary"/>
-                    <CardTitle>Credentials</CardTitle>
+                    <CardTitle>Credential Management</CardTitle>
                 </div>
-                <CardDescription>Manage your professional credentials.</CardDescription>
+                <CardDescription>Upload and manage your professional credentials for verification.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <FormField control={profileForm.control} name="licenseNumber" render={({ field }) => (
-                        <FormItem><FormLabel>Medical License Number</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-                    )} />
+                    <div className="space-y-4">
+                        <FormField control={profileForm.control} name="licenseNumber" render={({ field }) => (
+                            <FormItem><FormLabel>Medical License Number</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                        <div>
+                             <FormLabel>Credential Document</FormLabel>
+                             <div className="p-4 mt-2 bg-background rounded-lg flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <BadgeCheck className="h-6 w-6 text-green-600"/>
+                                    <div>
+                                        <p className="font-semibold">Medical License - MDCN/12345/2014</p>
+                                        <p className="text-sm text-muted-foreground">Status: <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200">Verified</Badge></p>
+                                    </div>
+                                </div>
+                                <Button variant="outline">View</Button>
+                             </div>
+                        </div>
+                        <div className="pt-2">
+                             <Button type="button">
+                                <FileUp className="mr-2 h-4 w-4"/>
+                                Upload New Credential
+                             </Button>
+                             <p className="text-xs text-muted-foreground mt-2">Upload a new document to replace the existing one. It will be reviewed by our team.</p>
+                        </div>
+                    </div>
                 </CardContent>
             </Card>
-            
+
             <div className="flex justify-end">
                 <Button type="submit" size="lg">Save All Changes</Button>
             </div>

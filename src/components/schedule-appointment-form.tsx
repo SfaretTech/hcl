@@ -42,6 +42,11 @@ export type Doctor = {
     bio: string;
     location: string;
     status: 'online' | 'offline';
+    credential?: {
+        name: string;
+        url: string;
+        verified: boolean;
+    }
 };
 
 export const availableDoctors: Doctor[] = [
@@ -53,6 +58,11 @@ export const availableDoctors: Doctor[] = [
         bio: 'Dr. Chen has over 10 years of experience in general medicine and is passionate about preventative care.',
         location: 'Port Harcourt, NG',
         status: 'online',
+        credential: {
+            name: 'Medical License MDCN/12345/2014',
+            url: '#',
+            verified: true,
+        }
     },
     {
         name: 'Dr. Amina Khan',
@@ -62,6 +72,11 @@ export const availableDoctors: Doctor[] = [
         bio: 'Dr. Khan is a board-certified dermatologist specializing in both medical and cosmetic dermatology.',
         location: 'Lagos, NG',
         status: 'offline',
+        credential: {
+            name: 'Dermatology Board Certification',
+            url: '#',
+            verified: true,
+        }
     },
     {
         name: 'Dr. Evelyn Reed',
@@ -71,6 +86,11 @@ export const availableDoctors: Doctor[] = [
         bio: 'Dr. Reed is a leading cardiologist with expertise in managing complex heart conditions.',
         location: 'Abuja, FCT',
         status: 'online',
+         credential: {
+            name: 'Cardiology Fellowship Certificate',
+            url: '#',
+            verified: true,
+        }
     },
     {
         name: 'Dr. Ben Carter',
@@ -98,7 +118,7 @@ export function ScheduleAppointmentForm({ myDoctors, onSchedule }: { myDoctors: 
     resolver: zodResolver(formSchema),
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: z.infer<typeof formSchema>>) {
     const doctor = availableDoctors.find(d => d.name === values.doctorId);
     if (doctor) {
         onSchedule(doctor, values.date, values.notes || '');
