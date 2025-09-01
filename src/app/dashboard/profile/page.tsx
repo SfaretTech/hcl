@@ -19,7 +19,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useToast } from '@/hooks/use-toast';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Upload, KeyRound, User, Award, Info, BadgeCheck, FileUp, FileText, AlertCircle, RefreshCw, Trash2 } from 'lucide-react';
-import React from 'react';
+import React, { useRef } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Credential, CredentialType, availableDoctors } from '@/components/schedule-appointment-form';
@@ -154,6 +154,7 @@ function CredentialUploadForm({ onUpload }: { onUpload: (data: z.infer<typeof cr
 
 export default function ProfessionalProfilePage() {
   const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [isCredentialUploadOpen, setCredentialUploadOpen] = React.useState(false);
   const [doctor, setDoctor] = React.useState(() => availableDoctors.find(d => d.id === 'doc-1')); // Assuming current user is Dr. Chen
 
@@ -231,6 +232,16 @@ export default function ProfessionalProfilePage() {
     });
   }
   
+  const handlePictureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      toast({
+        title: 'Picture Updated!',
+        description: `${file.name} has been selected. In a real app, this would be uploaded.`,
+      });
+    }
+  };
+
   const getStatusBadge = (status: Credential['status']) => {
       switch(status) {
           case 'Verified': return <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200"><BadgeCheck className="mr-1 h-3 w-3" />Verified</Badge>;
@@ -257,7 +268,8 @@ export default function ProfessionalProfilePage() {
             <div className="space-y-1">
                 <h2 className="text-2xl font-bold font-headline">{form.getValues('fullName')}</h2>
                 <p className="text-muted-foreground">{form.getValues('professionalTitle')}</p>
-                <Button variant="outline" size="sm" className="mt-2">
+                <Input type="file" ref={fileInputRef} onChange={handlePictureChange} className="hidden" accept="image/*" />
+                <Button variant="outline" size="sm" className="mt-2" onClick={() => fileInputRef.current?.click()}>
                     <Upload className="mr-2 h-4 w-4"/>
                     Change Picture
                 </Button>

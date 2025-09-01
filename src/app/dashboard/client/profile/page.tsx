@@ -19,6 +19,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Upload, KeyRound, User, Phone, Calendar } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { useRef } from 'react';
 
 const profileSchema = z.object({
   fullName: z.string().min(2, 'Full name must be at least 2 characters.'),
@@ -29,6 +30,7 @@ const profileSchema = z.object({
 
 export default function ClientProfilePage() {
   const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const profileForm = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
@@ -48,6 +50,16 @@ export default function ClientProfilePage() {
     });
   }
 
+  const handlePictureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      toast({
+        title: 'Picture Updated!',
+        description: `${file.name} has been selected. In a real app, this would be uploaded.`,
+      });
+    }
+  };
+
   return (
     <div className="space-y-8">
       <div>
@@ -65,7 +77,8 @@ export default function ClientProfilePage() {
             <div className="space-y-1">
                 <h2 className="text-2xl font-bold font-headline">{profileForm.getValues('fullName')}</h2>
                 <p className="text-muted-foreground">{profileForm.getValues('email')}</p>
-                <Button variant="outline" size="sm" className="mt-2">
+                 <Input type="file" ref={fileInputRef} onChange={handlePictureChange} className="hidden" accept="image/*" />
+                <Button variant="outline" size="sm" className="mt-2" onClick={() => fileInputRef.current?.click()}>
                     <Upload className="mr-2 h-4 w-4"/>
                     Change Picture
                 </Button>
