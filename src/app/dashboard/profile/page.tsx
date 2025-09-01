@@ -177,7 +177,7 @@ export default function ProfessionalProfilePage() {
                                     <BadgeCheck className="h-6 w-6 text-green-600"/>
                                     <div>
                                         <p className="font-semibold">Medical License - MDCN/12345/2014</p>
-                                        <p className="text-sm text-muted-foreground">Status: <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200">Verified</Badge></p>
+                                        <div className="text-sm text-muted-foreground">Status: <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200">Verified</Badge></div>
                                     </div>
                                 </div>
                                 <Button variant="outline">View</Button>
