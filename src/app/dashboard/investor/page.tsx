@@ -14,6 +14,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
+import { cn } from '@/lib/utils';
 
 const chartData = [
   { month: "January", desktop: 186 },
