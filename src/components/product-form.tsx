@@ -147,7 +147,7 @@ export function ProductForm({ onSave, product, currentStep = 0, onStepChange }: 
          <div className={cn(step !== 2 && "hidden")}>
             <div>
                 <FormLabel>Product Images</FormLabel>
-                <div className="mt-2 flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-lg text-center cursor-pointer hover:bg-accent">
+                <div className="relative mt-2 flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-lg text-center cursor-pointer hover:bg-accent">
                     <FileUp className="h-12 w-12 text-muted-foreground mb-2" />
                     <p className="font-semibold">Drag & drop or click to upload</p>
                     <p className="text-xs text-muted-foreground">PNG, JPG, GIF up to 10MB</p>
