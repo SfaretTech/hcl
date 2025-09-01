@@ -11,9 +11,10 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
-import { allAppointments } from '@/lib/data';
+import { allAppointments, type Appointment } from '@/lib/data';
 import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 
 export default function ProfessionalAppointmentsPage() {
@@ -89,29 +90,54 @@ export default function ProfessionalAppointmentsPage() {
                                     </div>
                                     <Badge variant={appt.status === 'Completed' ? 'secondary' : 'default'}>{appt.status}</Badge>
                                 </div>
-                                <div className="w-full sm:w-auto flex gap-2">
-                                     <AlertDialog>
-                                        <AlertDialogTrigger asChild>
-                                            <Button className="w-full sm:w-auto">
-                                                <Video className="mr-2 h-4 w-4" /> Start Meeting
+                                <div className="w-full sm:w-auto flex gap-2 justify-end">
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="ghost" size="icon">
+                                                <MoreVertical className="h-5 w-5" />
                                             </Button>
-                                        </AlertDialogTrigger>
-                                        <AlertDialogContent>
-                                            <AlertDialogHeader>
-                                                <AlertDialogTitle className="flex items-center gap-2"><AlertTriangle className="h-6 w-6 text-primary" />Start Consultation?</AlertDialogTitle>
-                                                <AlertDialogDescription>
-                                                    This will start a video call and notify {appt.patientName} to join immediately. Are you ready to begin?
-                                                </AlertDialogDescription>
-                                            </AlertDialogHeader>
-                                            <AlertDialogFooter>
-                                                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                                <AlertDialogAction onClick={() => handleStartMeeting(appt.patientName, 'video')}>Yes, Start Video Call</AlertDialogAction>
-                                            </AlertDialogFooter>
-                                        </AlertDialogContent>
-                                    </AlertDialog>
-                                    <Button variant="ghost" size="icon" className="w-auto">
-                                        <MoreVertical className="h-5 w-5" />
-                                    </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                     <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                                        <Video className="mr-2 h-4 w-4" /> Start Video Call
+                                                    </DropdownMenuItem>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle className="flex items-center gap-2"><AlertTriangle className="h-6 w-6 text-primary" />Start Video Call?</AlertDialogTitle>
+                                                        <AlertDialogDescription>
+                                                            This will start a video call and notify {appt.patientName} to join immediately. Are you ready to begin?
+                                                        </Description>
+                                                    </AlertDialogHeader>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                        <AlertDialogAction onClick={() => handleStartMeeting(appt.patientName, 'video')}>Yes, Start Call</AlertDialogAction>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                             <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                     <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                                        <Phone className="mr-2 h-4 w-4" /> Start Phone Call
+                                                    </DropdownMenuItem>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle className="flex items-center gap-2"><AlertTriangle className="h-6 w-6 text-primary" />Start Phone Call?</AlertDialogTitle>
+                                                        <AlertDialogDescription>
+                                                             This will start a phone call and notify {appt.patientName} to join immediately. Are you ready to begin?
+                                                        </Description>
+                                                    </AlertDialogHeader>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                        <AlertDialogAction onClick={() => handleStartMeeting(appt.patientName, 'phone')}>Yes, Start Call</AlertDialogAction>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
                                 </div>
                             </li>
                         ))}
