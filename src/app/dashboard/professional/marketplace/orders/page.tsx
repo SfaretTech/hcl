@@ -2,9 +2,9 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { MoreHorizontal, Package, Search, Truck, CheckCircle2 } from 'lucide-react';
+import { MoreHorizontal, Package, Search, Truck, CheckCircle2, User, Calendar } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -13,9 +13,70 @@ import { Badge } from '@/components/ui/badge';
 import { professionalOrders, type Order, type OrderStatus } from '@/lib/data';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from '@/components/ui/dialog';
+import { Separator } from '@/components/ui/separator';
+
 
 const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(amount);
+}
+
+const OrderDetailsDialog = ({ order }: { order: Order }) => {
+    return (
+        <Dialog>
+            <DialogTrigger asChild>
+                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                    <Package className="mr-2 h-4 w-4"/> View Details
+                </DropdownMenuItem>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-lg">
+                <DialogHeader>
+                    <DialogTitle>Order #{order.id}</DialogTitle>
+                    <DialogDescription>
+                         Details for the order placed by {order.customerName}.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
+                     <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center gap-2 text-muted-foreground"><User className="h-4 w-4"/> Customer:</div>
+                        <span className="font-medium">{order.customerName}</span>
+                    </div>
+                     <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center gap-2 text-muted-foreground"><Calendar className="h-4 w-4"/> Date:</div>
+                        <span className="font-medium">{format(new Date(order.date), 'PPP')}</span>
+                    </div>
+                     <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center gap-2 text-muted-foreground"><Truck className="h-4 w-4"/> Status:</div>
+                         <Badge variant={order.status === 'Delivered' ? 'secondary' : (order.status === 'Shipped' ? 'default' : 'outline')}>{order.status}</Badge>
+                    </div>
+
+                    <Separator />
+                    <h4 className="font-semibold">Items</h4>
+                    <div className="space-y-2">
+                        {order.items.map(item => (
+                            <div key={item.productId} className="flex justify-between items-center text-sm">
+                                <div>
+                                    <p className="font-medium">{item.name}</p>
+                                    <p className="text-muted-foreground">Qty: {item.quantity}</p>
+                                </div>
+                                <p>{formatCurrency(item.price * item.quantity)}</p>
+                            </div>
+                        ))}
+                    </div>
+                    <Separator />
+                    <div className="flex justify-between font-bold text-lg">
+                        <p>Total</p>
+                        <p>{formatCurrency(order.total)}</p>
+                    </div>
+                </div>
+                 <DialogFooter>
+                    <DialogClose asChild>
+                        <Button variant="outline">Close</Button>
+                    </DialogClose>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
 }
 
 export default function MarketplaceOrdersPage() {
@@ -109,9 +170,7 @@ export default function MarketplaceOrdersPage() {
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
                                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                                <DropdownMenuItem>
-                                                    <Package className="mr-2 h-4 w-4"/> View Details
-                                                </DropdownMenuItem>
+                                                <OrderDetailsDialog order={order} />
                                                 <DropdownMenuSeparator />
                                                 <DropdownMenuItem onClick={() => handleStatusChange(order.id, 'Shipped')}>
                                                     <Truck className="mr-2 h-4 w-4"/> Mark as Shipped
@@ -127,9 +186,11 @@ export default function MarketplaceOrdersPage() {
                         </TableBody>
                     </Table>
                      {filteredOrders.length === 0 && (
-                        <div className="text-center py-16">
-                            <p className="text-lg text-muted-foreground">No orders found matching your criteria.</p>
-                        </div>
+                        <CardFooter className="py-12">
+                            <div className="text-center w-full">
+                                <p className="text-lg text-muted-foreground">No orders found matching your criteria.</p>
+                            </div>
+                        </CardFooter>
                     )}
                 </CardContent>
             </Card>
