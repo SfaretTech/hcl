@@ -405,14 +405,12 @@ export function Header() {
                     </Sheet>
                  </div>
                  <div className="flex items-center gap-2 ml-auto">
-                    {role === 'client' && (
-                        <Button asChild variant="ghost" size="icon">
-                            <Link href="/dashboard/shop/cart">
-                                <ShoppingCart className="h-5 w-5" />
-                                <span className="sr-only">Cart</span>
-                            </Link>
-                        </Button>
-                    )}
+                    <Button asChild variant="ghost" size="icon">
+                        <Link href="/dashboard/shop/cart">
+                            <ShoppingCart className="h-5 w-5" />
+                            <span className="sr-only">Cart</span>
+                        </Link>
+                    </Button>
                     <Notifications role={role} />
                     <UserNav role={role} />
                  </div>
