@@ -122,7 +122,7 @@ export function ProductForm({ onSave, product }: { onSave: (data: z.infer<typeof
                 <FileUp className="h-12 w-12 text-muted-foreground mb-2" />
                 <p className="font-semibold">Drag & drop or click to upload</p>
                 <p className="text-xs text-muted-foreground">PNG, JPG, GIF up to 10MB</p>
-                <Input type="file" className="w-full h-full opacity-0 absolute inset-0 z-10 cursor-pointer" multiple/>
+                <Input type="file" className="w-full h-full opacity-0 absolute inset-0 z-10 cursor-pointer" multiple />
             </div>
             <FormDescription className="mt-2">The first image will be used as the cover.</FormDescription>
         </div>
