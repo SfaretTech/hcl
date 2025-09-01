@@ -56,8 +56,7 @@ export default function LoginPage() {
         router.push('/dashboard/professional');
         break;
       case 'investor':
-        // As there is no investor dashboard yet, redirecting to the client dashboard
-        router.push('/dashboard');
+        router.push('/dashboard/investor');
         break;
       case 'client':
       default:

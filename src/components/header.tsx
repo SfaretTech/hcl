@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Menu, X, LayoutGrid, CalendarDays, MessageSquare, FileText, User, UserSearch, UserPlus, Settings, Bell, CheckCircle2, LogOut, ShoppingCart, CreditCard, CheckCircle, Briefcase, ShoppingBag, Package, PackagePlus } from 'lucide-react';
+import { Menu, X, LayoutGrid, CalendarDays, MessageSquare, FileText, User, UserSearch, UserPlus, Settings, Bell, CheckCircle2, LogOut, ShoppingCart, CreditCard, CheckCircle, Briefcase, ShoppingBag, Package, PackagePlus, DollarSign, PieChart, ShieldCheck, Wallet } from 'lucide-react';
 import Link from 'next/link';
 import { Button, buttonVariants } from './ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle } from './ui/sheet';
@@ -143,6 +143,34 @@ const professionalNavItems = [
     }
 ];
 
+const investorNavItems = [
+    {
+        title: 'Dashboard',
+        href: '/dashboard/investor',
+        icon: LayoutGrid
+    },
+    {
+        title: 'Investments',
+        href: '/dashboard/investor/investments',
+        icon: DollarSign
+    },
+    {
+        title: 'Analytics',
+        href: '/dashboard/investor/analytics',
+        icon: PieChart
+    },
+    {
+        title: 'Wallet',
+        href: '/dashboard/investor/wallet',
+        icon: Wallet
+    },
+    {
+        title: 'Profile & KYC',
+        href: '/dashboard/investor/profile',
+        icon: ShieldCheck
+    },
+];
+
 
 const iconMap: Record<string, React.ElementType> = {
     'MessageSquare': MessageSquare,
@@ -155,7 +183,7 @@ const getIcon = (iconName: string) => {
     return Icon ? <Icon /> : <Bell />;
 }
 
-function Notifications({role}: {role: 'client' | 'professional'}) {
+function Notifications({role}: {role: 'client' | 'professional' | 'investor'}) {
     const notifications = allNotifications;
     return (
         <Popover>
@@ -200,7 +228,7 @@ function Notifications({role}: {role: 'client' | 'professional'}) {
     )
 }
 
-function UserNav({role}: {role: 'client' | 'professional'}) {
+function UserNav({role}: {role: 'client' | 'professional' | 'investor'}) {
     const router = useRouter();
     const { toast } = useToast();
     const [showLogoutToast, setShowLogoutToast] = useState(false);
@@ -219,24 +247,41 @@ function UserNav({role}: {role: 'client' | 'professional'}) {
         setShowLogoutToast(true);
     };
     
-    const profileLink = role === 'professional' ? '/dashboard/profile' : '/dashboard/client/profile';
-    const settingsLink = role === 'professional' ? '/dashboard/settings' : '/dashboard/client/settings';
+    let profileLink = '/dashboard/client/profile';
+    let settingsLink = '/dashboard/client/settings';
+    let userName = 'Jessica Peterson';
+    let userEmail = 'jessica.peterson@example.com';
+    let avatarFallback = 'JP';
+
+    if (role === 'professional') {
+        profileLink = '/dashboard/profile';
+        settingsLink = '/dashboard/settings';
+        userName = 'Dr. Chen';
+        userEmail = 'dr.chen@hcom.com';
+        avatarFallback = 'DC';
+    } else if (role === 'investor') {
+        profileLink = '/dashboard/investor/profile';
+        settingsLink = '/dashboard/investor/profile'; // Or a dedicated settings page
+        userName = 'Alex Johnson';
+        userEmail = 'alex.j@invest.hcom.com';
+        avatarFallback = 'AJ';
+    }
 
     return (
          <DropdownMenu>
             <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="relative h-10 w-10 rounded-full">
                     <Avatar className="h-10 w-10">
-                        <AvatarImage src={role === 'professional' ? 'https://placehold.co/100x100.png' : 'https://placehold.co/100x100.png'} />
-                        <AvatarFallback>{role === 'professional' ? 'DC' : 'JP'}</AvatarFallback>
+                        <AvatarImage src={'https://placehold.co/100x100.png'} />
+                        <AvatarFallback>{avatarFallback}</AvatarFallback>
                     </Avatar>
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">{role === 'professional' ? 'Dr. Chen' : 'Jessica Peterson'}</p>
-                        <p className="text-xs leading-none text-muted-foreground">{role === 'professional' ? 'dr.chen@hcom.com' : 'jessica.peterson@example.com'}</p>
+                        <p className="text-sm font-medium leading-none">{userName}</p>
+                        <p className="text-xs leading-none text-muted-foreground">{userEmail}</p>
                     </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
@@ -256,23 +301,33 @@ function UserNav({role}: {role: 'client' | 'professional'}) {
     )
 }
 
-const professionalRoutes = [
-    '/dashboard/professional',
-    '/dashboard/profile',
-    '/dashboard/settings',
-    '/dashboard/notifications',
-    '/dashboard/shop',
-    '/dashboard/shop/cart',
-    '/dashboard/shop/checkout',
-    '/dashboard/shop/confirmation',
-];
+const getRole = (pathname: string, roleQueryParam: string | null): 'client' | 'professional' | 'investor' => {
+    if (pathname.startsWith('/dashboard/investor')) {
+        return 'investor';
+    }
+    
+    const professionalRoutes = [
+        '/dashboard/professional',
+        '/dashboard/profile',
+        '/dashboard/settings',
+    ];
 
-const isProfessionalRoute = (pathname: string, roleQueryParam: string | null) => {
-    if (roleQueryParam === 'professional') return true;
-    if (professionalRoutes.includes(pathname)) return true;
-    if (pathname.startsWith('/dashboard/professional/')) return true;
-    return false;
-};
+    if (roleQueryParam === 'professional') return 'professional';
+    if (professionalRoutes.some(route => pathname.startsWith(route))) return 'professional';
+
+    const sharedShopRoutes = [
+        '/dashboard/shop',
+        '/dashboard/shop/cart',
+        '/dashboard/shop/checkout',
+        '/dashboard/shop/confirmation'
+    ];
+
+    if (sharedShopRoutes.some(route => pathname.startsWith(route)) && roleQueryParam === 'professional') {
+        return 'professional';
+    }
+    
+    return 'client';
+}
 
 
 export function Header() {
@@ -298,8 +353,18 @@ export function Header() {
   };
 
   const isDashboard = pathname.startsWith('/dashboard');
-  const role = isProfessionalRoute(pathname, searchParams.get('role')) ? 'professional' : 'client';
-  const dashboardNavItems = role === 'professional' ? professionalNavItems : clientNavItems;
+  const role = getRole(pathname, searchParams.get('role'));
+  
+  let dashboardNavItems;
+  if (role === 'investor') {
+      dashboardNavItems = investorNavItems;
+  } else if (role === 'professional') {
+      dashboardNavItems = professionalNavItems;
+  } else {
+      dashboardNavItems = clientNavItems;
+  }
+  
+  const settingsLink = role === 'professional' ? '/dashboard/settings' : (role === 'investor' ? '/dashboard/investor/profile' : '/dashboard/client/settings');
 
 
   if (isDashboard) {
@@ -386,11 +451,11 @@ export function Header() {
                                     <SheetClose asChild>
                                         <Button asChild className="w-full justify-start text-base mb-2">
                                             <Link
-                                                href={role === 'professional' ? '/dashboard/settings' : '/dashboard/client/settings'}
+                                                href={settingsLink}
                                                 className={cn(
                                                     buttonVariants({ variant: 'ghost' }),
                                                     'w-full justify-start',
-                                                     (pathname === '/dashboard/settings' || pathname === '/dashboard/client/settings') && 'bg-primary/10 text-primary hover:bg-primary/20'
+                                                     pathname === settingsLink && 'bg-primary/10 text-primary hover:bg-primary/20'
                                                 )}
                                             >
                                                 <Settings className="mr-3 h-5 w-5" />
@@ -407,12 +472,14 @@ export function Header() {
                     </Sheet>
                  </div>
                  <div className="flex items-center gap-2 ml-auto">
-                    <Button asChild variant="ghost" size="icon">
-                        <Link href={role === 'professional' ? '/dashboard/shop/cart?role=professional' : '/dashboard/shop/cart'}>
-                            <ShoppingCart className="h-5 w-5" />
-                            <span className="sr-only">Cart</span>
-                        </Link>
-                    </Button>
+                    {role !== 'investor' && (
+                        <Button asChild variant="ghost" size="icon">
+                            <Link href={role === 'professional' ? '/dashboard/shop/cart?role=professional' : '/dashboard/shop/cart'}>
+                                <ShoppingCart className="h-5 w-5" />
+                                <span className="sr-only">Cart</span>
+                            </Link>
+                        </Button>
+                    )}
                     <Notifications role={role} />
                     <UserNav role={role} />
                  </div>

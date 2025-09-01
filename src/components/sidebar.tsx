@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { LayoutGrid, CalendarDays, MessageSquare, FileText, User, Settings, LifeBuoy, LogOut, UserSearch, UserPlus, ShoppingCart, CreditCard, CheckCircle, Briefcase, Bell, ShoppingBag, Package, PackagePlus } from 'lucide-react';
+import { LayoutGrid, CalendarDays, MessageSquare, FileText, User, Settings, LifeBuoy, LogOut, UserSearch, UserPlus, ShoppingCart, CreditCard, CheckCircle, Briefcase, Bell, ShoppingBag, Package, PackagePlus, DollarSign, PieChart, ShieldCheck, Wallet } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -129,23 +129,61 @@ const professionalNavItems = [
     }
 ];
 
-const professionalRoutes = [
-    '/dashboard/professional',
-    '/dashboard/profile',
-    '/dashboard/settings',
-    '/dashboard/notifications',
-    '/dashboard/shop',
-    '/dashboard/shop/cart',
-    '/dashboard/shop/checkout',
-    '/dashboard/shop/confirmation',
+const investorNavItems = [
+    {
+        title: 'Dashboard',
+        href: '/dashboard/investor',
+        icon: LayoutGrid
+    },
+    {
+        title: 'Investments',
+        href: '/dashboard/investor/investments',
+        icon: DollarSign
+    },
+    {
+        title: 'Analytics',
+        href: '/dashboard/investor/analytics',
+        icon: PieChart
+    },
+    {
+        title: 'Wallet',
+        href: '/dashboard/investor/wallet',
+        icon: Wallet
+    },
+    {
+        title: 'Profile & KYC',
+        href: '/dashboard/investor/profile',
+        icon: ShieldCheck
+    },
 ];
 
-const isProfessionalRoute = (pathname: string, roleQueryParam: string | null) => {
-    if (roleQueryParam === 'professional') return true;
-    if (professionalRoutes.includes(pathname)) return true;
-    if (pathname.startsWith('/dashboard/professional/')) return true;
-    return false;
-};
+
+const getRole = (pathname: string, roleQueryParam: string | null): 'client' | 'professional' | 'investor' => {
+    if (pathname.startsWith('/dashboard/investor')) {
+        return 'investor';
+    }
+    
+    const professionalRoutes = [
+        '/dashboard/professional',
+        '/dashboard/profile',
+        '/dashboard/settings',
+    ];
+
+    if (professionalRoutes.some(route => pathname.startsWith(route))) return 'professional';
+
+    const sharedShopRoutes = [
+        '/dashboard/shop',
+        '/dashboard/shop/cart',
+        '/dashboard/shop/checkout',
+        '/dashboard/shop/confirmation'
+    ];
+
+    if (sharedShopRoutes.some(route => pathname.startsWith(route)) && roleQueryParam === 'professional') {
+        return 'professional';
+    }
+    
+    return 'client';
+}
 
 export function Sidebar() {
     const pathname = usePathname();
@@ -153,8 +191,7 @@ export function Sidebar() {
     const router = useRouter();
     const { toast } = useToast();
     
-    // In a real app, role would come from a user session
-    const role = isProfessionalRoute(pathname, searchParams.get('role')) ? 'professional' : 'client';
+    const role = getRole(pathname, searchParams.get('role'));
 
 
     const handleLogout = () => {
@@ -169,8 +206,24 @@ export function Sidebar() {
     const isShopActive = pathname.startsWith('/dashboard/shop');
     const isMarketplaceActive = pathname.startsWith('/dashboard/professional/marketplace');
 
-    const sidebarNavItems = role === 'professional' ? professionalNavItems : clientNavItems;
-    const settingsLink = role === 'professional' ? '/dashboard/settings' : '/dashboard/client/settings';
+    let sidebarNavItems;
+    let settingsLink = '';
+
+    switch (role) {
+        case 'investor':
+            sidebarNavItems = investorNavItems;
+            settingsLink = '/dashboard/investor/profile'; // Investors have settings within profile
+            break;
+        case 'professional':
+            sidebarNavItems = professionalNavItems;
+            settingsLink = '/dashboard/settings';
+            break;
+        case 'client':
+        default:
+            sidebarNavItems = clientNavItems;
+            settingsLink = '/dashboard/client/settings';
+            break;
+    }
 
     return (
         <aside className="hidden lg:flex flex-col w-64 border-r bg-card">
@@ -226,7 +279,7 @@ export function Sidebar() {
                            className={cn(
                                buttonVariants({ variant: 'ghost' }),
                                'w-full justify-start',
-                               (pathname.startsWith(item.href) && item.href !== '/dashboard' && !item.href.endsWith('/professional')) && 'bg-primary/10 text-primary hover:bg-primary/20',
+                               (pathname.startsWith(item.href) && item.href !== '/dashboard' && !item.href.endsWith('/professional') && !item.href.endsWith('/investor')) && 'bg-primary/10 text-primary hover:bg-primary/20',
                                pathname === item.href && 'bg-primary/10 text-primary hover:bg-primary/20'
                            )}
                        >
