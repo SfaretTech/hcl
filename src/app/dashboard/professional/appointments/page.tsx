@@ -128,7 +128,7 @@ export default function ProfessionalAppointmentsPage() {
                                                         <AlertDialogTitle className="flex items-center gap-2"><AlertTriangle className="h-6 w-6 text-primary" />Start Phone Call?</AlertDialogTitle>
                                                         <AlertDialogDescription>
                                                              This will start a phone call and notify {appt.patientName} to join immediately. Are you ready to begin?
-                                                        </Description>
+                                                        </AlertDialogDescription>
                                                     </AlertDialogHeader>
                                                     <AlertDialogFooter>
                                                         <AlertDialogCancel>Cancel</AlertDialogCancel>
