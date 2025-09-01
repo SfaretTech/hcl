@@ -188,7 +188,7 @@ export default function InvestorSettingsPage() {
                                 <FormItem><FormLabel>New Password</FormLabel><FormControl><Input type="password" {...field} /></FormControl><FormMessage /></FormItem>
                             )}/>
                             <FormField control={passwordForm.control} name="confirmPassword" render={({ field }) => (
-                                <FormItem><FormLabel>Confirm New Password</FormLabel><FormControl><Input type="password" {...field} /></FormControl><FormMessage /></FormMessage>
+                                <FormItem><FormLabel>Confirm New Password</FormLabel><FormControl><Input type="password" {...field} /></FormControl><FormMessage /></FormItem>
                             )}/>
                         </div>
                             <div className="flex justify-end">
