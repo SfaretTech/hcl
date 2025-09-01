@@ -75,7 +75,7 @@ export function ProductForm({ onSave, product }: { onSave: (data: z.infer<typeof
                     <FormItem>
                         <FormLabel>Price (NGN)</FormLabel>
                         <FormControl>
-                            <Input type="number" placeholder="25000" {...field} onChange={e => field.onChange(parseFloat(e.target.value))}/>
+                            <Input type="number" placeholder="25000" {...field} onChange={e => field.onChange(parseFloat(e.target.value) || 0)}/>
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -88,7 +88,7 @@ export function ProductForm({ onSave, product }: { onSave: (data: z.infer<typeof
                     <FormItem>
                         <FormLabel>Stock Quantity</FormLabel>
                         <FormControl>
-                            <Input type="number" placeholder="100" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10))}/>
+                            <Input type="number" placeholder="100" {...field} onChange={e => field.onChange(parseInt(e.target.value, 10) || 0)}/>
                         </FormControl>
                         <FormMessage />
                     </FormItem>
@@ -129,7 +129,7 @@ export function ProductForm({ onSave, product }: { onSave: (data: z.infer<typeof
 
         <div className="flex justify-end gap-4 pt-4">
              <Button type="button" variant="outline" asChild>
-                <Link href="/dashboard/professional/marketplace">Cancel</Link>
+                <Link href="/dashboard/professional/marketplace/products">Cancel</Link>
              </Button>
              <Button type="submit">
                 <Save className="mr-2 h-4 w-4"/>
