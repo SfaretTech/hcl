@@ -38,13 +38,35 @@ const profileSchema = z.object({
 });
 
 const passwordSchema = z.object({
-    currentPassword: z.string().min(1, 'Current password is required.'),
-    newPassword: z.string().min(8, 'New password must be at least 8 characters.'),
-    confirmPassword: z.string(),
-}).refine(data => data.newPassword === data.confirmPassword, {
+    currentPassword: z.string().optional(),
+    newPassword: z.string().optional(),
+    confirmPassword: z.string().optional(),
+}).refine(data => {
+    if (data.newPassword && data.newPassword.length < 8) return false;
+    return true;
+}, {
+    message: "New password must be at least 8 characters.",
+    path: ['newPassword'],
+}).refine(data => {
+    if (data.newPassword || data.confirmPassword) {
+        return data.newPassword === data.confirmPassword;
+    }
+    return true;
+}, {
     message: "New passwords don't match.",
     path: ['confirmPassword'],
+}).refine(data => {
+    if (data.newPassword && !data.currentPassword) {
+        return false;
+    }
+    return true;
+}, {
+    message: "Current password is required to set a new one.",
+    path: ['currentPassword'],
 });
+
+const combinedSchema = profileSchema.merge(passwordSchema);
+
 
 const credentialSchema = z.object({
   credentialType: z.string().min(1, 'Please select a credential type.'),
@@ -135,8 +157,8 @@ export default function ProfessionalProfilePage() {
   const [isCredentialUploadOpen, setCredentialUploadOpen] = React.useState(false);
   const [doctor, setDoctor] = React.useState(() => availableDoctors.find(d => d.id === 'doc-1')); // Assuming current user is Dr. Chen
 
-  const profileForm = useForm<z.infer<typeof profileSchema>>({
-    resolver: zodResolver(profileSchema),
+  const form = useForm<z.infer<typeof combinedSchema>>({
+    resolver: zodResolver(combinedSchema),
     defaultValues: {
       fullName: doctor?.name,
       email: 'dr.chen@hcom.com',
@@ -144,33 +166,34 @@ export default function ProfessionalProfilePage() {
       specialization: doctor?.specialty,
       yearsOfExperience: 10,
       bio: doctor?.bio,
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: '',
     },
   });
-
-  const passwordForm = useForm<z.infer<typeof passwordSchema>>({
-      resolver: zodResolver(passwordSchema),
-      defaultValues: { currentPassword: '', newPassword: '', confirmPassword: '' }
-  })
   
   if (!doctor) {
       return <div>Loading professional profile...</div>;
   }
 
-  function onProfileSubmit(values: z.infer<typeof profileSchema>) {
+  function onSubmit(values: z.infer<typeof combinedSchema>) {
     console.log('Profile updated:', values);
     toast({
       title: 'Profile Updated',
       description: 'Your professional information has been saved.',
     });
-  }
-
-  function onPasswordSubmit(values: z.infer<typeof passwordSchema>) {
-    console.log("Password change requested:", values);
-    toast({
-        title: "Password Updated",
-        description: "Your password has been changed successfully.",
+     if (values.newPassword) {
+        toast({
+            title: "Password Updated",
+            description: "Your password has been changed successfully.",
+        });
+    }
+    form.reset({
+        ...values,
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: '',
     });
-    passwordForm.reset();
   }
 
   function onCredentialUpload(values: z.infer<typeof credentialSchema>) {
@@ -232,8 +255,8 @@ export default function ProfessionalProfilePage() {
                 <AvatarFallback>DC</AvatarFallback>
             </Avatar>
             <div className="space-y-1">
-                <h2 className="text-2xl font-bold font-headline">{profileForm.getValues('fullName')}</h2>
-                <p className="text-muted-foreground">{profileForm.getValues('professionalTitle')}</p>
+                <h2 className="text-2xl font-bold font-headline">{form.getValues('fullName')}</h2>
+                <p className="text-muted-foreground">{form.getValues('professionalTitle')}</p>
                 <Button variant="outline" size="sm" className="mt-2">
                     <Upload className="mr-2 h-4 w-4"/>
                     Change Picture
@@ -243,8 +266,8 @@ export default function ProfessionalProfilePage() {
         </CardHeader>
       </Card>
 
-      <Form {...profileForm}>
-        <form onSubmit={profileForm.handleSubmit(onProfileSubmit)} className="space-y-8">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <Card className="bg-white">
                 <CardHeader>
                 <div className="flex items-center gap-3">
@@ -255,13 +278,13 @@ export default function ProfessionalProfilePage() {
                 </CardHeader>
                 <CardContent>
                     <div className="grid md:grid-cols-2 gap-6">
-                        <FormField control={profileForm.control} name="fullName" render={({ field }) => (
+                        <FormField control={form.control} name="fullName" render={({ field }) => (
                             <FormItem><FormLabel>Full Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
-                        <FormField control={profileForm.control} name="email" render={({ field }) => (
+                        <FormField control={form.control} name="email" render={({ field }) => (
                             <FormItem><FormLabel>Email Address</FormLabel><FormControl><Input type="email" {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
-                        <FormField control={profileForm.control} name="professionalTitle" render={({ field }) => (
+                        <FormField control={form.control} name="professionalTitle" render={({ field }) => (
                             <FormItem><FormLabel>Professional Title</FormLabel><FormControl><Input placeholder="e.g. Medical Doctor" {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
                     </div>
@@ -279,14 +302,14 @@ export default function ProfessionalProfilePage() {
                 <CardContent>
                     <div className="space-y-6">
                          <div className="grid md:grid-cols-2 gap-6">
-                            <FormField control={profileForm.control} name="specialization" render={({ field }) => (
+                            <FormField control={form.control} name="specialization" render={({ field }) => (
                                 <FormItem><FormLabel>Specialization</FormLabel><FormControl><Input placeholder="e.g. General Medicine" {...field} /></FormControl><FormMessage /></FormItem>
                             )} />
-                             <FormField control={profileForm.control} name="yearsOfExperience" render={({ field }) => (
+                             <FormField control={form.control} name="yearsOfExperience" render={({ field }) => (
                                 <FormItem><FormLabel>Years of Experience</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>
                             )} />
                         </div>
-                        <FormField control={profileForm.control} name="bio" render={({ field }) => (
+                        <FormField control={form.control} name="bio" render={({ field }) => (
                             <FormItem><FormLabel>Biography</FormLabel><FormControl><Textarea placeholder="Tell patients about yourself..." className="min-h-24" {...field} /></FormControl><FormMessage /></FormItem>
                         )} />
                     </div>
@@ -295,65 +318,27 @@ export default function ProfessionalProfilePage() {
 
             <Card className="bg-white">
                 <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <div className="flex items-center gap-3">
-                          <Award className="w-6 h-6 text-primary"/>
-                          <CardTitle>Credential Management</CardTitle>
-                      </div>
-                      <CardDescription>Upload and manage your professional credentials for verification.</CardDescription>
-                    </div>
-                     <Dialog open={isCredentialUploadOpen} onOpenChange={setCredentialUploadOpen}>
-                        <DialogTrigger asChild>
-                            <Button type="button">
-                                <FileUp className="mr-2 h-4 w-4"/>
-                                Upload New Credential
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>Upload New Credential</DialogTitle>
-                                <DialogDescription>
-                                    Please upload your updated credential document. It will be reviewed by our team within 2-3 business days.
-                                </DialogDescription>
-                            </DialogHeader>
-                            <CredentialUploadForm onUpload={onCredentialUpload} />
-                        </DialogContent>
-                    </Dialog>
-                  </div>
+                   <div className="flex items-center gap-3">
+                      <KeyRound className="w-6 h-6 text-primary"/>
+                      <CardTitle>Security</CardTitle>
+                   </div>
+                  <CardDescription>Manage your password. Leave fields blank to keep your current password.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="space-y-3">
-                      {(doctor.credentials && doctor.credentials.length > 0) ? (
-                        doctor.credentials.map((cred) => (
-                           <div key={cred.id} className="p-3 bg-background rounded-lg flex items-center justify-between">
-                                <div className="flex items-center gap-3">
-                                    <FileText className="h-6 w-6 text-muted-foreground"/>
-                                    <div>
-                                        <p className="font-semibold">{cred.name}</p>
-                                        <p className="text-sm text-muted-foreground">{cred.type}</p>
-                                    </div>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  {getStatusBadge(cred.status)}
-                                  <Button variant="outline" size="sm" asChild>
-                                    <Link href={cred.url} target="_blank">View</Link>
-                                  </Button>
-                                  <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive" onClick={() => handleDeleteCredential(cred.id)}>
-                                    <Trash2 className="w-4 h-4" />
-                                  </Button>
-                                </div>
-                           </div>
-                        ))
-                      ) : (
-                        <div className="text-center py-8">
-                          <p className="text-muted-foreground">No credentials uploaded yet.</p>
-                        </div>
-                      )}
-                    </div>
+                   <div className="grid md:grid-cols-3 gap-6">
+                     <FormField control={form.control} name="currentPassword" render={({ field }) => (
+                        <FormItem><FormLabel>Current Password</FormLabel><FormControl><Input type="password" {...field} /></FormControl><FormMessage /></FormItem>
+                     )}/>
+                     <FormField control={form.control} name="newPassword" render={({ field }) => (
+                        <FormItem><FormLabel>New Password</FormLabel><FormControl><Input type="password" {...field} /></FormControl><FormMessage /></FormItem>
+                     )}/>
+                     <FormField control={form.control} name="confirmPassword" render={({ field }) => (
+                        <FormItem><FormLabel>Confirm New Password</FormLabel><FormControl><Input type="password" {...field} /></FormControl><FormMessage /></FormItem>
+                     )}/>
+                   </div>
                 </CardContent>
             </Card>
-
+            
             <div className="flex justify-end">
                 <Button type="submit" size="lg">Save All Changes</Button>
             </div>
@@ -362,35 +347,65 @@ export default function ProfessionalProfilePage() {
 
 
       <Card className="bg-white">
-        <CardHeader>
-           <div className="flex items-center gap-3">
-              <KeyRound className="w-6 h-6 text-primary"/>
-              <CardTitle>Security</CardTitle>
-           </div>
-          <CardDescription>Manage your password.</CardDescription>
-        </CardHeader>
-        <CardContent>
-            <Form {...passwordForm}>
-                <form onSubmit={passwordForm.handleSubmit(onPasswordSubmit)} className="space-y-6">
-                   <div className="grid md:grid-cols-3 gap-6">
-                     <FormField control={passwordForm.control} name="currentPassword" render={({ field }) => (
-                        <FormItem><FormLabel>Current Password</FormLabel><FormControl><Input type="password" {...field} /></FormControl><FormMessage /></FormItem>
-                     )}/>
-                     <FormField control={passwordForm.control} name="newPassword" render={({ field }) => (
-                        <FormItem><FormLabel>New Password</FormLabel><FormControl><Input type="password" {...field} /></FormControl><FormMessage /></FormItem>
-                     )}/>
-                     <FormField control={passwordForm.control} name="confirmPassword" render={({ field }) => (
-                        <FormItem><FormLabel>Confirm New Password</FormLabel><FormControl><Input type="password" {...field} /></FormControl><FormMessage /></FormItem>
-                     )}/>
-                   </div>
-                    <div className="flex justify-end">
-                        <Button type="submit">Change Password</Button>
-                    </div>
-                </form>
-            </Form>
-        </CardContent>
+          <CardHeader>
+            <div className="flex justify-between items-start">
+              <div>
+                <div className="flex items-center gap-3">
+                    <Award className="w-6 h-6 text-primary"/>
+                    <CardTitle>Credential Management</CardTitle>
+                </div>
+                <CardDescription>Upload and manage your professional credentials for verification.</CardDescription>
+              </div>
+               <Dialog open={isCredentialUploadOpen} onOpenChange={setCredentialUploadOpen}>
+                  <DialogTrigger asChild>
+                      <Button type="button">
+                          <FileUp className="mr-2 h-4 w-4"/>
+                          Upload New Credential
+                      </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                      <DialogHeader>
+                          <DialogTitle>Upload New Credential</DialogTitle>
+                          <DialogDescription>
+                              Please upload your updated credential document. It will be reviewed by our team within 2-3 business days.
+                          </DialogDescription>
+                      </DialogHeader>
+                      <CredentialUploadForm onUpload={onCredentialUpload} />
+                  </DialogContent>
+              </Dialog>
+            </div>
+          </CardHeader>
+          <CardContent>
+              <div className="space-y-3">
+                {(doctor.credentials && doctor.credentials.length > 0) ? (
+                  doctor.credentials.map((cred) => (
+                     <div key={cred.id} className="p-3 bg-background rounded-lg flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                              <FileText className="h-6 w-6 text-muted-foreground"/>
+                              <div>
+                                  <p className="font-semibold">{cred.name}</p>
+                                  <p className="text-sm text-muted-foreground">{cred.type}</p>
+                              </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {getStatusBadge(cred.status)}
+                            <Button variant="outline" size="sm" asChild>
+                              <Link href={cred.url} target="_blank">View</Link>
+                            </Button>
+                            <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive" onClick={() => handleDeleteCredential(cred.id)}>
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                     </div>
+                  ))
+                ) : (
+                  <div className="text-center py-8">
+                    <p className="text-muted-foreground">No credentials uploaded yet.</p>
+                  </div>
+                )}
+              </div>
+          </CardContent>
       </Card>
-
     </div>
   );
 }
