@@ -18,7 +18,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Upload, KeyRound, User, Award, Info, BadgeCheck, FileUp, FileText, AlertCircle, RefreshCw, Trash2 } from 'lucide-react';
+import { Upload, KeyRound, User, Award, Info, BadgeCheck, FileUp, FileText, AlertCircle, RefreshCw, Trash2, ShieldCheck } from 'lucide-react';
 import React, { useRef } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -72,6 +72,11 @@ const credentialSchema = z.object({
   credentialType: z.string().min(1, 'Please select a credential type.'),
   credentialName: z.string().min(3, 'Credential name must be at least 3 characters.'),
   credentialFile: z.any().refine((files) => files?.length === 1, 'A file is required.'),
+});
+
+const kycSchema = z.object({
+  documentType: z.string().min(1, 'Please select a document type.'),
+  documentFile: z.any().refine((files) => files?.length === 1, 'An identity document file is required.'),
 });
 
 
@@ -152,11 +157,76 @@ function CredentialUploadForm({ onUpload }: { onUpload: (data: z.infer<typeof cr
     );
 }
 
+function KycUploadForm({ onUpload }: { onUpload: (data: z.infer<typeof kycSchema>) => void; }) {
+    const form = useForm<z.infer<typeof kycSchema>>({
+        resolver: zodResolver(kycSchema),
+        defaultValues: { documentType: '', documentFile: undefined },
+    });
+    const fileRef = form.register("documentFile");
+    const kycFile = form.watch("documentFile");
+
+    function onSubmit(values: z.infer<typeof kycSchema>) {
+        onUpload(values);
+        form.reset();
+    }
+
+    return (
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                <div className="space-y-4">
+                    <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-lg text-center relative cursor-pointer hover:bg-accent">
+                        <FileUp className="h-12 w-12 text-muted-foreground mb-2" />
+                        <p className="font-semibold">{kycFile?.[0]?.name || 'Drag & drop or click to upload'}</p>
+                        <p className="text-xs text-muted-foreground">PDF, PNG, JPG up to 10MB</p>
+                        <Input type="file" className="w-full h-full opacity-0 absolute inset-0 z-10 cursor-pointer" {...fileRef} />
+                    </div>
+                    <FormField
+                      control={form.control}
+                      name="documentFile"
+                      render={() => ( <FormItem><FormMessage /></FormItem>)}
+                    />
+                </div>
+                <FormField
+                    control={form.control}
+                    name="documentType"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Identity Document Type</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                    <SelectTrigger>
+                                        <SelectValue placeholder="Select ID type" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    <SelectItem value="National ID">National ID Card</SelectItem>
+                                    <SelectItem value="Passport">International Passport</SelectItem>
+                                    <SelectItem value="Drivers License">Driver's License</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                 <div className="flex justify-end gap-2 pt-4">
+                     <DialogTrigger asChild>
+                        <Button type="button" variant="ghost">Cancel</Button>
+                    </DialogTrigger>
+                    <Button type="submit">Submit KYC Document</Button>
+                </div>
+            </form>
+        </Form>
+    );
+}
+
 export default function ProfessionalProfilePage() {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isCredentialUploadOpen, setCredentialUploadOpen] = React.useState(false);
+  const [isKycUploadOpen, setKycUploadOpen] = React.useState(false);
   const [doctor, setDoctor] = React.useState(() => availableDoctors.find(d => d.id === 'doc-1')); // Assuming current user is Dr. Chen
+  const [kycStatus, setKycStatus] = React.useState<'Not Submitted' | 'Pending' | 'Verified'>('Not Submitted');
+
 
   const form = useForm<z.infer<typeof combinedSchema>>({
     resolver: zodResolver(combinedSchema),
@@ -216,6 +286,16 @@ export default function ProfessionalProfilePage() {
     });
   }
 
+   function onKycUpload(values: z.infer<typeof kycSchema>) {
+        console.log("KYC document uploaded:", values);
+        setKycStatus('Pending');
+        setKycUploadOpen(false);
+        toast({
+            title: "KYC Document Submitted",
+            description: "Your identity document has been submitted for verification.",
+        });
+    }
+
   const handleDeleteCredential = (credId: string) => {
       if (!doctor) return;
       setDoctor(prev => {
@@ -250,6 +330,17 @@ export default function ProfessionalProfilePage() {
           default: return <Badge variant="outline">Unknown</Badge>;
       }
   }
+
+   const getKycStatusBadge = () => {
+        switch (kycStatus) {
+            case 'Verified': return <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200"><BadgeCheck className="mr-1 h-3 w-3" />Verified</Badge>;
+            case 'Pending': return <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 border-yellow-200"><RefreshCw className="mr-1 h-3 w-3 animate-spin" />Pending</Badge>;
+            case 'Not Submitted':
+            default:
+                return <Badge variant="outline">Not Submitted</Badge>;
+        }
+    }
+
 
   return (
     <div className="space-y-8">
@@ -417,6 +508,43 @@ export default function ProfessionalProfilePage() {
                 )}
               </div>
           </CardContent>
+      </Card>
+
+      <Card className="bg-white">
+        <CardHeader>
+            <div className="flex justify-between items-start">
+              <div>
+                <div className="flex items-center gap-3">
+                    <ShieldCheck className="w-6 h-6 text-primary"/>
+                    <CardTitle>KYC Verification (Admin View Only)</CardTitle>
+                </div>
+                <CardDescription>Upload identity documents for internal Know Your Customer verification.</CardDescription>
+              </div>
+                <Dialog open={isKycUploadOpen} onOpenChange={setKycUploadOpen}>
+                    <DialogTrigger asChild>
+                        <Button variant="outline">
+                            <FileUp className="mr-2 h-4 w-4"/>
+                            Upload Identity Document
+                        </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Upload Identity Document</DialogTitle>
+                            <DialogDescription>
+                                This document is for internal verification only and will not be shared publicly.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <KycUploadForm onUpload={onKycUpload}/>
+                    </DialogContent>
+                </Dialog>
+            </div>
+        </CardHeader>
+         <CardContent>
+             <div className="p-3 bg-background rounded-lg flex items-center justify-between">
+                <div className="font-semibold">Verification Status</div>
+                {getKycStatusBadge()}
+            </div>
+         </CardContent>
       </Card>
     </div>
   );
