@@ -18,7 +18,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Upload, KeyRound, User, Award, Info, BadgeCheck, FileUp, FileText, AlertCircle, RefreshCw, Trash2, ShieldCheck } from 'lucide-react';
+import { Upload, KeyRound, User, Award, Info, BadgeCheck, FileUp, FileText, AlertCircle, RefreshCw, Trash2, ShieldCheck, Building } from 'lucide-react';
 import React, { useRef } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -35,6 +35,12 @@ const profileSchema = z.object({
   specialization: z.string().min(2, 'Specialization is required.'),
   yearsOfExperience: z.coerce.number().min(0, 'Years of experience cannot be negative.'),
   bio: z.string().min(20, 'Bio should be at least 20 characters.'),
+  // Organisation fields
+  organisationName: z.string().optional(),
+  organisationType: z.string().optional(),
+  cacNumber: z.string().optional(),
+  organisationAddress: z.string().optional(),
+  organisationWebsite: z.string().url('Please enter a valid URL.').optional().or(z.literal('')),
 });
 
 const passwordSchema = z.object({
@@ -237,6 +243,11 @@ export default function ProfessionalProfilePage() {
       specialization: doctor?.specialty,
       yearsOfExperience: 10,
       bio: doctor?.bio,
+      organisationName: 'HCOM International Clinic',
+      organisationType: 'Clinic',
+      cacNumber: 'RC 123456',
+      organisationAddress: '23 Rumomoi, Port Harcourt, Nigeria',
+      organisationWebsite: 'https://www.hcom.com.ng',
       currentPassword: '',
       newPassword: '',
       confirmPassword: '',
@@ -397,6 +408,35 @@ export default function ProfessionalProfilePage() {
             <Card className="bg-white">
                 <CardHeader>
                 <div className="flex items-center gap-3">
+                    <Building className="w-6 h-6 text-primary"/>
+                    <CardTitle>Organisation Information</CardTitle>
+                </div>
+                <CardDescription>Details about your affiliated hospital, clinic, or pharmacy.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <FormField control={form.control} name="organisationName" render={({ field }) => (
+                            <FormItem><FormLabel>Organisation Name</FormLabel><FormControl><Input placeholder="HCOM Clinic" {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                         <FormField control={form.control} name="organisationType" render={({ field }) => (
+                            <FormItem><FormLabel>Organisation Type</FormLabel><FormControl><Input placeholder="e.g. Clinic, Hospital" {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                         <FormField control={form.control} name="cacNumber" render={({ field }) => (
+                            <FormItem><FormLabel>CAC Registration No.</FormLabel><FormControl><Input placeholder="RC 123456" {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                         <FormField control={form.control} name="organisationAddress" render={({ field }) => (
+                            <FormItem><FormLabel>Address</FormLabel><FormControl><Input placeholder="123 Healthway Drive, Port Harcourt" {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                         <FormField control={form.control} name="organisationWebsite" render={({ field }) => (
+                            <FormItem className="md:col-span-2"><FormLabel>Website</FormLabel><FormControl><Input placeholder="https://www.yourclinic.com" {...field} /></FormControl><FormMessage /></FormItem>
+                        )} />
+                    </div>
+                </CardContent>
+            </Card>
+            
+            <Card className="bg-white">
+                <CardHeader>
+                <div className="flex items-center gap-3">
                     <Info className="w-6 h-6 text-primary"/>
                     <CardTitle>Public Profile Details</CardTitle>
                 </div>
@@ -549,3 +589,6 @@ export default function ProfessionalProfilePage() {
     </div>
   );
 }
+
+
+    
