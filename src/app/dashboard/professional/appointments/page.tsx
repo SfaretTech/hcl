@@ -4,7 +4,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Calendar as CalendarIcon, Clock, Users, Video, MoreVertical, Filter } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, Users, Video, MoreVertical, Filter, Phone } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Calendar } from '@/components/ui/calendar';
@@ -81,7 +81,10 @@ export default function ProfessionalAppointmentsPage() {
                                 </div>
                                 <div className="w-full sm:w-auto flex gap-2">
                                     <Button variant="outline" className="w-full sm:w-auto">
-                                        <Video className="mr-2 h-4 w-4" /> Join Call
+                                        <Video className="mr-2 h-4 w-4" /> Video Call
+                                    </Button>
+                                    <Button variant="outline" className="w-full sm:w-auto">
+                                        <Phone className="mr-2 h-4 w-4" /> Call
                                     </Button>
                                     <Button variant="ghost" size="icon" className="w-auto">
                                         <MoreVertical className="h-5 w-5" />
