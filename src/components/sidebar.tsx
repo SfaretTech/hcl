@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutGrid, CalendarDays, MessageSquare, FileText, User, Settings, LifeBuoy, LogOut, UserSearch, UserPlus, ShoppingCart, CreditCard, CheckCircle, Briefcase, Bell } from 'lucide-react';
+import { LayoutGrid, CalendarDays, MessageSquare, FileText, User, Settings, LifeBuoy, LogOut, UserSearch, UserPlus, ShoppingCart, CreditCard, CheckCircle, Briefcase, Bell, ShoppingBag, Package, PackagePlus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -99,6 +99,28 @@ const professionalNavItems = [
         title: 'Patient Records',
         href: '/dashboard/professional/records',
         icon: FileText
+    },
+    {
+        title: 'Marketplace',
+        href: '/dashboard/professional/marketplace',
+        icon: ShoppingBag,
+        subItems: [
+            {
+                title: 'My Products',
+                href: '/dashboard/professional/marketplace/products',
+                icon: Package,
+            },
+            {
+                title: 'Add New Product',
+                href: '/dashboard/professional/marketplace/products/new',
+                icon: PackagePlus,
+            },
+            {
+                title: 'Orders',
+                href: '/dashboard/professional/marketplace/orders',
+                icon: Briefcase,
+            }
+        ]
     }
 ];
 
@@ -106,11 +128,17 @@ const professionalRoutes = [
     '/dashboard/professional',
     '/dashboard/profile',
     '/dashboard/settings',
-    '/dashboard/notifications'
+    '/dashboard/notifications', // Shared route, but should show prof. menu
 ];
 
 const isProfessionalRoute = (pathname: string) => {
-    return professionalRoutes.some(route => pathname.startsWith(route));
+    // Exact matches for main professional pages
+    if (professionalRoutes.includes(pathname)) return true;
+    
+    // Pattern matches for sub-routes
+    if (pathname.startsWith('/dashboard/professional/')) return true;
+    
+    return false;
 };
 
 export function Sidebar() {
@@ -132,6 +160,7 @@ export function Sidebar() {
 
     const isProfessionalsActive = pathname.startsWith('/dashboard/professionals');
     const isShopActive = pathname.startsWith('/dashboard/shop');
+    const isMarketplaceActive = pathname.startsWith('/dashboard/professional/marketplace');
 
     const sidebarNavItems = role === 'professional' ? professionalNavItems : clientNavItems;
     const settingsLink = role === 'professional' ? '/dashboard/settings' : '/dashboard/client/settings';
@@ -148,7 +177,7 @@ export function Sidebar() {
                 <nav className="flex-1 px-4 space-y-1">
                    {sidebarNavItems.map((item: any) => (
                     item.subItems ? (
-                        <Accordion key={item.title} type="single" collapsible defaultValue={isProfessionalsActive || isShopActive ? 'item-1' : ''}>
+                        <Accordion key={item.title} type="single" collapsible defaultValue={isProfessionalsActive || isShopActive || isMarketplaceActive ? 'item-1' : ''}>
                             <AccordionItem value="item-1" className="border-b-0">
                                 <Link
                                     href={item.href}

@@ -1,7 +1,7 @@
 
 'use client';
 
-import { Menu, X, LayoutGrid, CalendarDays, MessageSquare, FileText, User, UserSearch, UserPlus, Settings, Bell, CheckCircle2, LogOut, ShoppingCart, CreditCard, CheckCircle } from 'lucide-react';
+import { Menu, X, LayoutGrid, CalendarDays, MessageSquare, FileText, User, UserSearch, UserPlus, Settings, Bell, CheckCircle2, LogOut, ShoppingCart, CreditCard, CheckCircle, Briefcase, ShoppingBag, Package, PackagePlus } from 'lucide-react';
 import Link from 'next/link';
 import { Button, buttonVariants } from './ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle } from './ui/sheet';
@@ -113,6 +113,28 @@ const professionalNavItems = [
         title: 'Patient Records',
         href: '/dashboard/professional/records',
         icon: FileText
+    },
+    {
+        title: 'Marketplace',
+        href: '/dashboard/professional/marketplace',
+        icon: ShoppingBag,
+        subItems: [
+            {
+                title: 'My Products',
+                href: '/dashboard/professional/marketplace/products',
+                icon: Package,
+            },
+            {
+                title: 'Add New Product',
+                href: '/dashboard/professional/marketplace/products/new',
+                icon: PackagePlus,
+            },
+            {
+                title: 'Orders',
+                href: '/dashboard/professional/marketplace/orders',
+                icon: Briefcase,
+            }
+        ]
     }
 ];
 
@@ -233,11 +255,17 @@ const professionalRoutes = [
     '/dashboard/professional',
     '/dashboard/profile',
     '/dashboard/settings',
-    '/dashboard/notifications',
+    '/dashboard/notifications', // Shared route, but should show prof. menu
 ];
 
 const isProfessionalRoute = (pathname: string) => {
-    return professionalRoutes.some(route => pathname.startsWith(route));
+    // Exact matches for main professional pages
+    if (professionalRoutes.includes(pathname)) return true;
+    
+    // Pattern matches for sub-routes
+    if (pathname.startsWith('/dashboard/professional/')) return true;
+    
+    return false;
 };
 
 

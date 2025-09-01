@@ -1,6 +1,7 @@
 
 
 import { type Doctor, availableDoctors } from "@/components/schedule-appointment-form";
+import { z } from "zod";
 
 export type AppointmentStatus = 'Pending' | 'Confirmed' | 'Completed' | 'Canceled';
 export type Appointment = {
@@ -177,5 +178,107 @@ export const allNotifications: Notification[] = [
         description: "Follow-up with Dr. Amina Khan on Oct 28, 2024.",
         time: "3 days ago",
         read: true,
+    },
+];
+
+
+// --- Marketplace Data ---
+
+export const productSchema = z.object({
+  name: z.string().min(3, 'Product name must be at least 3 characters.'),
+  description: z.string().min(20, 'Description must be at least 20 characters.'),
+  price: z.number().positive('Price must be a positive number.'),
+  stock: z.number().int().min(0, 'Stock cannot be negative.'),
+  category: z.string().min(1, 'Please select a category.'),
+});
+
+export type Product = z.infer<typeof productSchema> & {
+    id: string;
+    images: string[];
+    rating: number;
+    reviews: number;
+    sales: number;
+};
+
+export const professionalProducts: Product[] = [
+    {
+        id: 'prod-1',
+        name: 'Professional Stethoscope',
+        description: 'High-quality stethoscope for accurate diagnostics. Features a dual-head chest piece and comfortable earpieces. Suitable for all medical professionals.',
+        price: 35000,
+        stock: 50,
+        category: 'Equipment',
+        images: ['https://placehold.co/600x600.png'],
+        rating: 4.9,
+        reviews: 25,
+        sales: 150,
+    },
+    {
+        id: 'prod-2',
+        name: 'Bulk Paracetamol (1000 tablets)',
+        description: 'A bulk package of 1000 paracetamol tablets (500mg). Ideal for clinics and hospitals for managing pain and fever.',
+        price: 18000,
+        stock: 200,
+        category: 'Medications',
+        images: ['https://placehold.co/600x600.png'],
+        rating: 4.8,
+        reviews: 15,
+        sales: 320,
+    },
+];
+
+export const addProfessionalProduct = (product: Product) => {
+    professionalProducts.unshift(product);
+}
+
+export type OrderStatus = 'Pending' | 'Shipped' | 'Delivered' | 'Canceled';
+
+export type OrderItem = {
+    productId: string;
+    name: string;
+    quantity: number;
+    price: number;
+};
+
+export type Order = {
+    id: string;
+    customerName: string;
+    date: string;
+    status: OrderStatus;
+    items: OrderItem[];
+    total: number;
+};
+
+export const professionalOrders: Order[] = [
+    {
+        id: 'ORD-001',
+        customerName: 'Jessica Peterson',
+        date: '2024-08-28T10:00:00',
+        status: 'Shipped',
+        items: [
+            { productId: 'prod-1', name: 'Professional Stethoscope', quantity: 1, price: 35000 },
+        ],
+        total: 35000
+    },
+    {
+        id: 'ORD-002',
+        customerName: 'Hope Clinic',
+        date: '2024-08-27T14:30:00',
+        status: 'Pending',
+        items: [
+            { productId: 'prod-2', name: 'Bulk Paracetamol (1000 tablets)', quantity: 5, price: 18000 },
+        ],
+        total: 90000
+    },
+     {
+        id: 'ORD-003',
+        customerName: 'St. Nicholas Hospital',
+        date: '2024-08-25T09:00:00',
+        status: 'Delivered',
+        items: [
+            { productId: 'prod-1', name: 'Professional Stethoscope', quantity: 10, price: 35000 },
+            { productId: 'prod-2', name: 'Bulk Paracetamol (1000 tablets)', quantity: 2, price: 18000 },
+        ],
+        total: 386000
     },
 ];
