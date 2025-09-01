@@ -21,6 +21,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Upload, KeyRound, User, Award, Briefcase, Info, BadgeCheck, FileUp } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
+import React from 'react';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 const profileSchema = z.object({
   fullName: z.string().min(2, 'Full name must be at least 2 characters.'),
@@ -43,8 +45,57 @@ const passwordSchema = z.object({
     path: ['confirmPassword'],
 });
 
+const credentialSchema = z.object({
+  credentialFile: z.any().refine((files) => files?.length === 1, 'A file is required.'),
+});
+
+function CredentialUploadForm({ onUpload }: { onUpload: (data: z.infer<typeof credentialSchema>) => void; }) {
+    const form = useForm<z.infer<typeof credentialSchema>>({
+        resolver: zodResolver(credentialSchema),
+        defaultValues: { credentialFile: undefined },
+    });
+    const fileRef = form.register("credentialFile");
+    const credentialFile = form.watch("credentialFile");
+
+    function onSubmit(values: z.infer<typeof credentialSchema>) {
+        onUpload(values);
+        form.reset();
+    }
+    
+    return (
+         <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                <div className="space-y-4">
+                    <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-lg text-center relative cursor-pointer hover:bg-accent">
+                        <FileUp className="h-12 w-12 text-muted-foreground mb-2" />
+                        <p className="font-semibold">{credentialFile?.[0]?.name || 'Drag & drop or click to upload'}</p>
+                        <p className="text-xs text-muted-foreground">PDF, PNG, JPG up to 10MB</p>
+                        <Input type="file" className="w-full h-full opacity-0 absolute inset-0 z-10 cursor-pointer" {...fileRef} />
+                    </div>
+                    <FormField
+                      control={form.control}
+                      name="credentialFile"
+                      render={() => (
+                        <FormItem>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                </div>
+                <div className="flex justify-end gap-2">
+                     <DialogTrigger asChild>
+                        <Button type="button" variant="ghost">Cancel</Button>
+                    </DialogTrigger>
+                    <Button type="submit">Submit for Review</Button>
+                </div>
+            </form>
+        </Form>
+    );
+}
+
 export default function ProfessionalProfilePage() {
   const { toast } = useToast();
+  const [isCredentialUploadOpen, setCredentialUploadOpen] = React.useState(false);
 
   const profileForm = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
@@ -79,6 +130,15 @@ export default function ProfessionalProfilePage() {
         description: "Your password has been changed successfully.",
     });
     passwordForm.reset();
+  }
+
+  function onCredentialUpload(values: z.infer<typeof credentialSchema>) {
+    console.log("Credential uploaded:", values.credentialFile[0].name);
+    setCredentialUploadOpen(false);
+    toast({
+        title: "Credential Submitted",
+        description: "Your new credential has been submitted for review. This may take 2-3 business days.",
+    });
   }
 
   return (
@@ -184,10 +244,23 @@ export default function ProfessionalProfilePage() {
                              </div>
                         </div>
                         <div className="pt-2">
-                             <Button type="button">
-                                <FileUp className="mr-2 h-4 w-4"/>
-                                Upload New Credential
-                             </Button>
+                            <Dialog open={isCredentialUploadOpen} onOpenChange={setCredentialUploadOpen}>
+                                <DialogTrigger asChild>
+                                    <Button type="button">
+                                        <FileUp className="mr-2 h-4 w-4"/>
+                                        Upload New Credential
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>Upload New Credential</DialogTitle>
+                                        <DialogDescription>
+                                            Please upload your updated credential document. It will be reviewed by our team within 2-3 business days.
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <CredentialUploadForm onUpload={onCredentialUpload} />
+                                </DialogContent>
+                            </Dialog>
                              <p className="text-xs text-muted-foreground mt-2">Upload a new document to replace the existing one. It will be reviewed by our team.</p>
                         </div>
                     </div>
