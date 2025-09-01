@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Button, buttonVariants } from './ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle } from './ui/sheet';
 import { useState, useEffect } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Logo } from './logo';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
@@ -116,7 +116,7 @@ const professionalNavItems = [
     },
     {
         title: 'Shop',
-        href: '/dashboard/professional/shop',
+        href: '/dashboard/professional/shop?role=professional',
         icon: ShoppingCart
     },
     {
@@ -260,16 +260,13 @@ const professionalRoutes = [
     '/dashboard/professional',
     '/dashboard/profile',
     '/dashboard/settings',
-    '/dashboard/notifications', // Shared route, but should show prof. menu
+    '/dashboard/notifications',
 ];
 
-const isProfessionalRoute = (pathname: string) => {
-    // Exact matches for main professional pages
+const isProfessionalRoute = (pathname: string, roleQueryParam: string | null) => {
+    if (roleQueryParam === 'professional') return true;
     if (professionalRoutes.includes(pathname)) return true;
-    
-    // Pattern matches for sub-routes
     if (pathname.startsWith('/dashboard/professional/')) return true;
-    
     return false;
 };
 
@@ -277,6 +274,7 @@ const isProfessionalRoute = (pathname: string) => {
 export function Header() {
   const [isSheetOpen, setSheetOpen] = useState(false);
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const router = useRouter();
   const { toast } = useToast();
   const [showLogoutToast, setShowLogoutToast] = useState(false);
@@ -296,7 +294,7 @@ export function Header() {
   };
 
   const isDashboard = pathname.startsWith('/dashboard');
-  const role = isProfessionalRoute(pathname) ? 'professional' : 'client';
+  const role = isProfessionalRoute(pathname, searchParams.get('role')) ? 'professional' : 'client';
   const dashboardNavItems = role === 'professional' ? professionalNavItems : clientNavItems;
 
 
@@ -406,7 +404,7 @@ export function Header() {
                  </div>
                  <div className="flex items-center gap-2 ml-auto">
                     <Button asChild variant="ghost" size="icon">
-                        <Link href="/dashboard/shop/cart">
+                        <Link href={role === 'professional' ? '/dashboard/shop/cart?role=professional' : '/dashboard/shop/cart'}>
                             <ShoppingCart className="h-5 w-5" />
                             <span className="sr-only">Cart</span>
                         </Link>

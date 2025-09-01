@@ -2,7 +2,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { LayoutGrid, CalendarDays, MessageSquare, FileText, User, Settings, LifeBuoy, LogOut, UserSearch, UserPlus, ShoppingCart, CreditCard, CheckCircle, Briefcase, Bell, ShoppingBag, Package, PackagePlus } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button, buttonVariants } from '@/components/ui/button';
@@ -102,7 +102,7 @@ const professionalNavItems = [
     },
      {
         title: 'Shop',
-        href: '/dashboard/professional/shop',
+        href: '/dashboard/professional/shop?role=professional',
         icon: ShoppingCart
     },
     {
@@ -133,26 +133,24 @@ const professionalRoutes = [
     '/dashboard/professional',
     '/dashboard/profile',
     '/dashboard/settings',
-    '/dashboard/notifications', // Shared route, but should show prof. menu
+    '/dashboard/notifications',
 ];
 
-const isProfessionalRoute = (pathname: string) => {
-    // Exact matches for main professional pages
+const isProfessionalRoute = (pathname: string, roleQueryParam: string | null) => {
+    if (roleQueryParam === 'professional') return true;
     if (professionalRoutes.includes(pathname)) return true;
-    
-    // Pattern matches for sub-routes
     if (pathname.startsWith('/dashboard/professional/')) return true;
-    
     return false;
 };
 
 export function Sidebar() {
     const pathname = usePathname();
+    const searchParams = useSearchParams();
     const router = useRouter();
     const { toast } = useToast();
     
     // In a real app, role would come from a user session
-    const role = isProfessionalRoute(pathname) ? 'professional' : 'client';
+    const role = isProfessionalRoute(pathname, searchParams.get('role')) ? 'professional' : 'client';
 
 
     const handleLogout = () => {
