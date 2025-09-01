@@ -4,7 +4,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import React from 'react';
+import React, { useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -124,6 +124,7 @@ function KycForm({ onUpload, status }: { onUpload: (data: z.infer<typeof kycSche
 
 export default function InvestorProfilePage() {
     const { toast } = useToast();
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const [kycStatus, setKycStatus] = React.useState<'Not Verified' | 'Pending' | 'Verified'>('Not Verified');
     const [isBankDialogOpen, setBankDialogOpen] = React.useState(false);
     const [bankAccounts, setBankAccounts] = React.useState<BankAccount[]>([
@@ -162,6 +163,16 @@ export default function InvestorProfilePage() {
         toast({ title: 'Bank Account Removed', variant: 'destructive'});
     }
 
+    const handlePictureChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+        toast({
+            title: 'Picture Updated!',
+            description: `${file.name} has been selected. In a real app, this would be uploaded.`,
+        });
+        }
+    };
+
     return (
         <div className="space-y-8">
             <div>
@@ -179,7 +190,10 @@ export default function InvestorProfilePage() {
                     <div className="space-y-1">
                         <h2 className="text-2xl font-bold font-headline">{profileForm.getValues('fullName')}</h2>
                         <p className="text-muted-foreground">{profileForm.getValues('email')}</p>
-                        <Button variant="outline" size="sm" className="mt-2"><Upload className="mr-2 h-4 w-4"/> Change Picture</Button>
+                        <Input type="file" ref={fileInputRef} onChange={handlePictureChange} className="hidden" accept="image/*" />
+                        <Button variant="outline" size="sm" className="mt-2" onClick={() => fileInputRef.current?.click()}>
+                            <Upload className="mr-2 h-4 w-4"/> Change Picture
+                        </Button>
                     </div>
                 </div>
                 </CardHeader>
