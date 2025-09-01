@@ -28,7 +28,7 @@ import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 
 
-const profileSchema = z.object({
+const profileFormSchema = z.object({
   fullName: z.string().min(2, 'Full name must be at least 2 characters.'),
   email: z.string().email('Please enter a valid email.'),
   professionalTitle: z.string().min(2, 'Title must be at least 2 characters.'),
@@ -41,19 +41,19 @@ const profileSchema = z.object({
   cacNumber: z.string().optional(),
   organisationAddress: z.string().optional(),
   organisationWebsite: z.string().url('Please enter a valid URL.').optional().or(z.literal('')),
-});
-
-const passwordSchema = z.object({
-    currentPassword: z.string().optional(),
-    newPassword: z.string().optional(),
-    confirmPassword: z.string().optional(),
-}).refine(data => {
+  // Password fields
+  currentPassword: z.string().optional(),
+  newPassword: z.string().optional(),
+  confirmPassword: z.string().optional(),
+})
+.refine(data => {
     if (data.newPassword && data.newPassword.length < 8) return false;
     return true;
 }, {
     message: "New password must be at least 8 characters.",
     path: ['newPassword'],
-}).refine(data => {
+})
+.refine(data => {
     if (data.newPassword || data.confirmPassword) {
         return data.newPassword === data.confirmPassword;
     }
@@ -61,7 +61,8 @@ const passwordSchema = z.object({
 }, {
     message: "New passwords don't match.",
     path: ['confirmPassword'],
-}).refine(data => {
+})
+.refine(data => {
     if (data.newPassword && !data.currentPassword) {
         return false;
     }
@@ -70,8 +71,6 @@ const passwordSchema = z.object({
     message: "Current password is required to set a new one.",
     path: ['currentPassword'],
 });
-
-const combinedSchema = profileSchema.merge(passwordSchema);
 
 
 const credentialSchema = z.object({
@@ -230,12 +229,12 @@ export default function ProfessionalProfilePage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isCredentialUploadOpen, setCredentialUploadOpen] = React.useState(false);
   const [isKycUploadOpen, setKycUploadOpen] = React.useState(false);
-  const [doctor, setDoctor] = React.useState(() => availableDoctors.find(d => d.id === 'doc-1')); // Assuming current user is Dr. Chen
+  const [doctor, setDoctor] = React.useState(availableDoctors.find(d => d.id === 'doc-1')); // Assuming current user is Dr. Chen
   const [kycStatus, setKycStatus] = React.useState<'Not Submitted' | 'Pending' | 'Verified'>('Not Submitted');
 
 
-  const form = useForm<z.infer<typeof combinedSchema>>({
-    resolver: zodResolver(combinedSchema),
+  const form = useForm<z.infer<typeof profileFormSchema>>({
+    resolver: zodResolver(profileFormSchema),
     defaultValues: {
       fullName: doctor?.name,
       email: 'dr.chen@hcom.com',
@@ -258,7 +257,7 @@ export default function ProfessionalProfilePage() {
       return <div>Loading professional profile...</div>;
   }
 
-  function onSubmit(values: z.infer<typeof combinedSchema>) {
+  function onSubmit(values: z.infer<typeof profileFormSchema>) {
     console.log('Profile updated:', values);
     toast({
       title: 'Profile Updated',
@@ -589,6 +588,5 @@ export default function ProfessionalProfilePage() {
     </div>
   );
 }
-
 
     
