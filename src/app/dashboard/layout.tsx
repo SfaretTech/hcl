@@ -3,12 +3,15 @@ import { ReactNode } from 'react';
 import { Sidebar } from '@/components/sidebar';
 import { DashboardHeader } from '@/components/dashboard-header';
 import Image from 'next/image';
+import { Suspense } from 'react';
 
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex flex-col min-h-dvh bg-background text-foreground">
-        <DashboardHeader />
+        <Suspense fallback={<div>Loading header...</div>}>
+            <DashboardHeader />
+        </Suspense>
         <div className="flex flex-1">
              <Sidebar />
              <main className="flex-1 relative">
