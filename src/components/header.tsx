@@ -132,7 +132,7 @@ function Notifications({role}: {role: 'client' | 'professional'}) {
     const notifications = allNotifications;
     return (
         <Popover>
-            <PopoverTrigger>
+            <PopoverTrigger asChild>
                 <Button variant="ghost" size="icon" className="relative">
                     <Bell className="h-5 w-5" />
                     {notifications.filter(n => !n.read).length > 0 && (
