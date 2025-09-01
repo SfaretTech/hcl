@@ -37,7 +37,7 @@ export default function ConfirmationPage() {
     const searchParams = useSearchParams();
     const role = searchParams.get('role');
     const dashboardUrl = role === 'professional' ? '/dashboard/professional' : '/dashboard';
-    const shopUrl = role === 'professional' ? '/dashboard/shop?role=professional' : '/dashboard/shop';
+    const shopUrl = role === 'professional' ? '/dashboard/professional/shop?role=professional' : '/dashboard/shop';
 
 
     const subtotal = orderedItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
