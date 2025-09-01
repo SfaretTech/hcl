@@ -18,13 +18,14 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Upload, KeyRound, User, Award, Info, BadgeCheck, FileUp, FileText, AlertCircle, RefreshCw } from 'lucide-react';
+import { Upload, KeyRound, User, Award, Info, BadgeCheck, FileUp, FileText, AlertCircle, RefreshCw, Trash2 } from 'lucide-react';
 import React from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Credential, CredentialType, availableDoctors } from '@/components/schedule-appointment-form';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import Link from 'next/link';
 
 
 const profileSchema = z.object({
@@ -190,6 +191,22 @@ export default function ProfessionalProfilePage() {
         description: "Your new credential has been submitted for review. This may take 2-3 business days.",
     });
   }
+
+  const handleDeleteCredential = (credId: string) => {
+      if (!doctor) return;
+      setDoctor(prev => {
+        if (!prev) return undefined;
+        return {
+            ...prev,
+            credentials: prev.credentials?.filter(c => c.id !== credId) || []
+        }
+    });
+    toast({
+        title: "Credential Removed",
+        description: "The credential has been successfully removed.",
+        variant: "destructive"
+    });
+  }
   
   const getStatusBadge = (status: Credential['status']) => {
       switch(status) {
@@ -317,9 +334,14 @@ export default function ProfessionalProfilePage() {
                                         <p className="text-sm text-muted-foreground">{cred.type}</p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-4">
+                                <div className="flex items-center gap-2">
                                   {getStatusBadge(cred.status)}
-                                  <Button variant="outline" size="sm">View</Button>
+                                  <Button variant="outline" size="sm" asChild>
+                                    <Link href={cred.url} target="_blank">View</Link>
+                                  </Button>
+                                  <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-destructive" onClick={() => handleDeleteCredential(cred.id)}>
+                                    <Trash2 className="w-4 h-4" />
+                                  </Button>
                                 </div>
                            </div>
                         ))
