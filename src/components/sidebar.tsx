@@ -3,7 +3,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutGrid, CalendarDays, MessageSquare, FileText, User, Settings, LifeBuoy, LogOut, UserSearch, UserPlus, ShoppingCart, CreditCard, CheckCircle, Briefcase } from 'lucide-react';
+import { LayoutGrid, CalendarDays, MessageSquare, FileText, User, Settings, LifeBuoy, LogOut, UserSearch, UserPlus, ShoppingCart, CreditCard, CheckCircle, Briefcase, Bell } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -22,6 +22,11 @@ const clientNavItems = [
         title: 'Appointments',
         href: '/dashboard/appointments',
         icon: CalendarDays,
+    },
+    {
+        title: 'Notifications',
+        href: '/dashboard/notifications',
+        icon: Bell
     },
     {
         title: 'My Doctors',
@@ -79,6 +84,11 @@ const professionalNavItems = [
         title: 'Appointments',
         href: '/dashboard/professional/appointments',
         icon: CalendarDays
+    },
+    {
+        title: 'Notifications',
+        href: '/dashboard/notifications',
+        icon: Bell
     },
     {
         title: 'Messaging',

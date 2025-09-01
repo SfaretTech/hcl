@@ -15,6 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Separator } from './ui/separator';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from './ui/dropdown-menu';
 import { useToast } from '@/hooks/use-toast';
+import { allNotifications } from '@/lib/data';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -35,6 +36,11 @@ const clientNavItems = [
         title: 'Appointments',
         href: '/dashboard/appointments',
         icon: CalendarDays
+    },
+    {
+        title: 'Notifications',
+        href: '/dashboard/notifications',
+        icon: Bell
     },
     {
         title: 'My Doctors',
@@ -94,6 +100,11 @@ const professionalNavItems = [
         icon: CalendarDays
     },
     {
+        title: 'Notifications',
+        href: '/dashboard/notifications',
+        icon: Bell
+    },
+    {
         title: 'Messaging',
         href: '/dashboard/professional/messages',
         icon: MessageSquare
@@ -106,36 +117,30 @@ const professionalNavItems = [
 ];
 
 
-const notifications = [
-    {
-        icon: MessageSquare,
-        title: "New message from Dr. Samuel Chen",
-        description: "Hi Jessica, please find your latest test results attached...",
-        time: "2 hours ago",
-        read: false,
-    },
-    {
-        icon: CheckCircle2,
-        title: "Prescription Refilled",
-        description: "Your prescription for Vitamin D has been refilled.",
-        time: "1 day ago",
-        read: true,
-    },
-    {
-        icon: CalendarDays,
-        title: "Appointment Confirmed",
-        description: "Follow-up with Dr. Amina Khan on Oct 28, 2024.",
-        time: "3 days ago",
-        read: true,
-    },
-];
+const iconMap: Record<string, React.ElementType> = {
+    'MessageSquare': MessageSquare,
+    'CalendarDays': CalendarDays,
+    'CheckCircle2': CheckCircle2,
+};
+
+const getIcon = (iconName: string) => {
+    const Icon = iconMap[iconName];
+    return Icon ? <Icon /> : <Bell />;
+}
 
 function Notifications({role}: {role: 'client' | 'professional'}) {
+    const notifications = allNotifications;
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button variant="ghost" size="icon">
+                <Button variant="ghost" size="icon" className="relative">
                     <Bell className="h-5 w-5" />
+                    {notifications.filter(n => !n.read).length > 0 && (
+                         <span className="absolute top-1 right-1 flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+                        </span>
+                    )}
                     <span className="sr-only">Notifications</span>
                 </Button>
             </PopoverTrigger>
@@ -145,10 +150,10 @@ function Notifications({role}: {role: 'client' | 'professional'}) {
                     <Button variant="link" size="sm" className="p-0 h-auto">Mark all as read</Button>
                 </div>
                 <div className="space-y-2">
-                    {notifications.map((notif, index) => (
+                    {notifications.slice(0,3).map((notif, index) => (
                         <div key={index} className="flex items-start gap-3 p-2 rounded-lg hover:bg-secondary/50">
                             <div className="w-5 h-5 mt-1 text-muted-foreground flex-shrink-0">
-                                <notif.icon />
+                                {getIcon(notif.icon)}
                             </div>
                             <div className="flex-1">
                                 <p className="text-sm font-medium">{notif.title}</p>
@@ -160,7 +165,9 @@ function Notifications({role}: {role: 'client' | 'professional'}) {
                     ))}
                 </div>
                  <Separator className="my-2" />
-                 <Button variant="outline" className="w-full">View all notifications</Button>
+                 <Button variant="outline" className="w-full" asChild>
+                    <Link href="/dashboard/notifications">View all notifications</Link>
+                </Button>
             </PopoverContent>
         </Popover>
     )

@@ -1,4 +1,5 @@
 
+
 import { type Doctor, availableDoctors } from "@/components/schedule-appointment-form";
 
 export type AppointmentStatus = 'Pending' | 'Confirmed' | 'Completed' | 'Canceled';
@@ -141,3 +142,40 @@ export const addPatientRecord = (patientId: string, record: HealthRecord) => {
         patient.records.unshift(record);
     }
 };
+
+// --- Notifications ---
+export type Notification = {
+    id: string;
+    icon: string;
+    title: string;
+    description: string;
+    time: string;
+    read: boolean;
+};
+
+export const allNotifications: Notification[] = [
+    {
+        id: 'notif-1',
+        icon: 'MessageSquare',
+        title: "New message from Dr. Samuel Chen",
+        description: "Hi Jessica, please find your latest test results attached...",
+        time: "2 hours ago",
+        read: false,
+    },
+    {
+        id: 'notif-2',
+        icon: 'CheckCircle2',
+        title: "Prescription Refilled",
+        description: "Your prescription for Vitamin D has been refilled.",
+        time: "1 day ago",
+        read: true,
+    },
+    {
+        id: 'notif-3',
+        icon: 'CalendarDays',
+        title: "Appointment Confirmed",
+        description: "Follow-up with Dr. Amina Khan on Oct 28, 2024.",
+        time: "3 days ago",
+        read: true,
+    },
+];
