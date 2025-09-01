@@ -106,6 +106,7 @@ const professionalRoutes = [
     '/dashboard/professional',
     '/dashboard/profile',
     '/dashboard/settings',
+    '/dashboard/notifications'
 ];
 
 const isProfessionalRoute = (pathname: string) => {
