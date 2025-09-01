@@ -7,6 +7,7 @@ import { CheckCircle2, ShoppingBag, LayoutGrid } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Separator } from '@/components/ui/separator';
+import { useSearchParams } from 'next/navigation';
 
 const orderedItems = [
   {
@@ -33,6 +34,10 @@ const formatCurrency = (amount: number) => {
 
 
 export default function ConfirmationPage() {
+    const searchParams = useSearchParams();
+    const role = searchParams.get('role');
+    const dashboardUrl = role === 'professional' ? '/dashboard/professional' : '/dashboard';
+
     const subtotal = orderedItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
     const shipping = 2000;
     const total = subtotal + shipping;
@@ -90,7 +95,7 @@ export default function ConfirmationPage() {
                         </Link>
                     </Button>
                     <Button asChild variant="outline" className="w-full">
-                         <Link href="/dashboard">
+                         <Link href={dashboardUrl}>
                             <LayoutGrid className="mr-2 h-4 w-4" />
                             Go to Dashboard
                         </Link>
@@ -100,5 +105,3 @@ export default function ConfirmationPage() {
         </div>
     )
 }
-
-    
