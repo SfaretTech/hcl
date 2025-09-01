@@ -37,6 +37,8 @@ export default function ConfirmationPage() {
     const searchParams = useSearchParams();
     const role = searchParams.get('role');
     const dashboardUrl = role === 'professional' ? '/dashboard/professional' : '/dashboard';
+    const shopUrl = role === 'professional' ? '/dashboard/shop?role=professional' : '/dashboard/shop';
+
 
     const subtotal = orderedItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
     const shipping = 2000;
@@ -89,7 +91,7 @@ export default function ConfirmationPage() {
                 </CardContent>
                 <CardFooter className="flex-col sm:flex-row gap-4">
                      <Button asChild className="w-full">
-                        <Link href="/dashboard/shop">
+                        <Link href={shopUrl}>
                             <ShoppingBag className="mr-2 h-4 w-4" />
                             Continue Shopping
                         </Link>
