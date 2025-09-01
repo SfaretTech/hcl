@@ -155,6 +155,23 @@ export default function InvestorSettingsPage() {
             <Card className="bg-white">
                 <CardHeader>
                     <div className="flex items-center gap-3">
+                        <Palette className="w-6 h-6 text-primary"/>
+                        <CardTitle>Appearance</CardTitle>
+                    </div>
+                    <CardDescription>Customize the look and feel of your dashboard.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="grid sm:grid-cols-3 gap-4">
+                        <Button variant={activeTheme === 'light' ? 'secondary' : 'outline'} onClick={() => handleThemeChange('light')}>Light Mode</Button>
+                        <Button variant={activeTheme === 'dark' ? 'secondary' : 'outline'} onClick={() => handleThemeChange('dark')}>Dark Mode</Button>
+                        <Button variant="outline" onClick={() => handleThemeChange('system')}>System Default</Button>
+                    </div>
+                </CardContent>
+            </Card>
+
+            <Card className="bg-white">
+                <CardHeader>
+                    <div className="flex items-center gap-3">
                         <KeyRound className="w-6 h-6 text-primary"/>
                         <CardTitle>Security</CardTitle>
                     </div>
@@ -171,7 +188,7 @@ export default function InvestorSettingsPage() {
                                 <FormItem><FormLabel>New Password</FormLabel><FormControl><Input type="password" {...field} /></FormControl><FormMessage /></FormItem>
                             )}/>
                             <FormField control={passwordForm.control} name="confirmPassword" render={({ field }) => (
-                                <FormItem><FormLabel>Confirm New Password</FormLabel><FormControl><Input type="password" {...field} /></FormControl><FormMessage /></FormItem>
+                                <FormItem><FormLabel>Confirm New Password</FormLabel><FormControl><Input type="password" {...field} /></FormControl><FormMessage /></FormMessage>
                             )}/>
                         </div>
                             <div className="flex justify-end">
