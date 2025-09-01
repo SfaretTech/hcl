@@ -261,7 +261,7 @@ function UserNav({role}: {role: 'client' | 'professional' | 'investor'}) {
         avatarFallback = 'DC';
     } else if (role === 'investor') {
         profileLink = '/dashboard/investor/profile';
-        settingsLink = '/dashboard/investor/profile'; // Or a dedicated settings page
+        settingsLink = '/dashboard/investor/settings';
         userName = 'Alex Johnson';
         userEmail = 'alex.j@invest.hcom.com';
         avatarFallback = 'AJ';
@@ -364,7 +364,7 @@ export function Header() {
       dashboardNavItems = clientNavItems;
   }
   
-  const settingsLink = role === 'professional' ? '/dashboard/settings' : (role === 'investor' ? '/dashboard/investor/profile' : '/dashboard/client/settings');
+  const settingsLink = role === 'professional' ? '/dashboard/settings' : (role === 'investor' ? '/dashboard/investor/settings' : '/dashboard/client/settings');
 
 
   if (isDashboard) {

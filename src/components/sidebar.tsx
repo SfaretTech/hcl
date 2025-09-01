@@ -212,7 +212,7 @@ export function Sidebar() {
     switch (role) {
         case 'investor':
             sidebarNavItems = investorNavItems;
-            settingsLink = '/dashboard/investor/profile'; // Investors have settings within profile
+            settingsLink = '/dashboard/investor/settings';
             break;
         case 'professional':
             sidebarNavItems = professionalNavItems;
