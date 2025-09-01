@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -12,6 +13,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Separator } from '@/components/ui/separator';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const cartItems = [
   {
@@ -39,6 +41,8 @@ const formatCurrency = (amount: number) => {
 export default function CheckoutPage() {
     const { toast } = useToast();
     const router = useRouter();
+    const [paymentMethod, setPaymentMethod] = useState('card');
+
     const subtotal = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
     const shipping = 2000;
     const total = subtotal + shipping;
@@ -96,7 +100,7 @@ export default function CheckoutPage() {
                              <CardDescription>All transactions are secure and encrypted.</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <RadioGroup defaultValue="card" className="grid sm:grid-cols-2 gap-4">
+                            <RadioGroup defaultValue={paymentMethod} onValueChange={setPaymentMethod} className="grid sm:grid-cols-2 gap-4">
                                 <Label htmlFor="card" className="flex items-center gap-4 rounded-md border p-4 cursor-pointer hover:bg-accent has-[:checked]:bg-primary/10 has-[:checked]:border-primary">
                                     <RadioGroupItem value="card" id="card" />
                                     <div className="flex items-center gap-2">
@@ -112,20 +116,38 @@ export default function CheckoutPage() {
                                     </div>
                                 </Label>
                             </RadioGroup>
-                             <div className="grid sm:grid-cols-2 gap-4 mt-6">
-                                <div className="sm:col-span-2">
-                                    <Label htmlFor="card-number">Card Number</Label>
-                                    <Input id="card-number" placeholder="0000 0000 0000 0000" />
+                             
+                             {paymentMethod === 'card' && (
+                                <div className="grid sm:grid-cols-2 gap-4 mt-6">
+                                    <div className="sm:col-span-2">
+                                        <Label htmlFor="card-number">Card Number</Label>
+                                        <Input id="card-number" placeholder="0000 0000 0000 0000" />
+                                    </div>
+                                    <div>
+                                        <Label htmlFor="expiry">Expiry Date</Label>
+                                        <Input id="expiry" placeholder="MM / YY" />
+                                    </div>
+                                    <div>
+                                        <Label htmlFor="cvc">CVC</Label>
+                                        <Input id="cvc" placeholder="123" />
+                                    </div>
                                 </div>
-                                <div>
-                                    <Label htmlFor="expiry">Expiry Date</Label>
-                                    <Input id="expiry" placeholder="MM / YY" />
-                                </div>
-                                <div>
-                                    <Label htmlFor="cvc">CVC</Label>
-                                    <Input id="cvc" placeholder="123" />
-                                </div>
-                            </div>
+                             )}
+
+                             {paymentMethod === 'bank' && (
+                                <Alert className="mt-6">
+                                  <Landmark className="h-4 w-4" />
+                                  <AlertTitle>Bank Transfer Details</AlertTitle>
+                                  <AlertDescription>
+                                    <p className="mb-2">Please transfer the total amount to the account below. Use your order number as the payment reference.</p>
+                                    <div className="text-sm space-y-1">
+                                      <p><strong>Bank:</strong> HCOM Bank PLC</p>
+                                      <p><strong>Account Name:</strong> HCOM International Limited</p>
+                                      <p><strong>Account Number:</strong> 1234567890</p>
+                                    </div>
+                                  </AlertDescription>
+                                </Alert>
+                             )}
                         </CardContent>
                     </Card>
                 </div>
@@ -179,5 +201,3 @@ export default function CheckoutPage() {
         </div>
     )
 }
-
-    
