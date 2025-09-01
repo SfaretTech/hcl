@@ -115,6 +115,11 @@ const professionalNavItems = [
         icon: FileText
     },
     {
+        title: 'Shop',
+        href: '/dashboard/professional/shop',
+        icon: ShoppingCart
+    },
+    {
         title: 'Marketplace',
         href: '/dashboard/professional/marketplace',
         icon: ShoppingBag,
@@ -155,7 +160,7 @@ function Notifications({role}: {role: 'client' | 'professional'}) {
     return (
         <Popover>
             <PopoverTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative">
+                 <Button variant="ghost" size="icon" className="relative">
                     <Bell className="h-5 w-5" />
                     {notifications.filter(n => !n.read).length > 0 && (
                          <span className="absolute top-1 right-1 flex h-2 w-2">

@@ -100,6 +100,11 @@ const professionalNavItems = [
         href: '/dashboard/professional/records',
         icon: FileText
     },
+     {
+        title: 'Shop',
+        href: '/dashboard/professional/shop',
+        icon: ShoppingCart
+    },
     {
         title: 'Marketplace',
         href: '/dashboard/professional/marketplace',
