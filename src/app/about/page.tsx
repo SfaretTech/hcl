@@ -49,10 +49,10 @@ const teamMembers = [
     },
   },
   {
-    name: 'Amina Khan',
-    role: 'Head of Community Outreach',
+    name: 'Dike Paul',
+    role: 'CTO',
     image: 'https://placehold.co/200x200.png',
-    hint: 'community leader',
+    hint: 'tech professional',
     socials: {
       linkedin: '#',
       twitter: '#',
