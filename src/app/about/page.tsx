@@ -96,7 +96,7 @@ export default function AboutPage() {
     <div className="relative min-h-dvh">
         <div className="absolute inset-0 -z-10">
             <Image
-              src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3dHpyMjBsYmMwM3N1N3A3Y3duajlrM3pvdmNodmczeGsxZW5iNGpoNCZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/l2JBygxaUuh8aJ6YHn/giphy.gif"
+              src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3NHFyZXI1eDVjcjY5b2xwa2ZiOGJoaGFtb3hxZjc0YTN2cjh4dXJkOSZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/B9xA6CAKrXjeU/giphy.gif"
               alt="Abstract background"
               fill
               objectFit="cover"
