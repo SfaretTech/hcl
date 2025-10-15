@@ -79,12 +79,13 @@ export default function Home() {
         <section id="home" className="relative pt-24 pb-16 sm:pt-32 sm:pb-24 overflow-hidden">
            <div className="absolute inset-0">
             <Image
-              src="https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxoZWFsdGhjYXJlJTIwdGVjaG5vbG9neSUyMGFic3RyYWN0fGVufDB8fHx8MTc1NTQ3MDI3N3ww&ixlib=rb-4.1.0&q=80&w=1080"
+              src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3MmUxdGUyb2l4Y3l2NGNyMm16YTd3M3NyN2FveW52bHV1MWF5cjhtdiZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/s1IJ0L8hZ4wms/giphy.gif"
               alt="Healthcare Technology background"
               fill
               objectFit="cover"
               className="opacity-20 blur-sm"
               data-ai-hint="healthcare technology abstract"
+              unoptimized
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/50"></div>
           </div>
