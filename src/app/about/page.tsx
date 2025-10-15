@@ -41,7 +41,7 @@ const teamMembers = [
   {
     name: 'Hope Kpanikwu',
     role: 'COO & Co-Founder',
-    image: '/img/hopey.jpg',
+    image: '/img/hopey.png',
     hint: 'professional portrait',
     socials: {
       linkedin: '#',
