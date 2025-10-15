@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Video, Bot, Truck, Users, Smartphone, HeartHandshake, TrendingUp } from 'lucide-react';
 import { AIAssistant } from '@/components/ai-assistant';
 import { Badge } from '@/components/ui/badge';
+import Image from 'next/image';
 
 const servicesData = [
   {
@@ -63,51 +64,65 @@ const servicesData = [
 
 export default function ServicesPage() {
   return (
-    <div className="flex flex-col min-h-dvh bg-background text-foreground">
-      <Header />
-      <main className="flex-1">
-        <section id="services-hero" className="bg-white pt-24 pb-16 sm:pt-32 sm:pb-24">
-          <div className="container">
-            <div className="max-w-4xl mx-auto text-center">
-               <Badge variant="secondary" className="mb-4">Our Offerings</Badge>
-              <h1 className="font-headline text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl">
-                Comprehensive Digital Health Services
-              </h1>
-              <p className="mt-6 text-lg tracking-wide text-muted-foreground">
-                We provide a holistic ecosystem of services designed to make healthcare accessible, intelligent, and patient-centric.
-              </p>
+    <div className="relative min-h-dvh">
+        <div className="absolute inset-0 -z-10">
+            <Image
+              src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3eTI3c2M5MmE2aWNxOHh0NjdpMXdnNzhyc3NrdnV3aHo0MTI0cGV6cyZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/9V0CwaOoFvP2d8pcgx/giphy.gif"
+              alt="Abstract services background"
+              fill
+              objectFit="cover"
+              className="opacity-20"
+              data-ai-hint="abstract animation"
+              unoptimized
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/90 to-background"></div>
+        </div>
+      <div className="flex flex-col min-h-dvh bg-transparent text-foreground">
+        <Header />
+        <main className="flex-1">
+          <section id="services-hero" className="bg-transparent pt-24 pb-16 sm:pt-32 sm:pb-24">
+            <div className="container">
+              <div className="max-w-4xl mx-auto text-center">
+                 <Badge variant="secondary" className="mb-4">Our Offerings</Badge>
+                <h1 className="font-headline text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl">
+                  Comprehensive Digital Health Services
+                </h1>
+                <p className="mt-6 text-lg tracking-wide text-muted-foreground">
+                  We provide a holistic ecosystem of services designed to make healthcare accessible, intelligent, and patient-centric.
+                </p>
+              </div>
             </div>
-          </div>
-        </section>
-        
-        <section id="services-list" className="bg-background">
-          <div className="container">
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {servicesData.map((service) => (
-                <Card key={service.title} className="flex flex-col transition-transform transform hover:-translate-y-2 hover:shadow-xl bg-white">
-                  <CardHeader>
-                    <div className="flex items-center gap-4">
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                        <service.icon className="h-6 w-6" />
+          </section>
+          
+          <section id="services-list" className="bg-transparent">
+            <div className="container">
+              <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                {servicesData.map((service) => (
+                  <Card key={service.title} className="flex flex-col transition-transform transform hover:-translate-y-2 hover:shadow-xl bg-white/80 backdrop-blur-md">
+                    <CardHeader>
+                      <div className="flex items-center gap-4">
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                          <service.icon className="h-6 w-6" />
+                        </div>
+                        <CardTitle className="font-headline text-xl">{service.title}</CardTitle>
                       </div>
-                      <CardTitle className="font-headline text-xl">{service.title}</CardTitle>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="flex-grow">
-                    <ul className="space-y-2 text-muted-foreground list-disc pl-5">
-                      {service.description.map((item, index) => (
-                        <li key={index}>{item}</li>
-                      ))}
-                    </ul>
-                  </CardContent>
-                </Card>
-              ))}
+                    </CardHeader>
+                    <CardContent className="flex-grow">
+                      <ul className="space-y-2 text-muted-foreground list-disc pl-5">
+                        {service.description.map((item, index) => (
+                          <li key={index}>{item}</li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
-      </main>
-      <Footer />
-      <AIAssistant />
+          </section>
+        </main>
+        <Footer />
+        <AIAssistant />
+      </div>
     </div>
   );
 }
