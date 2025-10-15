@@ -41,7 +41,7 @@ const teamMembers = [
   {
     name: 'Hope Kpanikwu',
     role: 'COO & Co-Founder',
-    image: 'https://placehold.co/200x200.png',
+    image: '/img/hopey.jpg',
     hint: 'professional portrait',
     socials: {
       linkedin: '#',
