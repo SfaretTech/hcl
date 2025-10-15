@@ -100,7 +100,7 @@ export default function AboutPage() {
               alt="Abstract background"
               fill
               objectFit="cover"
-              className="opacity-20"
+              className="opacity-80"
               data-ai-hint="abstract animation"
               unoptimized
             />
