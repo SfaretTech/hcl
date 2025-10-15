@@ -29,7 +29,7 @@ const missionData = {
 
 const teamMembers = [
   {
-    name: 'Dr. Evelyn Reed',
+    name: 'Grace Philip',
     role: 'CEO & Founder',
     image: 'https://placehold.co/200x200.png',
     hint: 'professional headshot',
