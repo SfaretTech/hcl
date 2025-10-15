@@ -39,10 +39,10 @@ const teamMembers = [
     },
   },
   {
-    name: 'Samuel Chen',
-    role: 'Chief Technology Officer',
+    name: 'Hope Kpanikwu',
+    role: 'COO & Co-Founder',
     image: 'https://placehold.co/200x200.png',
-    hint: 'developer portrait',
+    hint: 'professional portrait',
     socials: {
       linkedin: '#',
       twitter: '#',
