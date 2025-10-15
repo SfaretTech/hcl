@@ -80,7 +80,7 @@ export default function Home() {
               alt="Healthcare Technology background"
               fill
               objectFit="cover"
-              className="opacity-30"
+              className="opacity-50"
               data-ai-hint="healthcare technology abstract"
               unoptimized
             />
