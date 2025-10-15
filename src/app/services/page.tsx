@@ -71,11 +71,10 @@ export default function ServicesPage() {
               alt="Abstract services background"
               fill
               objectFit="cover"
-              className="opacity-20"
               data-ai-hint="abstract animation"
               unoptimized
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-background/50 via-background/90 to-background"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/90 to-background"></div>
         </div>
       <div className="flex flex-col min-h-dvh bg-transparent text-foreground">
         <Header />
