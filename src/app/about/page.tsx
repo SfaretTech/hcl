@@ -60,7 +60,7 @@ const teamMembers = [
   },
   {
     name: 'Ben Carter',
-    role: 'Lead UX Designer',
+    role: 'Director of HCOM Outreach',
     image: 'https://placehold.co/200x200.png',
     hint: 'designer smiling',
     socials: {
