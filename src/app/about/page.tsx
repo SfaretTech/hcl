@@ -31,7 +31,7 @@ const teamMembers = [
   {
     name: 'Grace Philip',
     role: 'CEO & Founder',
-    image: 'https://placehold.co/200x200.png',
+    image: '/img/grace pic.jpg',
     hint: 'professional headshot',
     socials: {
       linkedin: '#',
