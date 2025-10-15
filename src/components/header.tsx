@@ -8,7 +8,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle 
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { Logo } from './logo';
+import Image from 'next/image';
 
 
 const navLinks = [
@@ -33,7 +33,7 @@ export function Header() {
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
         <Link href="/" className="flex items-center gap-2 mr-auto">
-          <Logo className="h-7 w-7 text-primary" />
+          <Image src="/img/HCOM logo.png" alt="HCOM Logo" width={28} height={28} />
           <span className="font-bold text-xl font-headline">HCOM</span>
         </Link>
 
@@ -75,7 +75,7 @@ export function Header() {
                  <SheetHeader className="flex flex-row items-center justify-between p-4 border-b">
                    <SheetTitle>
                     <Link href="/" className="flex items-center gap-2">
-                        <Logo className="h-6 w-6 text-primary" />
+                        <Image src="/img/HCOM logo.png" alt="HCOM Logo" width={24} height={24} />
                         <span className="font-bold text-lg font-headline">HCOM</span>
                     </Link>
                    </SheetTitle>

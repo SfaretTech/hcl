@@ -7,7 +7,7 @@ import { LayoutGrid, CalendarDays, MessageSquare, FileText, User, Settings, Life
 import { cn } from '@/lib/utils';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Logo } from './logo';
+import Image from 'next/image';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
 import { useToast } from '@/hooks/use-toast';
 
@@ -230,7 +230,7 @@ export function Sidebar() {
             <div className="flex-1 flex flex-col gap-y-7">
                 <div className="h-16 flex items-center px-6 border-b">
                      <Link href="/" className="flex items-center gap-2">
-                        <Logo className="h-7 w-7 text-primary" />
+                        <Image src="/img/HCOM logo.png" alt="HCOM Logo" width={28} height={28} />
                         <span className="font-bold text-xl font-headline">HCOM</span>
                     </Link>
                 </div>

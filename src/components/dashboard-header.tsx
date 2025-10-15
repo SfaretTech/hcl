@@ -8,7 +8,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle 
 import { useState, useEffect } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { Logo } from './logo';
+import Image from 'next/image';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
@@ -372,7 +372,7 @@ export function DashboardHeader() {
                                 <SheetHeader className="h-16 flex items-center px-6 border-b">
                                     <SheetTitle>
                                         <Link href="/" className="flex items-center gap-2">
-                                        <Logo className="h-7 w-7 text-primary" />
+                                        <Image src="/img/HCOM logo.png" alt="HCOM Logo" width={28} height={28} />
                                         <span className="font-bold text-xl font-headline">HCOM</span>
                                         </Link>
                                     </SheetTitle>

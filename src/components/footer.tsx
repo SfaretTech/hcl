@@ -3,7 +3,7 @@ import { Mail, MapPin, Phone, Facebook, Twitter, Linkedin } from 'lucide-react';
 import Link from 'next/link';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
-import { Logo } from './logo';
+import Image from 'next/image';
 import { Separator } from './ui/separator';
 
 export function Footer() {
@@ -15,7 +15,7 @@ export function Footer() {
           {/* About HCOM */}
           <div className="space-y-4 lg:col-span-2 md:col-span-3">
              <Link href="/" className="flex items-center gap-2">
-              <Logo className="h-7 w-7 text-primary" />
+              <Image src="/img/HCOM logo.png" alt="HCOM Logo" width={28} height={28} />
               <span className="font-bold text-xl font-headline">HCOM</span>
             </Link>
             <p className="text-sm text-muted-foreground max-w-sm">
