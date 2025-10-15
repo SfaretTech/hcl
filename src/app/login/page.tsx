@@ -116,10 +116,7 @@ export default function LoginPage() {
                               name="password"
                               render={({ field }) => (
                                 <FormItem>
-                                  <div className="flex justify-between items-baseline">
-                                      <FormLabel>Password</FormLabel>
-                                      <Link href="#" className="text-sm font-medium text-primary hover:underline">Forgot password?</Link>
-                                  </div>
+                                  <FormLabel>Password</FormLabel>
                                   <FormControl>
                                     <Input type="password" placeholder="********" {...field} />
                                   </FormControl>
@@ -130,6 +127,11 @@ export default function LoginPage() {
                             <Button type="submit" size="lg" className="w-full font-bold">
                               Log In as {role.charAt(0).toUpperCase() + role.slice(1)}
                             </Button>
+                            <p className="text-center text-sm">
+                                <Link href="#" className="font-medium text-primary hover:underline">
+                                    Forgot password?
+                                </Link>
+                            </p>
                           </form>
                         </Form>
                          <p className="mt-8 text-center text-sm text-muted-foreground">
