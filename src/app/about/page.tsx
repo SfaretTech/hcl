@@ -23,7 +23,7 @@ const missionData = {
   values: {
     icon: Gem,
     title: 'Core Values',
-    description: 'Accessibility, Innovation, Compassion, and Integrity. These values guide every decision we make and every interaction we have.',
+    description: 'Accessibility, Innovation, Compassion, and Integrity.',
   },
 };
 
