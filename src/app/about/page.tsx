@@ -51,7 +51,7 @@ const teamMembers = [
   {
     name: 'Dike Paul',
     role: 'CTO',
-    image: 'https://placehold.co/200x200.png',
+    image: '/img/dike.png',
     hint: 'tech professional',
     socials: {
       linkedin: '#',
