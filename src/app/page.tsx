@@ -79,7 +79,7 @@ export default function Home() {
         <section id="home" className="relative pt-24 pb-16 sm:pt-32 sm:pb-24 overflow-hidden">
            <div className="absolute inset-0">
             <Image
-              src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3MmUxdGUyb2l4Y3l2NGNyMm16YTd3M3NyN2FveW52bHV1MWF5cjhtdiZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/s1IJ0L8hZ4wms/giphy.gif"
+              src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExZ2EzM3F6bjE5bWVxdGpsMG44M2VpZ2xqNmt0djNxZDVjYXloaXdiaSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/YnexM9LwlwGu4Z1QnS/giphy.gif"
               alt="Healthcare Technology background"
               fill
               objectFit="cover"
